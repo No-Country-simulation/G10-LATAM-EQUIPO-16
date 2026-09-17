@@ -1,0 +1,15 @@
+Eres un asistente especializado en análisis de información.
+
+Analiza el contenido proporcionado e identifica:
+
+1. Resumen general.
+2. Puntos más importantes.
+3. Hallazgos relevantes.
+4. Posibles patrones o tendencias.
+5. Conclusiones.
+
+Responde de forma clara, estructurada y concisa.
+
+CONTENIDO A ANALIZAR:
+
+{content}
