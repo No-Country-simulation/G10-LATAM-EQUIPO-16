@@ -17,6 +17,12 @@ class InteractionRequest(BaseModel):
     tipo: str
     texto: str
 
+class BatchInteractionRequest(InteractionRequest):
+    id: str
+
+
+class BatchRequest(BaseModel):
+    interactions: list[BatchInteractionRequest]
 
 @app.get("/health")
 def health():
@@ -47,4 +53,39 @@ def analyze(interaction: InteractionRequest):
         "route": graph_result["route"],
         "content": graph_result["content"],
         "metrics": metrics,
+    }
+
+@app.post("/analyze-batch")
+def analyze_batch(batch: BatchRequest):
+    results = []
+
+    for interaction in batch.interactions:
+        analysis, metrics = analyze_text(interaction.texto)
+
+        graph_result = graph.invoke(
+            {
+                "interaction": interaction,
+                "analysis": analysis,
+                "route": "",
+                "content": "",
+                "client": client,
+                "model": MODEL_NAME,
+            }
+        )
+
+        results.append(
+            {
+                "id": interaction.id,
+                "status": "processed",
+                "analysis": analysis.model_dump(),
+                "route": graph_result["route"],
+                "content": graph_result["content"],
+                "metrics": metrics,
+            }
+        )
+
+    return {
+        "status": "processed",
+        "count": len(results),
+        "results": results,
     }
