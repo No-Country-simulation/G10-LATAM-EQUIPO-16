@@ -1,8 +1,13 @@
+import json
 import os
 import time
 
 from dotenv import load_dotenv
 from google import genai
+from pydantic import ValidationError
+
+from models import AnalysisResult
+from loaders import load_csv
 
 
 # ==========================================
@@ -140,7 +145,17 @@ def analyze_text(text: str):
         ),
     }
 
-    return interaction.output_text, metrics
+    try:
+        data = json.loads(interaction.output_text)
+        analysis = AnalysisResult(**data)
+
+    except (json.JSONDecodeError, ValidationError) as error:
+        raise RuntimeError(
+            "Gemini devolvió una respuesta con formato inválido."
+        ) from error
+
+    return analysis, metrics
+
 
 
 # ==========================================
@@ -150,36 +165,45 @@ def analyze_text(text: str):
 if __name__ == "__main__":
 
     try:
-        result, metrics = analyze_text(
-            "La inteligencia artificial puede ayudar a los equipos "
-            "a analizar grandes cantidades de información."
+        interactions = load_csv("data/messages.csv")
+
+        print(
+            f"\n📂 Interacciones cargadas: "
+            f"{len(interactions)}"
         )
 
-        print("\n--- RESULTADO ---")
-        print(result)
+        for interaction in interactions:
 
-        print("\n--- MÉTRICAS ---")
-        print(
-            f"⏱ Tiempo: "
-            f"{metrics['time_seconds']:.2f} segundos"
-        )
-        print(
-            f"📥 Tokens de entrada: "
-            f"{metrics['input_tokens']}"
-        )
-        print(
-            f"📤 Tokens de salida: "
-            f"{metrics['output_tokens']}"
-        )
-        print(
-            f"🔢 Tokens totales: "
-            f"{metrics['total_tokens']}"
-        )
-        print(
-            f"💭 Tokens de razonamiento: "
-            f"{metrics['thought_tokens']}"
-        )
+            print("\n" + "=" * 50)
+            print(f"👤 Autor: {interaction.autor}")
+            print(f"💬 Canal: {interaction.canal}")
+            print(f"📝 Texto: {interaction.texto}")
 
-    except RuntimeError as error:
+            result, metrics = analyze_text(
+                interaction.texto
+            )
+
+            print("\n--- RESULTADO VALIDADO ---")
+            print(
+                result.model_dump_json(
+                    indent=2
+                )
+            )
+
+            print("\n--- MÉTRICAS ---")
+            print(
+                f"⏱ Tiempo: "
+                f"{metrics['time_seconds']:.2f} segundos"
+            )
+            print(
+                f"🔢 Tokens totales: "
+                f"{metrics['total_tokens']}"
+            )
+
+    except (
+        RuntimeError,
+        FileNotFoundError,
+        ValueError,
+    ) as error:
         print("\n❌ No se pudo completar el análisis.")
         print(f"ℹ️ {error}")
