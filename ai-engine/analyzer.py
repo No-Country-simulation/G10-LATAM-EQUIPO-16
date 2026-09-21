@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from models import AnalysisResult
 from loaders import load_csv
+from graph import graph
 
 
 # ==========================================
@@ -183,12 +184,32 @@ if __name__ == "__main__":
                 interaction.texto
             )
 
+            graph_result = graph.invoke(
+                {
+                    "interaction": interaction,
+                    "analysis": result,
+                    "route": "",
+                    "content": "",
+                    "client": client,
+                    "model": MODEL_NAME
+                }
+            )
+
             print("\n--- RESULTADO VALIDADO ---")
             print(
                 result.model_dump_json(
                     indent=2
                 )
             )
+
+            print("\n--- RUTA LANGGRAPH ---")
+            print(
+                f"🔀 Ruta seleccionada: "
+                f"{graph_result['route']}"
+            )
+
+            print("\n--- CONTENIDO GENERADO ---")
+            print(graph_result["content"])
 
             print("\n--- MÉTRICAS ---")
             print(
