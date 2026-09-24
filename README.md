@@ -60,13 +60,13 @@ backend confirme la configuración de Docker Compose y los perfiles de conexión
 | Rol | Responsable |
 | --- | --- |
 | Project Management | Gabriela Correa |
-| Backend (Java) | Bryan Naragio, Roberto Borja, Andrea Jaramillo, Alexandra Estupiñan |
+| Backend (Java) | Bryan Naragio, Roberto Borja, Alexandra Estupiñan |
+| Backend (Python) | Andrea Jaramillo |
 | Machine Learning / prompt engineering | Oscar Cruz |
 | Data Science | Saul Mendoza |
 | Marketing / copywriting / tono de voz | Uziel Green |
 | Frontend | Camilo Moroch |
 
-_Andrea (Backend) está apoyando la documentación del proyecto durante esta fase inicial._
 
 ## Estado del proyecto
 
