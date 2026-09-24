@@ -87,5 +87,12 @@ Desktop.ini
 .streamlit/config.toml
 !.streamlit/config.example.toml
 
+# Descartar llaves y wallets de OCI
+*.pem
+*.sso
+*.wallet
+Wallet_*
+wallet/
+
 # Linux
 *~
