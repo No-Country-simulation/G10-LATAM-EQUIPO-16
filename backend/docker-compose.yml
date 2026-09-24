@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine # Versión ligera y optimizada de PostgreSQL
+    container_name: communitylab-db
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persistencia local de los datos
+    restart: unless-stopped
+    healthcheck:
+      # Evita que Spring Boot falle al intentar conectar antes de que la BD esté lista
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
