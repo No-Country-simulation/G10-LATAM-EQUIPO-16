@@ -1,6 +1,6 @@
 package com.nocountry.communitylab.model.entity;
 
-import com.nocountry.communitylab.model.enums.EstadoInteraccion;
+import com.nocountry.communitylab.model.enums.InteractionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class InteraccionCruda {
+public class InteractionEntity {
     @Id
     private UUID id;
 
@@ -28,16 +28,16 @@ public class InteraccionCruda {
     @Column(name = "periodo_referencia")
     private String referencePeriod;
 
-    private String autor;
-    private String canal;
-    private String tipo;
+    private String author;
+    private String channel;
+    private String type;
 
     @Column(columnDefinition = "TEXT")
     private String text;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoInteraccion status;
+    private InteractionStatus status;
 
     @Column(name = "ruta_oci")
     private String ociObjectRoute;
@@ -55,7 +55,7 @@ public class InteraccionCruda {
 
     //filtro conservador
 
-    public boolean esTrivialmenteVacia() {
+    public boolean isTriviallyEmpty() {
         if (this.text == null || this.text.isBlank()) {
             return true;
         }
@@ -63,20 +63,20 @@ public class InteraccionCruda {
         return !this.text.matches(".*[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ].*");
     }
 
-    public void marcarComoDescartada() {
-        this.status = EstadoInteraccion.DESCARTADO;
+    public void markAsDiscarded() {
+        this.status = InteractionStatus.DISCARDED;
     }
 
-    public void marcarComoProcesando() {
-        this.status = EstadoInteraccion.PROCESANDO;
+    public void markAsProcessing() {
+        this.status = InteractionStatus.PROCESSING;
     }
 
-    public void marcarComoProcesada(String rutaOci) {
-        this.status = EstadoInteraccion.PROCESADO;
+    public void markAsProcessed(String rutaOci) {
+        this.status = InteractionStatus.PROCESSED;
         this.ociObjectRoute = rutaOci;
     }
 
-    public void marcarComoError() {
-        this.status = EstadoInteraccion.ERROR;
+    public void markAsError() {
+        this.status = InteractionStatus.ERROR;
     }
 }
