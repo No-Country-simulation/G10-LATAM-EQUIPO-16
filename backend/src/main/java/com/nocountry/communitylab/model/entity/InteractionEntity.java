@@ -20,6 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class InteractionEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "fuente_comunidad")
