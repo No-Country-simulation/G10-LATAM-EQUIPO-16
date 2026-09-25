@@ -1,7 +1,7 @@
 package com.nocountry.communitylab.repository;
 
-import com.nocountry.communitylab.model.entity.InteraccionCruda;
-import com.nocountry.communitylab.model.enums.EstadoInteraccion;
+import com.nocountry.communitylab.model.entity.InteractionEntity;
+import com.nocountry.communitylab.model.enums.InteractionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface InteraccionCrudaRepository extends JpaRepository<InteraccionCruda, UUID> {
-    List<InteraccionCruda> findByStatus(EstadoInteraccion status);
+public interface InteractionRepository extends JpaRepository<InteractionEntity, UUID> {
+    List<InteractionEntity> findByStatus(InteractionStatus status);
 }

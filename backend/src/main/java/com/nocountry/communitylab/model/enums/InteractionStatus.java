@@ -1,9 +1,9 @@
 package com.nocountry.communitylab.model.enums;
 
-public enum EstadoInteraccion {
-    PENDIENTE,
-    PROCESANDO,
-    PROCESADO,
+public enum InteractionStatus {
+    PENDING,
+    PROCESSING,
+    PROCESSED,
     ERROR,
-    DESCARTADO
+    DISCARDED
 }
