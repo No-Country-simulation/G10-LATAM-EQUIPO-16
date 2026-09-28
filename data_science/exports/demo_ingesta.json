@@ -1,0 +1,60 @@
+{
+  "origen_comunidad": "StackExchange_ES_EN",
+  "periodo_referencia": "2026-09-28T02:27:09.507131+00:00",
+  "interacciones": [
+    {
+      "autor": "gbianchi",
+      "canal": "es.stackoverflow",
+      "tipo": "pregunta_tecnica",
+      "texto": "no entiendo algo.. las sentencias se ejecutan, como van a tener un alcance?"
+    },
+    {
+      "autor": "Jared McCarthy",
+      "canal": "es.stackoverflow",
+      "tipo": "testimonio",
+      "texto": "@MarcePuente edite la pregunta original (esta), porque estuve haciendo mas despues de la pregunta. Entonces, uno de los docentes me dio un feedback y que era lo que se esperaba, que es lo siguiente: Lo que metés al array (todasTareas) es un string pegado  no un objeto { id, texto, fecha, completado }. Esto es lo que estás resolviendo ahorita mismo y es el paso pendiente más urgente, porque todo lo demás depende de esto.. Ya edite la pregunta, cuando puedas revisa y dime si debo tocar la variable todasTareas y hacerlo un dic {} o como podria hacerlo, gracias!"
+    },
+    {
+      "autor": "Jared McCarthy",
+      "canal": "es.stackoverflow",
+      "tipo": "logro",
+      "texto": "Ya hice la pregunta de nuevo @Marce, cuando tenga tiempo y si quieres puedes revisarla, te lo agradezco! (Error en funcion y addEventListener en JS (Seguimiento de pregunta))[es.stackoverflow.com/questions/636317/…"
+    },
+    {
+      "autor": "Marce Puente",
+      "canal": "es.stackoverflow",
+      "tipo": "otro",
+      "texto": "No tienes nada que agradecer, y no te quedes con dudas, pregunta, y estaremos felices de poder ayudarte! :)"
+    },
+    {
+      "autor": "Coarse Rosinflower",
+      "canal": "stackoverflow",
+      "tipo": "pregunta_tecnica",
+      "texto": "How would one do this before text-box?"
+    },
+    {
+      "autor": "Joe1036",
+      "canal": "stackoverflow",
+      "tipo": "testimonio",
+      "texto": "Yes, it is my problem."
+    },
+    {
+      "autor": "Aaqibhafeez Khan",
+      "canal": "stackoverflow",
+      "tipo": "logro",
+      "texto": "That makes sense. I was treating PENDING as safe to retry, but you're right that it doesn't tell me whether the provider call never happened or succeeded just before the crash.    Using a deterministic identifier/tag derived from the idempotency key gives me a way to recover the ambiguous case without relying on provider-side idempotency.    I hadn't considered recovering PENDING through lookup/adoption rather than immediately retrying the create request. Thanks, this addresses the failure window I was mainly concerned about."
+    },
+    {
+      "autor": "Akira Patafio",
+      "canal": "stackoverflow",
+      "tipo": "otro",
+      "texto": "cool posting one more"
+    },
+    {
+      "autor": "Scrooge McDuck",
+      "canal": "stackoverflow",
+      "tipo": "otro",
+      "texto": "@ScroogeMcDuck I imagine what"
+    }
+  ]
+}

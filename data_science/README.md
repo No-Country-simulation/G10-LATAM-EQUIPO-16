@@ -6,10 +6,26 @@ Entrega de Data Science, Semana 1. Responsable: Saul Mendoza.
 Cada sitio aporta 2,500 preguntas y 2,500 comentarios: Stack Overflow en español y Stack Overflow en inglés.
 No se generaron mensajes sintéticos, no se tradujeron textos y no se entrenó ningún modelo en esta entrega.
 
+
+## Prueba pequeña de ingesta (sin descargar los ZIP)
+
+Backend puede usar directamente [exports/demo_ingesta.json](exports/demo_ingesta.json),
+con **9 mensajes reales**, y consultar su procedencia en
+[exports/demo_fuentes.jsonl](exports/demo_fuentes.jsonl).
+Para probar el LLM usar este demo o un subconjunto pequeño de `ingesta.json`;
+**no enviar los 10,000 mensajes completos**, para evitar agotar la cuota.
+Las etiquetas siguen siendo automáticas provisionales, no un gold set humano.
+
 ## Empezar
 
-Descargar y extraer `CommunityLab_Dataset.zip`. El ZIP contiene la carpeta `CommunityLab_Dataset/` completa.
+Descargar [el dataset](https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/releases/download/dataset-v1.0/CommunityLab_Dataset.zip) y [las fuentes originales](https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/releases/download/dataset-v1.0/StackExchange_Fuentes.zip) y extraer ambos en la misma carpeta.
+El primero contiene CSV/JSON, etiquetas y scripts; el segundo contiene las respuestas originales de la API.
+Ambos se combinan bajo `CommunityLab_Dataset/`. Los ZIP se distribuyen como assets del [Release dataset-v1.0](https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/releases/tag/dataset-v1.0), fuera del historial Git. El Release incluye sus hashes SHA-256.
 Los scripts usan Python 3.10+ y solamente la biblioteca estándar.
+
+Resultado de esta captura: 5,000 comentarios anotados, cero pendientes; 4,624 pasan los filtros de calidad
+para un futuro baseline sobre etiquetas automáticas. Hay 160 citas de evidencia no literales, marcadas para revisión.
+Los 5,000 sentimientos de las preguntas se dejan nulos, sin asignarles neutralidad por defecto.
 
 ```bash
 cd CommunityLab_Dataset
@@ -29,7 +45,7 @@ python scripts/validate_dataset.py
 | `exports/revision_humana.jsonl` | Muestra estratificada con campos vacíos para que el equipo revise las etiquetas |
 | `reports/quality_report.json` | Conteos exactos de etiquetas, pendientes, duplicados, idiomas y consumo registrado |
 | `reports/validation.json` | Resultado de comprobaciones reproducibles |
-| `data/raw/` | Respuestas originales de Stack Exchange con URL y fecha de descarga |
+| `data/raw/` (ZIP de fuentes) | Respuestas originales de Stack Exchange con URL y fecha de descarga |
 | `data/annotations/` | Anotaciones persistidas de Gemini y consumo por lote |
 | `MANIFEST.sha256.json` | Integridad de los archivos del paquete |
 
