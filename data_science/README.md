@@ -8,8 +8,14 @@ No se generaron mensajes sintéticos, no se tradujeron textos y no se entrenó n
 
 ## Empezar
 
-Descargar y extraer `CommunityLab_Dataset.zip`. El ZIP contiene la carpeta `CommunityLab_Dataset/` completa.
+Descargar [el dataset](CommunityLab_Dataset.zip) y [las fuentes originales](StackExchange_Fuentes.zip) y extraer ambos en la misma carpeta.
+El primero contiene CSV/JSON, etiquetas y scripts; el segundo contiene las respuestas originales de la API.
+Ambos se combinan bajo `CommunityLab_Dataset/`. Se separan para facilitar la descarga y revisión en GitHub.
 Los scripts usan Python 3.10+ y solamente la biblioteca estándar.
+
+Resultado de esta captura: 5,000 comentarios anotados, cero pendientes; 4,624 pasan los filtros de calidad
+para un futuro baseline sobre etiquetas automáticas. Hay 160 citas de evidencia no literales, marcadas para revisión.
+Los 5,000 sentimientos de las preguntas se dejan nulos, sin asignarles neutralidad por defecto.
 
 ```bash
 cd CommunityLab_Dataset
@@ -29,7 +35,7 @@ python scripts/validate_dataset.py
 | `exports/revision_humana.jsonl` | Muestra estratificada con campos vacíos para que el equipo revise las etiquetas |
 | `reports/quality_report.json` | Conteos exactos de etiquetas, pendientes, duplicados, idiomas y consumo registrado |
 | `reports/validation.json` | Resultado de comprobaciones reproducibles |
-| `data/raw/` | Respuestas originales de Stack Exchange con URL y fecha de descarga |
+| `data/raw/` (ZIP de fuentes) | Respuestas originales de Stack Exchange con URL y fecha de descarga |
 | `data/annotations/` | Anotaciones persistidas de Gemini y consumo por lote |
 | `MANIFEST.sha256.json` | Integridad de los archivos del paquete |
 
