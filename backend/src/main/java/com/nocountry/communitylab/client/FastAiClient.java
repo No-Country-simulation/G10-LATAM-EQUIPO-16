@@ -3,7 +3,7 @@ package com.nocountry.communitylab.client;
 
 
 import com.nocountry.communitylab.model.dto.FastAiAnalysisResult;
-import com.nocountry.communitylab.model.entity.InteraccionCruda;
+import com.nocountry.communitylab.model.entity.InteractionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +37,7 @@ public class FastAiClient {
      * @return resultado del analisis (real o mock si el servicio no esta disponible)
      */
 
-    public FastAiAnalysisResult analyzeBatch(List<InteraccionCruda> interactions) {
+    public FastAiAnalysisResult analyzeBatch(List<InteractionEntity> interactions) {
         try {
             log.info("Sending {} interactions to AI service", interactions.size());
             FastAiAnalysisResult result = restClient.post()
