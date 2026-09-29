@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from google import genai
 from pydantic import ValidationError
 
-from models import AnalysisResult
+from models import AnalysisResult, BatchAnalysisResult
 from loaders import load_csv
 from graph import graph
 
@@ -60,7 +60,7 @@ def call_gemini(prompt: str):
             model=MODEL_NAME,
             input=prompt,
             generation_config={
-                "max_output_tokens": 400,
+                "max_output_tokens": 2000,
                 "thinking_level": "minimal",
             }
         )
@@ -157,7 +157,134 @@ def analyze_text(text: str):
 
     return analysis, metrics
 
+def analyze_batch_texts(interactions: list[dict]):
+    """Analiza varias interacciones en una sola llamada a Gemini."""
 
+    batch_data = [
+        {
+            "id": interaction["id"],
+            "texto": interaction["texto"],
+        }
+        for interaction in interactions
+    ]
+
+    prompt = f"""
+Analiza las siguientes interacciones de una comunidad digital.
+
+Debes analizar TODAS las interacciones recibidas y conservar exactamente
+el mismo ID de cada una.
+
+Para cada interacción devuelve:
+
+- id
+- sentimiento: positivo, neutro o negativo
+- tema: tema principal de la interacción
+- tipo: testimonio, pregunta_tecnica, feedback, logro u otro
+- relevancia: alta, media o baja
+- insight: conclusión breve y útil sobre la interacción
+
+Devuelve únicamente JSON válido con esta estructura:
+
+{{
+  "results": [
+    {{
+      "id": "MSG-001",
+      "sentimiento": "positivo",
+      "tema": "tema detectado",
+      "tipo": "feedback",
+      "relevancia": "alta",
+      "insight": "..."
+    }}
+  ]
+}}
+
+INTERACCIONES:
+
+{json.dumps(batch_data, ensure_ascii=False)}
+"""
+
+    print(
+        f"🤖 Analizando lote de {len(interactions)} "
+        f"interacciones con {MODEL_NAME}..."
+    )
+
+    response, elapsed_time = call_gemini(prompt)
+
+    usage = getattr(response, "usage", None)
+
+    metrics = {
+        "time_seconds": elapsed_time,
+        "input_tokens": (
+            getattr(usage, "total_input_tokens", None)
+            if usage
+            else None
+        ),
+        "output_tokens": (
+            getattr(usage, "total_output_tokens", None)
+            if usage
+            else None
+        ),
+        "thought_tokens": (
+            getattr(usage, "total_thought_tokens", None)
+            if usage
+            else None
+        ),
+        "total_tokens": (
+            getattr(usage, "total_tokens", None)
+            if usage
+            else None
+        ),
+    }
+
+    print("\n--- RESPUESTA RAW GEMINI ---")
+    print(repr(response.output_text))
+    print("--- FIN RESPUESTA RAW ---\n")
+
+    try:
+        raw_text = response.output_text.strip()
+
+        if raw_text.startswith("```json"):
+            raw_text = raw_text[7:]
+
+        if raw_text.startswith("```"):
+            raw_text = raw_text[3:]
+
+        if raw_text.endswith("```"):
+            raw_text = raw_text[:-3]
+
+        raw_text = raw_text.strip()
+
+        data = json.loads(raw_text)
+        batch_result = BatchAnalysisResult(**data)
+
+    except (json.JSONDecodeError, ValidationError) as error:
+        raise RuntimeError(
+            "Gemini devolvió un lote con formato inválido."
+        ) from error
+
+    expected_ids = {
+        interaction["id"]
+        for interaction in interactions
+    }
+
+    returned_ids = {
+        result.id
+        for result in batch_result.results
+    }
+
+    if expected_ids != returned_ids:
+        raise RuntimeError(
+            "Los IDs devueltos por Gemini no coinciden "
+            "con los IDs enviados."
+        )
+
+    if len(batch_result.results) != len(interactions):
+        raise RuntimeError(
+            "Gemini no devolvió la misma cantidad "
+            "de resultados que recibió."
+        )
+
+    return batch_result, metrics
 
 # ==========================================
 # PRUEBA

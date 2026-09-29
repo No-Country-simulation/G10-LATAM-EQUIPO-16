@@ -87,3 +87,44 @@ Respuesta: ...
     )
 
     return response.text.strip()
+
+def generate_newsletter(
+    client: genai.Client,
+    interaction: Interaction,
+    analysis: AnalysisResult,
+    model: str,
+) -> str:
+    """Genera un destaque breve para newsletter a partir de una interacción analizada."""
+
+    prompt = f"""
+Eres un asistente de marketing para una comunidad educativa de tecnología.
+
+Convierte la siguiente interacción en un destaque breve para el newsletter semanal.
+
+INTERACCIÓN:
+Autor: {interaction.autor}
+Canal: {interaction.canal}
+Mensaje: {interaction.texto}
+
+ANÁLISIS:
+Sentimiento: {analysis.sentimiento}
+Tema: {analysis.tema}
+Tipo: {analysis.tipo}
+Relevancia: {analysis.relevancia}
+Insight: {analysis.insight}
+
+INSTRUCCIONES:
+- Escribe en español.
+- Resume el hecho de forma clara, breve y atractiva.
+- Mantén un tono profesional y humano.
+- No inventes información que no aparezca en la interacción.
+- Máximo 80 palabras.
+- Devuelve únicamente el texto del destaque.
+"""
+
+    response = client.models.generate_content(
+        model=model,
+        contents=prompt,
+    )
+
+    return response.text.strip()

@@ -38,3 +38,11 @@ class AnalysisResult(BaseModel):
     ]
 
     insight: str
+    
+
+class BatchAnalysisItem(AnalysisResult):
+    id: str
+
+
+class BatchAnalysisResult(BaseModel):
+    results: list[BatchAnalysisItem]

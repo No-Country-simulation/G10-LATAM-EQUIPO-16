@@ -1,7 +1,7 @@
 from typing import TypedDict
 from langgraph.graph import END, START, StateGraph
 from models import AnalysisResult, Interaction
-from generators import generate_faq, generate_linkedin
+from generators import generate_faq, generate_linkedin, generate_newsletter
 from google import genai
 
 
@@ -26,6 +26,12 @@ def decide_route(state: GraphState) -> str:
 
     if analysis_type == "pregunta_tecnica":
         return "faq"
+
+    if (
+        analysis_type == "feedback"
+        and state["analysis"].relevancia == "alta"
+    ):
+        return "newsletter"
 
     return "general"
 
@@ -59,6 +65,20 @@ def faq_node(state: GraphState) -> dict:
             "content": content,
     }
 
+def newsletter_node(state: GraphState) -> dict:
+    """Genera un destaque para el newsletter semanal."""
+
+    content = generate_newsletter(
+        client=state["client"],
+        interaction=state["interaction"],
+        analysis=state["analysis"],
+        model=state["model"],
+    )
+
+    return {
+        "route": "newsletter",
+        "content": content,
+    }
 
 def general_node(state: GraphState) -> dict:
     """Procesa interacciones que no requieren una ruta específica."""
@@ -74,6 +94,7 @@ def build_graph():
 
     builder.add_node("linkedin", linkedin_node)
     builder.add_node("faq", faq_node)
+    builder.add_node("newsletter", newsletter_node)
     builder.add_node("general", general_node)
 
     builder.add_conditional_edges(
@@ -82,12 +103,14 @@ def build_graph():
         {
             "linkedin": "linkedin",
             "faq": "faq",
+            "newsletter": "newsletter",
             "general": "general",
         },
     )
 
     builder.add_edge("linkedin", END)
     builder.add_edge("faq", END)
+    builder.add_edge("newsletter", END)
     builder.add_edge("general", END)
 
     return builder.compile()
