@@ -94,7 +94,7 @@ public class CommunityProcessService {
     // helpers
 
     private List<InteractionEntity> toEntities(CommunityProcessRequestDto request) {
-        return request.getInteractions().stream().map(dto -> InteractionEntity.builder().id(UUID.randomUUID()).communitySource(request.getCommunitySource()).referencePeriod(request.getReferencePeriod()).author(dto.getAuthor()).channel(dto.getChannel()).type(dto.getType()).text(dto.getText()).receivedAt(LocalDateTime.now()).build()).collect(Collectors.toList());
+        return request.getInteractions().stream().map(dto -> InteractionEntity.builder().communitySource(request.getCommunitySource()).referencePeriod(request.getReferencePeriod()).author(dto.getAuthor()).channel(dto.getChannel()).type(dto.getType()).text(dto.getText()).receivedAt(LocalDateTime.now()).build()).collect(Collectors.toList());
     }
 
     private CommunityProcessResponseDto buildEmptyResponse(List<InteractionEntity> saved) {

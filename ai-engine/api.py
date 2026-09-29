@@ -7,6 +7,8 @@ from analyzer import (
     analyze_batch_texts,
     analyze_text,
     client,
+    TransientAIError,
+    PermanentAIError,
 )
 
 from graph import graph
@@ -75,9 +77,9 @@ def analyze_batch(batch: BatchRequest):
     results = []
 
     assets = {
-        "post_linkedin": [],
-        "destaque_newsletter_semanal": [],
-        "sugerencia_contenido_faq": [],
+        "post_linkedin": None,
+        "destaque_newsletter_semanal": None,
+        "sugerencia_contenido_faq": None,
     }
 
     batch_input = [
@@ -92,9 +94,15 @@ def analyze_batch(batch: BatchRequest):
        batch_analysis, batch_metrics = analyze_batch_texts(
            batch_input
        )
-    except RuntimeError as error:
+    except TransientAIError as error:
         raise HTTPException(
             status_code=503,
+            detail=str(error),
+        ) from error
+
+    except PermanentAIError as error:
+        raise HTTPException(
+            status_code=500,
             detail=str(error),
         ) from error
 
@@ -122,28 +130,26 @@ def analyze_batch(batch: BatchRequest):
             content = graph_result["content"]
 
             if route == "linkedin" and content:
-                assets["post_linkedin"].append(
-                    {
-                        "id_interaccion": interaction.id,
-                        "contenido": content,
-                    }
-                )
+                assets["post_linkedin"] = {
+                    "titulo": analysis.tema,
+                    "copy": content, 
+                    "canal_recomendado": "LinkedIn",
+                    "potencial_engagement": analysis.relevancia,
+                }
 
             elif route == "newsletter" and content:
-                assets["destaque_newsletter_semanal"].append(
-                    {
-                        "id_interaccion": interaction.id,
-                        "contenido": content,
-                    }
-                )
+                assets["destaque_newsletter_semanal"] = {
+                    "seccion": analysis.tema,
+                    "titular": analysis.insight,
+                    "resumen": content,
+                }
 
             elif route == "faq" and content:
-                assets["sugerencia_contenido_faq"].append(
-                    {
-                        "id_interaccion": interaction.id,
-                        "contenido": content,
+                assets["sugerencia_contenido_faq"] = {
+                        "tema": analysis.tema,
+                        "origen": interaction.canal,
+                        "status": "BORRADOR",
                     }
-                )
 
             results.append(
                 {

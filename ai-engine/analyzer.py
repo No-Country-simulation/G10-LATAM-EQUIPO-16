@@ -11,6 +11,16 @@ from loaders import load_csv
 from graph import graph
 
 
+class TransientAIError(RuntimeError):
+    """Error temporal del proveedor de IA; el backend puede reintentar."""
+    pass
+
+
+class PermanentAIError(RuntimeError):
+    """Error no transitorio; reintentar la misma solicitud no debería ayudar."""
+    pass
+
+
 # ==========================================
 # CONFIGURACIÓN
 # ==========================================
@@ -74,7 +84,7 @@ def call_gemini(prompt: str):
             or "quota exceeded" in error_message
             or "too_many_requests" in error_message
         ):
-            raise RuntimeError(
+            raise TransientAIError(
                 "Gemini alcanzó el límite de solicitudes. "
                 "No se realizarán reintentos automáticos."
             ) from error
@@ -84,12 +94,12 @@ def call_gemini(prompt: str):
             or "unavailable" in error_message
             or "high demand" in error_message
         ):
-            raise RuntimeError(
+            raise TransientAIError(
                 "Gemini está temporalmente saturado. "
                 "Inténtalo nuevamente más tarde."
             ) from error
 
-        raise RuntimeError(
+        raise PermanentAIError(
             f"Error al consultar Gemini después de "
             f"{elapsed_time:.2f} segundos."
         ) from error
@@ -151,7 +161,7 @@ def analyze_text(text: str):
         analysis = AnalysisResult(**data)
 
     except (json.JSONDecodeError, ValidationError) as error:
-        raise RuntimeError(
+        raise PermanentAIError(
             "Gemini devolvió una respuesta con formato inválido."
         ) from error
 
@@ -258,7 +268,7 @@ INTERACCIONES:
         batch_result = BatchAnalysisResult(**data)
 
     except (json.JSONDecodeError, ValidationError) as error:
-        raise RuntimeError(
+        raise PermanentAIError(
             "Gemini devolvió un lote con formato inválido."
         ) from error
 
@@ -273,13 +283,13 @@ INTERACCIONES:
     }
 
     if expected_ids != returned_ids:
-        raise RuntimeError(
+        raise PermanentAIError(
             "Los IDs devueltos por Gemini no coinciden "
             "con los IDs enviados."
         )
 
     if len(batch_result.results) != len(interactions):
-        raise RuntimeError(
+        raise PermanentAIError(
             "Gemini no devolvió la misma cantidad "
             "de resultados que recibió."
         )

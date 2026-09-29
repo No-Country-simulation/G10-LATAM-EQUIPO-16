@@ -115,9 +115,13 @@ Insight: {analysis.insight}
 
 INSTRUCCIONES:
 - Escribe en español.
-- Resume el hecho de forma clara, breve y atractiva.
-- Mantén un tono profesional y humano.
-- No inventes información que no aparezca en la interacción.
+- Resume únicamente los hechos expresados en la interacción.
+- Mantén un tono profesional, neutral y humano.
+- No inventes información que no aparezca explícitamente en la interacción.
+- No afirmes que la organización tomó, está tomando o tomará acciones, medidas o decisiones si eso no aparece explícitamente en la interacción.
+- No inventes compromisos, soluciones, mejoras, avances, estados de trabajo ni promesas de la organización.
+- No conviertas una sugerencia, queja o dificultad del usuario en una acción confirmada de la organización.
+- Puedes reformular el mensaje para hacerlo más claro, pero sin agregar hechos nuevos.
 - Máximo 80 palabras.
 - Devuelve únicamente el texto del destaque.
 """
