@@ -5,13 +5,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
+import org.junit.jupiter.api.condition.EnabledIf;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.jpa.hibernate.ddl-auto=none")
 @ActiveProfiles("oracle")
+@EnabledIf("hayCredencialesOracle")
 public class OciDatabaseTest {
+
+    static boolean hayCredencialesOracle() {
+        return System.getenv("ORACLE_DB_URL") != null
+                || Files.exists(Path.of(".env"))
+                || Files.exists(Path.of("../.env"))
+                || Files.exists(Path.of("backend/.env"));
+    }
 
     private final DataSource dataSource;
 
