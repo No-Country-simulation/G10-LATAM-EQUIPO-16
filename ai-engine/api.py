@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+﻿from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from analyzer import (
@@ -132,8 +132,12 @@ def analyze_batch(batch: BatchRequest):
                 assets["post_linkedin"] = {
                     "titulo": analysis.tema,
                     "copy": content, 
-                    "canal_recomendado": "LinkedIn",
-                    "potencial_engagement": analysis.relevancia,
+                    "canal_recomendado": "LinkedIn Oficial",
+                    "potencial_engagement": {
+                        "alta": "Alto",
+                        "media": "Medio",
+                        "baja": "Bajo",
+                    }.get(analysis.relevancia, "Medio"),
                 }
 
             elif route == "newsletter" and content:
