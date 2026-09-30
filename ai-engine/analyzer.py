@@ -246,10 +246,6 @@ INTERACCIONES:
         ),
     }
 
-    print("\n--- RESPUESTA RAW GEMINI ---")
-    print(repr(response.output_text))
-    print("--- FIN RESPUESTA RAW ---\n")
-
     try:
         raw_text = response.output_text.strip()
 

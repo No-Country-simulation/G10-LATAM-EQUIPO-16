@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
-import traceback
 
 from analyzer import (
     MODEL_NAME,
@@ -162,12 +161,6 @@ def analyze_batch(batch: BatchRequest):
             )
 
         except Exception as error:
-            traceback.print_exc()
-
-            print(
-                f"❌ Error procesando {interaction.id}: "
-                f"{type(error).__name__}: {error}"
-            )
 
             results.append(
                 {
