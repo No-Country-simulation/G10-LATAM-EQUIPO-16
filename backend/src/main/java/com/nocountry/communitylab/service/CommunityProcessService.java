@@ -66,7 +66,11 @@ public class CommunityProcessService {
         // 6. Llamar a la IA
 
         try {
-            FastAiAnalysisResult aiResult = fastAiClient.analyzeBatch(validInteractions);
+            FastAiAnalysisResult aiResult = fastAiClient.analyzeBatch(
+                    validInteractions,
+                    request.getCommunitySource(),
+                    request.getReferencePeriod()
+            );
 
             // 7. Simular almacenamiento en OCI (por ahora)
             String ociRoute = "oci://community-bucket/batch_" + UUID.randomUUID() + ".json";

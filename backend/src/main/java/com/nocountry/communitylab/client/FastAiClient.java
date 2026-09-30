@@ -2,6 +2,8 @@ package com.nocountry.communitylab.client;
 
 
 
+import com.nocountry.communitylab.model.dto.AiBatchRequestDto;
+import com.nocountry.communitylab.model.dto.AiInteractionDto;
 import com.nocountry.communitylab.model.dto.FastAiAnalysisResult;
 import com.nocountry.communitylab.model.entity.InteractionEntity;
 import org.slf4j.Logger;
@@ -11,12 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Cliente HTTP hacia el servicio Python de IA (FastAPI / LangChain).
- * Mientras el equipo de IA termina el servicio, este cliente retorna un mock
- * de respaldo si la llamada HTTP falla.
- */
 @Component
 public class FastAiClient {
 
@@ -30,19 +28,31 @@ public class FastAiClient {
                 .build();
         log.info("FastAiClient initialized with base URL: {}", baseUrl);
     }
-    /**
-     * EnvIa el lote de interacciones al servicio python y devuelve el analisis consolidado.
-     *
-     * @param interactions lista de interacciones validas (no descartadas)
-     * @return resultado del analisis (real o mock si el servicio no esta disponible)
-     */
 
-    public FastAiAnalysisResult analyzeBatch(List<InteractionEntity> interactions) {
+    public FastAiAnalysisResult analyzeBatch(List<InteractionEntity> interactions, String communitySource, String referencePeriod) {
         try {
+            // Convertir entidades a DTO de IA
+            List<AiInteractionDto> aiInteractions = interactions.stream()
+                    .map(i -> AiInteractionDto.builder()
+                            .id(i.getId().toString())
+                            .author(i.getAuthor())
+                            .channel(i.getChannel())
+                            .type(i.getType())
+                            .text(i.getText())
+                            .build())
+                    .collect(Collectors.toList());
+
+            AiBatchRequestDto request = AiBatchRequestDto.builder()
+                    .communitySource(communitySource)
+                    .referencePeriod(referencePeriod)
+                    .interactions(aiInteractions)
+                    .build();
+
             log.info("Sending {} interactions to AI service", interactions.size());
+
             FastAiAnalysisResult result = restClient.post()
-                    .uri("/api/v1/analyze")
-                    .body(interactions)
+                    .uri("/api/v1/analyze-batch")
+                    .body(request)
                     .retrieve()
                     .body(FastAiAnalysisResult.class);
 
