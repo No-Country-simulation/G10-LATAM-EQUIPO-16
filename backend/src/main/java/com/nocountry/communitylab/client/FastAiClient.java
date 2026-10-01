@@ -8,7 +8,6 @@ import com.nocountry.communitylab.model.dto.FastAiAnalysisResult;
 import com.nocountry.communitylab.model.entity.InteractionEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -22,11 +21,10 @@ public class FastAiClient {
 
     private final RestClient restClient;
 
-    public FastAiClient(@Value("${ai.service.base-url:http://localhost:8000}") String baseUrl) {
-        this.restClient = RestClient.builder()
-                .baseUrl(baseUrl)
-                .build();
-        log.info("FastAiClient initialized with base URL: {}", baseUrl);
+    public FastAiClient(RestClient fastAiRestClient) {
+        this.restClient = fastAiRestClient;
+
+        log.info("FastAiClient initialized with injected RestClient");
     }
 
     public FastAiAnalysisResult analyzeBatch(List<InteractionEntity> interactions, String communitySource, String referencePeriod) {
