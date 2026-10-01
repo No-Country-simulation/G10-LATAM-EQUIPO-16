@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "records_verified": 10000,
+  "source_text_fidelity": true,
+  "unique_ids": true,
+  "thread_split_overlap": 0,
+  "exact_normalized_text_split_overlap": 0,
+  "ingestion_json_csv_roundtrip": true,
+  "annotation_provenance_checked": true
+}
