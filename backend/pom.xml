@@ -59,6 +59,24 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+		<!-- Driver JDBC de Oracle para OCI -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+		<!-- Soporte para Wallet y Certificados SSL/PKI de Oracle -->
+        <dependency>
+            <groupId>com.oracle.database.security</groupId>
+            <artifactId>oraclepki</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+		<!-- Dependencia Estándar de Pruebas (JUnit 5 + Spring Test Context) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
