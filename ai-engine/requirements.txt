@@ -1,4 +1,8 @@
-langchain
-fastapi
-uvicorn
-python-dotenv
+﻿google-genai==2.24.0
+python-dotenv==1.2.3
+pydantic==2.13.5
+langgraph==1.2.11
+langchain-core==1.6.3
+langchain-google-genai==4.4.0
+fastapi==0.141.1
+uvicorn==0.53.0
