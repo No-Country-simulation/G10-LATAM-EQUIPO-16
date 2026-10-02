@@ -112,7 +112,7 @@ def analyze_batch(batch: BatchRequest):
 
     for interaction in batch.interacciones:
         try:
-            analysis = analysis_by_id[interaction.id]   
+            analysis = analysis_by_id[interaction.id]  
 
             graph_result = graph.invoke(
                 {
@@ -165,6 +165,21 @@ def analyze_batch(batch: BatchRequest):
             )
 
         except Exception as error:
+
+            error_message = str(error).lower()
+
+            if (
+                "429" in error_message
+                or "quota exceeded" in error_message
+                or "too_many_requests" in error_message
+                or "503" in error_message
+                or "unavailable" in error_message
+                or "high demand" in error_message
+            ):
+                raise HTTPException(
+                    status_code=503,
+                    detail="Gemini está temporalmente no disponible.",
+                ) from error
 
             results.append(
                 {
