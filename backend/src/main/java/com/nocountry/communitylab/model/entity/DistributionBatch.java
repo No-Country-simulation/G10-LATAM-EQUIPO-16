@@ -11,14 +11,23 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * lote de distribucion - paquete generado a partir de
+ * Representa un lote de distribución: el paquete de activos generado a partir de
  * un conjunto de interacciones y almacenado en OCI Object Storage.
  *
- *  - Agrupa N interacciones (relación 1:N con InteractionEntity, queda pendiente)
- *  - Registra la ubicación del paquete JSON en OCI
- *  - Guarda metadatos del lote (origen_comunidad, periodo_referencia)
+ * <p>Reglas de negocio:
+ * <ul>
+ *   <li>Todos los lotes nacen en {@link BatchStatus#PENDING}.</li>
+ *   <li>{@link #ociObjectRoute} almacena únicamente el <b>nombre/ruta interna</b> del objeto
+ *       (ej. {@code activos/2026-semana-04/paquete.json}), no una URL completa con {@code oci://}.
+ *       Permanece nulo hasta que la subida a OCI se confirme.</li>
+ *   <li>Regla del pipeline: {@code PROCESSED ⇒ ociObjectRoute != null}.</li>
+ * </ul>
+ *
+ * <p>Relación con otras entidades:
+ * <ul>
+ *   <li>1:N con {@code InteractionEntity} (pendiente de integrar en el service).</li>
+ * </ul>
  */
-
 @Entity
 @Table(name = "lote_distribucion")
 @EntityListeners(AuditingEntityListener.class)
@@ -39,18 +48,30 @@ public class DistributionBatch {
     @Column(name = "periodo_referencia", nullable = false)
     private String referencePeriod;
 
+    /**
+     * Nombre del bucket OCI donde se almacenan los activos.
+     * Se mantiene por trazabilidad histórica y potencial soporte multibucket.
+     */
     @Column(name = "oci_bucket")
     private String ociBucket;
 
+    /**
+     * Namespace del bucket OCI (requerido por el SDK de OCI).
+     */
+    @Column(name = "oci_namespace")
+    private String ociNamespace;
+
+    /**
+     * Nombre/ruta interna del objeto en OCI (ej. {@code activos/2026-semana-04/paquete.json}).
+     * NO incluye el protocolo {@code oci://}. Nulo hasta que la subida se confirme.
+     */
     @Column(name = "ruta_oci")
     private String ociObjectRoute;
 
-    @Column(name = "oci_status")
-    private String ociStorageStatus;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BatchStatus status;
+    @Builder.Default
+    private BatchStatus status = BatchStatus.PENDING;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
