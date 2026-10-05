@@ -1,7 +1,7 @@
 package com.nocountry.communitylab.client;
 
 
-
+import com.nocountry.communitylab.exception.AiServiceException;
 import com.nocountry.communitylab.model.dto.AiBatchRequestDto;
 import com.nocountry.communitylab.model.dto.AiInteractionDto;
 import com.nocountry.communitylab.model.dto.FastAiAnalysisResult;
@@ -23,48 +23,33 @@ public class FastAiClient {
 
     public FastAiClient(RestClient fastAiRestClient) {
         this.restClient = fastAiRestClient;
-
         log.info("FastAiClient initialized with injected RestClient");
     }
 
     public FastAiAnalysisResult analyzeBatch(List<InteractionEntity> interactions, String communitySource, String referencePeriod) {
         try {
             // Convertir entidades a DTO de IA
-            List<AiInteractionDto> aiInteractions = interactions.stream()
-                    .map(i -> AiInteractionDto.builder()
-                            .id(i.getId().toString())
-                            .author(i.getAuthor())
-                            .channel(i.getChannel())
-                            .type(i.getType())
-                            .text(i.getText())
-                            .build())
-                    .collect(Collectors.toList());
+            List<AiInteractionDto> aiInteractions = interactions.stream().map(i -> AiInteractionDto.builder().id(i.getId().toString()).author(i.getAuthor()).channel(i.getChannel()).type(i.getType()).text(i.getText()).build()).collect(Collectors.toList());
 
-            AiBatchRequestDto request = AiBatchRequestDto.builder()
-                    .communitySource(communitySource)
-                    .referencePeriod(referencePeriod)
-                    .interactions(aiInteractions)
-                    .build();
+            AiBatchRequestDto request = AiBatchRequestDto.builder().communitySource(communitySource).referencePeriod(referencePeriod).interactions(aiInteractions).build();
 
             log.info("Sending {} interactions to AI service", interactions.size());
 
-            FastAiAnalysisResult result = restClient.post()
-                    .uri("/api/v1/analyze-batch")
-                    .body(request)
-                    .retrieve()
-                    .body(FastAiAnalysisResult.class);
+            FastAiAnalysisResult result = restClient.post().uri("/api/v1/analyze-batch").body(request).retrieve().body(FastAiAnalysisResult.class);
 
             if (result == null) {
-                log.warn("AI service returned null response, falling back to mock");
-                return FastAiAnalysisResult.mock();
+                log.error("AI service returned null response");
+                throw new AiServiceException("AI service returned null response");
             }
 
             return result;
 
+        } catch (AiServiceException ex) {
+            throw ex;
+
         } catch (Exception ex) {
-            log.warn("AI service call failed ({}), falling back to mock: {}",
-                    ex.getClass().getSimpleName(), ex.getMessage());
-            return FastAiAnalysisResult.mock();
+            log.error("AI service call failed: {}", ex.getMessage(), ex);
+            throw new AiServiceException("AI service call failed: " + ex.getMessage(), ex);
         }
     }
 }

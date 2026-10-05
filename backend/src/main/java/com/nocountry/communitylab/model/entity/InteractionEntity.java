@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "interaccion_cruda")
@@ -19,6 +20,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InteractionEntity {
+
+    /** Regex para detectar al menos una letra o número unicode en el texto. */
+    private static final Pattern MEANINGFUL_CHAR = Pattern.compile("[\\p{L}\\p{N}]");
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -38,7 +43,8 @@ public class InteractionEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private InteractionStatus status;
+    @Builder.Default
+    private InteractionStatus status = InteractionStatus.PENDING;
 
     @Column(name = "ruta_oci")
     private String ociObjectRoute;
@@ -60,8 +66,7 @@ public class InteractionEntity {
         if (this.text == null || this.text.isBlank()) {
             return true;
         }
-        // Descartamos si no contiene letras ni números (solo emojis, espacios o caracteres especiales)
-        return !this.text.matches(".*[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ].*");
+        return !MEANINGFUL_CHAR.matcher(this.text).find();
     }
 
     public void markAsDiscarded() {
@@ -72,9 +77,9 @@ public class InteractionEntity {
         this.status = InteractionStatus.PROCESSING;
     }
 
-    public void markAsProcessed(String rutaOci) {
+    public void markAsProcessed(String ociObjectRoute) {
         this.status = InteractionStatus.PROCESSED;
-        this.ociObjectRoute = rutaOci;
+        this.ociObjectRoute = ociObjectRoute;
     }
 
     public void markAsError() {

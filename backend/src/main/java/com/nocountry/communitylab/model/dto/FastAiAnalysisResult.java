@@ -24,15 +24,4 @@ public class FastAiAnalysisResult {
     @JsonProperty("interacciones_analizadas")
     private List<InteractionAnalysisDto> analyzedInteractions;
 
-    /**
-     * mock de respaldo mientras el servicio python no esta disponible.
-     */
-    public static FastAiAnalysisResult mock() {
-        return FastAiAnalysisResult.builder()
-                .status("mock_processed")
-                .summary(null)
-                .distributionAssets(null)
-                .analyzedInteractions(null)
-                .build();
-    }
 }
