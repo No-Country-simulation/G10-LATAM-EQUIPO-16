@@ -1,6 +1,7 @@
 package com.nocountry.communitylab.service;
 
 import com.nocountry.communitylab.client.FastAiClient;
+import com.nocountry.communitylab.exception.AiServiceException;
 import com.nocountry.communitylab.model.dto.*;
 import com.nocountry.communitylab.model.entity.InteractionEntity;
 import com.nocountry.communitylab.model.enums.InteractionStatus;
@@ -36,10 +37,11 @@ public class CommunityProcessService {
     public CommunityProcessResponseDto process(CommunityProcessRequestDto request) {
         log.info("Processing batch: source={}, period={}, interactions={}", request.getCommunitySource(), request.getReferencePeriod(), request.getInteractions() != null ? request.getInteractions().size() : 0);
 
+
         // 1. Convertir DTOs a entidades de dominio
         List<InteractionEntity> interactions = toEntities(request);
 
-        // 2. Aplicar filtro conservador (marcar DESCARTADO si es trivialmente vacía)
+        // 2. Aplicar filtro conservador
         for (InteractionEntity interaction : interactions) {
             if (interaction.isTriviallyEmpty()) {
                 interaction.markAsDiscarded();
@@ -64,14 +66,27 @@ public class CommunityProcessService {
         interactionRepository.saveAll(validInteractions);
 
         // 6. Llamar a la IA
-
+        FastAiAnalysisResult aiResult;
         try {
-            FastAiAnalysisResult aiResult = fastAiClient.analyzeBatch(
+            aiResult = fastAiClient.analyzeBatch(
                     validInteractions,
                     request.getCommunitySource(),
                     request.getReferencePeriod()
             );
-
+        } catch (AiServiceException ex) {
+            // Fallo del servicio IA: marcar interacciones como ERROR y PROPAGAR para que el
+            // GlobalExceptionHandler responda 503 y el frontend pueda reintentar.
+            log.error("AI service failed, marking interactions as ERROR: {}", ex.getMessage(), ex);
+            validInteractions.forEach(InteractionEntity::markAsError);
+            interactionRepository.saveAll(validInteractions);
+            throw ex;
+        } catch (Exception ex) {
+            // Otros errores inesperados (BD, NPE, etc.): se reportan como 200 + status "error"
+            log.error("Unexpected error processing batch, marking interactions as ERROR", ex);
+            validInteractions.forEach(InteractionEntity::markAsError);
+            interactionRepository.saveAll(validInteractions);
+            return buildErrorResponse(saved);
+        }
             // 7. Simular almacenamiento en OCI (por ahora)
             String ociRoute = "oci://community-bucket/batch_" + UUID.randomUUID() + ".json";
 
@@ -83,20 +98,9 @@ public class CommunityProcessService {
 
             // 9. Construir respuesta
             return buildResponse(request, saved, aiResult, ociRoute);
-
-        } catch (Exception ex) {
-            log.error("Error processing batch, marking interactions as ERROR", ex);
-
-            validInteractions.forEach(InteractionEntity::markAsError);
-            interactionRepository.saveAll(validInteractions);
-
-            return buildErrorResponse(saved);
-        }
     }
 
-
     // helpers
-
     private List<InteractionEntity> toEntities(CommunityProcessRequestDto request) {
         return request.getInteractions().stream().map(dto -> InteractionEntity.builder().id(UUID.randomUUID()).communitySource(request.getCommunitySource()).referencePeriod(request.getReferencePeriod()).author(dto.getAuthor()).channel(dto.getChannel()).type(dto.getType()).text(dto.getText()).receivedAt(LocalDateTime.now()).build()).collect(Collectors.toList());
     }
@@ -111,7 +115,7 @@ public class CommunityProcessService {
 
     private CommunityProcessResponseDto buildResponse(CommunityProcessRequestDto request, List<InteractionEntity> saved, FastAiAnalysisResult aiResult, String ociRoute) {
         // Si la IA devuelve mock, construimos una respuesta con valores por defecto
-        CommunitySummaryDto summary = aiResult.getSummary() != null ? aiResult.getSummary() : CommunitySummaryDto.builder().totalProcessedInteractions(saved.size()).dominantSentiment("PENDING de análisis IA").mainTopics(List.of()).build();
+        CommunitySummaryDto summary = aiResult.getSummary() != null ? aiResult.getSummary() : CommunitySummaryDto.builder().totalProcessedInteractions(saved.size()).dominantSentiment("Pendiente de análisis IA").mainTopics(List.of()).build();
 
         DistributionAssetsDto assets = aiResult.getDistributionAssets() != null ? aiResult.getDistributionAssets() : DistributionAssetsDto.builder().build();
 

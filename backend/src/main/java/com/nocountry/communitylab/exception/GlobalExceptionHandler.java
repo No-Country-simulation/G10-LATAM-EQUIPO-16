@@ -1,5 +1,7 @@
 package com.nocountry.communitylab.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * Maneja errores de validacion de @Valid (@NotBlank, @Size).
@@ -39,21 +43,25 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AiServiceException.class)
     public ResponseEntity<Map<String, Object>> handleAiServiceException(AiServiceException ex) {
+        log.error("AI service unavailable: {}", ex.getMessage(), ex);
+
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", LocalDateTime.now());
         response.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
         response.put("error", "Servicio de IA no disponible");
-        response.put("mensaje", ex.getMessage());
+        response.put("mensaje", "No se pudo procesar el lote. Intente nuevamente más tarde.");
 
         return new ResponseEntity<>(response, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        log.error("Unexpected error", ex);
+
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", LocalDateTime.now());
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        response.put("message", "Error interno en la aplicación: " + ex.getMessage());
+        response.put("message", "Error interno. Contacte al administrador.");
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }

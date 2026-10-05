@@ -1,6 +1,7 @@
 package com.nocountry.communitylab.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -25,5 +26,6 @@ public class CommunityProcessRequestDto {
     @JsonProperty("interacciones")
     @NotEmpty(message = "El lote debe tener al menos una interacción")
     @Size(min = 1, max = 10, message = "El lote debe tener entre 1 y 10 interacciones")
+    @Valid
     private List<InteractionRequestDto> interactions;
 }
