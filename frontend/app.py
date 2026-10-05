@@ -53,13 +53,27 @@ if st.button("Procesar"):
         }
 
         try:
-            r = requests.post(url_backend, json=payload, timeout=15)
+            r = requests.post(url_backend, json=payload, timeout=(10, 90))
             st.write("status:", r.status_code)
-            st.markdown("### esto devolvió el backend")
-            try:
-                st.json(r.json())
-            except:
-                st.text(r.text)
+            st.markdown("### Resultados del análisis")
+            st.info("Nota: El sentimiento y tema por mensaje provienen actualmente de los datos cargados. El 'relevance score' está pendiente de integración con el backend/ML y se muestra como N/A.")
+
+            presentation_data = []
+            for item in interacciones:
+                presentation_data.append({
+                    "Mensaje": item.get("mensaje", "N/A"),
+                    "Sentimiento": item.get("sentimiento", "N/A"),
+                    "Tema": item.get("tema_principal", "N/A"),
+                    "Relevancia": "N/A"
+                })
+
+            st.dataframe(pd.DataFrame(presentation_data))
+
+            with st.expander("Respuesta del backend"):
+                try:
+                    st.json(r.json())
+                except:
+                    st.text(r.text)
         except requests.exceptions.ConnectionError:
             st.error("no conecta al backend, seguro no esta corriendo en local")
         except Exception as e:
