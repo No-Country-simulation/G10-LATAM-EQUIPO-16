@@ -1,0 +1,6 @@
+# Preservar bytes exactos para los hashes SHA256, también en Windows.
+* -text
+*.onnx binary
+*.bin binary
+*.pt binary
+deploy_mlp_int8/tokenizer.json binary

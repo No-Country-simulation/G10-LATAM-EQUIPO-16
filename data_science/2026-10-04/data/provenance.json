@@ -1,0 +1,18 @@
+{
+  "source": "corpus_original.jsonl",
+  "source_sha256": "d39cde081d51d3d4f5be40af9f32b0c13629dc6c4a5b7aedde9c9f3a76ea5662",
+  "faq": "titulo Stack Exchange=1; comentario=0",
+  "sentiment_mapping": {
+    "negativo": 0,
+    "neutro": 0.5,
+    "positivo": 1,
+    "mixto": 0.5
+  },
+  "no_quality_filter": true,
+  "pending": 1,
+  "rows": {
+    "es_faq": 9782,
+    "es_logro": 4782,
+    "sentimiento": 4781
+  }
+}

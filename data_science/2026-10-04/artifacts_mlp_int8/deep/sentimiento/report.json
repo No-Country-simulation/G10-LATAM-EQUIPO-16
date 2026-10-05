@@ -1,0 +1,194 @@
+{
+  "task": "sentimiento",
+  "architecture": "deep",
+  "dims": [
+    384,
+    64,
+    32,
+    16,
+    4,
+    1
+  ],
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "cuda_checks": true,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.6813910757341692,
+      "validation_loss": 0.6804324984550476
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.6694916063739408,
+      "validation_loss": 0.6638191938400269
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.6517330119686742,
+      "validation_loss": 0.6557291746139526
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.6469386969843218,
+      "validation_loss": 0.653784990310669
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.6452970312487695,
+      "validation_loss": 0.6527921557426453
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.6414559272027784,
+      "validation_loss": 0.6520400047302246
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.6412762249669721,
+      "validation_loss": 0.6513764262199402
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.6415370971925797,
+      "validation_loss": 0.6514064073562622
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.6415618946475368,
+      "validation_loss": 0.6511666774749756
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.6382414141008931,
+      "validation_loss": 0.6535614728927612
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.6417658540510363,
+      "validation_loss": 0.6525310277938843
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.6405793140011449,
+      "validation_loss": 0.6571279764175415
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.6421545205577728,
+      "validation_loss": 0.6511618494987488
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.6418414923452562,
+      "validation_loss": 0.6520923376083374
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.6392858528321789,
+      "validation_loss": 0.6551302671432495
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.6360298356702251,
+      "validation_loss": 0.6535122394561768
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.6356112880091513,
+      "validation_loss": 0.6517280340194702
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.6373120584795552,
+      "validation_loss": 0.6523876190185547
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.6332435761728594,
+      "validation_loss": 0.6540838479995728
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.6375054755518513,
+      "validation_loss": 0.6569344401359558
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.6378198092983615,
+      "validation_loss": 0.6531038880348206
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.6344746293560151,
+      "validation_loss": 0.6530411839485168
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.6343101090000521,
+      "validation_loss": 0.6534540057182312
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.6352864023177854,
+      "validation_loss": 0.65352463722229
+    }
+  ],
+  "parameters": 27321,
+  "epochs": 24,
+  "train_seconds": 1.6414441999950213,
+  "peak_training_vram_mb": 19.045888,
+  "threshold": [
+    0.3999999999999999,
+    0.6500000000000001
+  ],
+  "fp32_parity_error": 5.960464477539063e-08,
+  "validation": {
+    "f1_macro": 0.643530261396463,
+    "mae": 0.09218735247850418,
+    "confusion_matrix": [
+      [
+        11,
+        27,
+        0
+      ],
+      [
+        29,
+        374,
+        16
+      ],
+      [
+        2,
+        10,
+        43
+      ]
+    ],
+    "support": 512
+  },
+  "test": {
+    "f1_macro": 0.6683159545601995,
+    "mae": 0.0913723036646843,
+    "confusion_matrix": [
+      [
+        12,
+        11,
+        0
+      ],
+      [
+        20,
+        310,
+        16
+      ],
+      [
+        2,
+        14,
+        33
+      ]
+    ],
+    "support": 418
+  },
+  "encoder": "fine-tuned v2 frozen INT8",
+  "data_cache": "embeddings_int8.npy",
+  "precision": "encoder INT8 + MLP MatMul INT8",
+  "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+  "seed": 42
+}

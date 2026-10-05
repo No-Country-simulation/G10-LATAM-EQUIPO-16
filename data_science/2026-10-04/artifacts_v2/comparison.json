@@ -1,0 +1,374 @@
+{
+  "linear": {
+    "training": {
+      "kind": "linear",
+      "hardware": {
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "vram_gib": 15.99169921875,
+        "cpu_threads": 16,
+        "torch_cpu_threads": 8,
+        "ram_gib": 63.66278076171875,
+        "torch": "2.5.1+cu121",
+        "cuda": "12.1",
+        "cpu": "AMD Ryzen 7 8700F"
+      },
+      "epochs": 4,
+      "batch_size": 128,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": {
+            "es_faq": 0.20296856971277344,
+            "es_logro": 0.28127989893959415,
+            "sentimiento": 0.6843330725546806
+          },
+          "validation_loss": {
+            "es_faq": 0.05826683506673696,
+            "es_logro": 0.13062025979161263,
+            "sentimiento": 0.6671732068061829
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": {
+            "es_faq": 0.048160612966204365,
+            "es_logro": 0.12503605732514012,
+            "sentimiento": 0.6642614006996155
+          },
+          "validation_loss": {
+            "es_faq": 0.05857734366567159,
+            "es_logro": 0.1122600045055151,
+            "sentimiento": 0.6612756550312042
+          }
+        },
+        {
+          "epoch": 3,
+          "train_loss": {
+            "es_faq": 0.025212827570466025,
+            "es_logro": 0.07600888381561925,
+            "sentimiento": 0.644977331161499
+          },
+          "validation_loss": {
+            "es_faq": 0.05353883796808671,
+            "es_logro": 0.10226688161492348,
+            "sentimiento": 0.6806737631559372
+          }
+        },
+        {
+          "epoch": 4,
+          "train_loss": {
+            "es_faq": 0.012212821786599834,
+            "es_logro": 0.040582393281041615,
+            "sentimiento": 0.6411224353697992
+          },
+          "validation_loss": {
+            "es_faq": 0.05521227712838017,
+            "es_logro": 0.1223577968776226,
+            "sentimiento": 0.6626437306404114
+          }
+        }
+      ],
+      "validation": {
+        "es_faq": {
+          "f1": 0.9862142099681867,
+          "f1_macro": 0.9867157578847816,
+          "support": 980,
+          "positives": 468,
+          "threshold": 0.7500000000000001
+        },
+        "es_logro": {
+          "f1": 0.4583333333333333,
+          "f1_macro": 0.7158469945355191,
+          "support": 512,
+          "positives": 22,
+          "threshold": 0.2
+        },
+        "sentimiento": {
+          "f1_macro": 0.4894407652685799,
+          "mae": 0.11633701925165951,
+          "confusion_matrix": [
+            [
+              0,
+              38,
+              0
+            ],
+            [
+              0,
+              416,
+              3
+            ],
+            [
+              0,
+              33,
+              22
+            ]
+          ],
+          "classes": [
+            "negativo",
+            "central_neutro_mixto",
+            "positivo"
+          ],
+          "support": 512
+        }
+      },
+      "train_seconds": 49.90418499999214,
+      "train_peak_ram_mb": 2427.515625,
+      "train_peak_vram_mb": 4672.865234375,
+      "head_parameters": {
+        "es_faq": 385,
+        "es_logro": 385,
+        "sentimiento": 385
+      },
+      "dataset_sha256": {
+        "es_faq": "02c0b83b8de7a2a5d3f87b4b62a76d88269a8083681b92bfa10b691cb7e2a218",
+        "es_logro": "d9c695c2aecf03e95a3a5fe509e291b36701e03451c54c59a2b11ad1cde05441",
+        "sentimiento": "42ff55cee4b7e01ddc72f6366aeabeb4e389cdf5d0f98a6a70dfc2a63c63ed6e"
+      }
+    },
+    "evaluation": {
+      "kind": "linear",
+      "test": {
+        "es_faq": {
+          "f1": 0.9775967413441955,
+          "f1_macro": 0.9754488561089909,
+          "support": 903,
+          "positives": 485,
+          "threshold": 0.7500000000000001
+        },
+        "es_logro": {
+          "f1": 0.4,
+          "f1_macro": 0.6868913857677903,
+          "support": 418,
+          "positives": 18,
+          "threshold": 0.2
+        },
+        "sentimiento": {
+          "f1_macro": 0.5000320451195283,
+          "mae": 0.11681480556013482,
+          "confusion_matrix": [
+            [
+              0,
+              23,
+              0
+            ],
+            [
+              0,
+              345,
+              1
+            ],
+            [
+              0,
+              29,
+              20
+            ]
+          ],
+          "classes": [
+            "negativo",
+            "central_neutro_mixto",
+            "positivo"
+          ],
+          "support": 418
+        }
+      },
+      "benchmark": {
+        "ram_rss_peak_mb": 1414.91015625,
+        "vram_peak_allocated_mb": 461.84716796875,
+        "latency_p50_ms": 5.295650007610675,
+        "latency_p95_ms": 6.252509991463739,
+        "messages_per_second": 183.79548708046374,
+        "samples": 100,
+        "batch_size": 1
+      }
+    }
+  },
+  "mlp": {
+    "training": {
+      "kind": "mlp",
+      "hardware": {
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "vram_gib": 15.99169921875,
+        "cpu_threads": 16,
+        "torch_cpu_threads": 8,
+        "ram_gib": 63.66278076171875,
+        "torch": "2.5.1+cu121",
+        "cuda": "12.1",
+        "cpu": "AMD Ryzen 7 8700F"
+      },
+      "epochs": 4,
+      "batch_size": 128,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": {
+            "es_faq": 0.4526410420094767,
+            "es_logro": 0.28630513769965016,
+            "sentimiento": 0.697964366405241
+          },
+          "validation_loss": {
+            "es_faq": 0.15408100181696366,
+            "es_logro": 0.16010060533881187,
+            "sentimiento": 0.694713905453682
+          }
+        },
+        {
+          "epoch": 2,
+          "train_loss": {
+            "es_faq": 0.09507259378029455,
+            "es_logro": 0.15906138958469515,
+            "sentimiento": 0.6919393693247149
+          },
+          "validation_loss": {
+            "es_faq": 0.06791764290965334,
+            "es_logro": 0.10900774784386158,
+            "sentimiento": 0.6840747743844986
+          }
+        },
+        {
+          "epoch": 3,
+          "train_loss": {
+            "es_faq": 0.0428895216525322,
+            "es_logro": 0.10250757057820598,
+            "sentimiento": 0.6724429572782209
+          },
+          "validation_loss": {
+            "es_faq": 0.050135938473501986,
+            "es_logro": 0.12146616168320179,
+            "sentimiento": 0.7101947516202927
+          }
+        },
+        {
+          "epoch": 4,
+          "train_loss": {
+            "es_faq": 0.022029783933483545,
+            "es_logro": 0.08427610380514976,
+            "sentimiento": 0.659111415186236
+          },
+          "validation_loss": {
+            "es_faq": 0.050386974793307636,
+            "es_logro": 0.09807206876575947,
+            "sentimiento": 0.6606014966964722
+          }
+        }
+      ],
+      "validation": {
+        "es_faq": {
+          "f1": 0.9851063829787234,
+          "f1_macro": 0.9856904463913225,
+          "support": 980,
+          "positives": 468,
+          "threshold": 0.5
+        },
+        "es_logro": {
+          "f1": 0.6,
+          "f1_macro": 0.7897330595482546,
+          "support": 512,
+          "positives": 22,
+          "threshold": 0.25
+        },
+        "sentimiento": {
+          "f1_macro": 0.5504051648113945,
+          "mae": 0.10447827912867069,
+          "confusion_matrix": [
+            [
+              0,
+              38,
+              0
+            ],
+            [
+              0,
+              401,
+              18
+            ],
+            [
+              0,
+              13,
+              42
+            ]
+          ],
+          "classes": [
+            "negativo",
+            "central_neutro_mixto",
+            "positivo"
+          ],
+          "support": 512
+        }
+      },
+      "train_seconds": 49.06095089999144,
+      "train_peak_ram_mb": 2723.609375,
+      "train_peak_vram_mb": 4671.7294921875,
+      "head_parameters": {
+        "es_faq": 6233,
+        "es_logro": 6233,
+        "sentimiento": 6233
+      },
+      "dataset_sha256": {
+        "es_faq": "02c0b83b8de7a2a5d3f87b4b62a76d88269a8083681b92bfa10b691cb7e2a218",
+        "es_logro": "d9c695c2aecf03e95a3a5fe509e291b36701e03451c54c59a2b11ad1cde05441",
+        "sentimiento": "42ff55cee4b7e01ddc72f6366aeabeb4e389cdf5d0f98a6a70dfc2a63c63ed6e"
+      }
+    },
+    "evaluation": {
+      "kind": "mlp",
+      "test": {
+        "es_faq": {
+          "f1": 0.9805128205128205,
+          "f1_macro": 0.9788244006294549,
+          "support": 903,
+          "positives": 485,
+          "threshold": 0.5
+        },
+        "es_logro": {
+          "f1": 0.43902439024390244,
+          "f1_macro": 0.7050467863169197,
+          "support": 418,
+          "positives": 18,
+          "threshold": 0.25
+        },
+        "sentimiento": {
+          "f1_macro": 0.5217440511558159,
+          "mae": 0.10384832693344098,
+          "confusion_matrix": [
+            [
+              0,
+              23,
+              0
+            ],
+            [
+              0,
+              328,
+              18
+            ],
+            [
+              0,
+              17,
+              32
+            ]
+          ],
+          "classes": [
+            "negativo",
+            "central_neutro_mixto",
+            "positivo"
+          ],
+          "support": 418
+        }
+      },
+      "benchmark": {
+        "ram_rss_peak_mb": 1424.453125,
+        "vram_peak_allocated_mb": 461.9189453125,
+        "latency_p50_ms": 5.502799998794217,
+        "latency_p95_ms": 6.390035001095384,
+        "messages_per_second": 177.60424660883905,
+        "samples": 100,
+        "batch_size": 1
+      }
+    }
+  },
+  "recommendation": {
+    "kind": "mlp",
+    "validation_macro_f1": {
+      "linear": 0.7306678392296267,
+      "mlp": 0.7752762235836572
+    },
+    "rule": "MLP si mejora macro F1 medio de validation >0.01; en otro caso lineal. Test no selecciona. Una semilla."
+  }
+}
