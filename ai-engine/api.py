@@ -10,7 +10,7 @@ from analyzer import (
     PermanentAIError,
 )
 
-from graph import graph
+from graph import decide_route, graph
 
 
 app = FastAPI(
@@ -110,10 +110,69 @@ def analyze_batch(batch: BatchRequest):
         for item in batch_analysis.results
     }
 
+    relevance_score = {
+        "alta": 3,
+        "media": 2,
+        "baja": 1,
+    }
+
+    candidates = {}
+
     for interaction in batch.interacciones:
         try:
-            analysis = analysis_by_id[interaction.id]  
+            analysis = analysis_by_id[interaction.id]
 
+            route = decide_route(
+                {
+                    "interaction": interaction,
+                    "analysis": analysis,
+                    "route": "",
+                    "content": "",
+                    "client": client,
+                    "model": MODEL_NAME,
+                }
+            )
+
+            if route in ("linkedin", "newsletter", "faq"):
+                current = candidates.get(route)
+
+                if (
+                    current is None
+                    or relevance_score.get(analysis.relevancia, 0)
+                    > relevance_score.get(
+                        current["analysis"].relevancia,
+                        0,
+                    )
+                ):
+                    candidates[route] = {
+                        "interaction": interaction,
+                        "analysis": analysis,
+                    }
+
+            results.append(
+                {
+                    "id": interaction.id,
+                    "status": "processed",
+                    "analysis": analysis.model_dump(),
+                    "route": route,
+                    "content": "",
+                }
+            )
+
+        except Exception as error:
+            results.append(
+                {
+                    "id": interaction.id,
+                    "status": "error",
+                    "error": str(error),
+                }
+            )
+
+    for route, candidate in candidates.items():
+        interaction = candidate["interaction"]
+        analysis = candidate["analysis"]
+
+        try:
             graph_result = graph.invoke(
                 {
                     "interaction": interaction,
@@ -125,13 +184,12 @@ def analyze_batch(batch: BatchRequest):
                 }
             )
 
-            route = graph_result["route"]
             content = graph_result["content"]
 
             if route == "linkedin" and content:
                 assets["post_linkedin"] = {
                     "titulo": analysis.tema,
-                    "copy": content, 
+                    "copy": content,
                     "canal_recomendado": "LinkedIn Oficial",
                     "potencial_engagement": {
                         "alta": "Alto",
@@ -149,23 +207,17 @@ def analyze_batch(batch: BatchRequest):
 
             elif route == "faq" and content:
                 assets["sugerencia_contenido_faq"] = {
-                        "tema": analysis.tema,
-                        "origen": interaction.canal,
-                        "status": "BORRADOR",
-                    }
-
-            results.append(
-                {
-                    "id": interaction.id,
-                    "status": "processed",
-                    "analysis": analysis.model_dump(),
-                    "route": graph_result["route"],
-                    "content": graph_result["content"],
+                    "tema": analysis.tema,
+                    "origen": interaction.canal,
+                    "status": "BORRADOR",
                 }
-            )
+
+            for result in results:
+                if result.get("id") == interaction.id:
+                    result["content"] = content
+                    break
 
         except Exception as error:
-
             error_message = str(error).lower()
 
             if (
@@ -181,13 +233,11 @@ def analyze_batch(batch: BatchRequest):
                     detail="Gemini está temporalmente no disponible.",
                 ) from error
 
-            results.append(
-                {
-                    "id": interaction.id,
-                    "status": "error",
-                    "error": str(error),
-                }
-            )
+            for result in results:
+                if result.get("id") == interaction.id:
+                    result["status"] = "error"
+                    result["error"] = str(error)
+                    break
 
     successful_results = [
         result
