@@ -1,62 +1,59 @@
 package com.nocountry.communitylab.client;
 
-
-
+import com.nocountry.communitylab.exception.AiServiceException;
+import com.nocountry.communitylab.exception.AiServiceUnavailableException;
+import com.nocountry.communitylab.model.dto.CommunityProcessRequestDto;
 import com.nocountry.communitylab.model.dto.FastAiAnalysisResult;
-import com.nocountry.communitylab.model.entity.InteractionEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 
-import java.util.List;
-
-/**
- * Cliente HTTP hacia el servicio Python de IA (FastAPI / LangChain).
- * Mientras el equipo de IA termina el servicio, este cliente retorna un mock
- * de respaldo si la llamada HTTP falla.
- */
+@Slf4j
 @Component
 public class FastAiClient {
 
-    private static final Logger log = LoggerFactory.getLogger(FastAiClient.class);
-
+    private static final String ANALYZE_PATH = "/api/v1/analyze";
     private final RestClient restClient;
 
     public FastAiClient(@Value("${ai.service.base-url:http://localhost:8000}") String baseUrl) {
         this.restClient = RestClient.builder()
                 .baseUrl(baseUrl)
                 .build();
-        log.info("FastAiClient initialized with base URL: {}", baseUrl);
     }
-    /**
-     * EnvIa el lote de interacciones al servicio python y devuelve el analisis consolidado.
-     *
-     * @param interactions lista de interacciones validas (no descartadas)
-     * @return resultado del analisis (real o mock si el servicio no esta disponible)
-     */
 
-    public FastAiAnalysisResult analyzeBatch(List<InteractionEntity> interactions) {
+    // Realiza la petición HTTP real al servicio de Python
+    public FastAiAnalysisResult analyzeBatch(CommunityProcessRequestDto request) throws AiServiceException {
         try {
-            log.info("Sending {} interactions to AI service", interactions.size());
+            log.info("Sending {} interactions to AI service", request.getCommunitySource());
             FastAiAnalysisResult result = restClient.post()
-                    .uri("/api/v1/analyze")
-                    .body(interactions)
+                    .uri(ANALYZE_PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
                     .retrieve()
                     .body(FastAiAnalysisResult.class);
 
-            if (result == null) {
-                log.warn("AI service returned null response, falling back to mock");
-                return FastAiAnalysisResult.mock();
-            }
+        if (result == null) {
+            throw new AiServiceException("AI service returned an empty body");
+        }
+        return result;        
 
-            return result;
-
-        } catch (Exception ex) {
-            log.warn("AI service call failed ({}), falling back to mock: {}",
-                    ex.getClass().getSimpleName(), ex.getMessage());
-            return FastAiAnalysisResult.mock();
+        } catch (ResourceAccessException e) {
+            // Error de red (el servidor está apagado o no hay internet)
+            log.warn("AI service unreachable or timed out: {}", e.getMessage());
+            throw new AiServiceUnavailableException("AI service unreachable or timed out", e);
+        } catch (HttpServerErrorException e) {
+            // El servidor respondió, pero con un error 5xx (ej. 500 Internal Server Error)
+            log.warn("AI service returned HTTP {}", e.getStatusCode().value());
+            throw new AiServiceUnavailableException(
+                    "AI service returned HTTP " + e.getStatusCode().value(), e);
+        } catch (Exception e) {
+            // Cualquier otro error desconocido
+            log.error("Non-retryable error calling AI service", e);
+            throw new AiServiceException("Unexpected error calling AI service: " + e.getMessage(), e);
         }
     }
 }
