@@ -15,7 +15,6 @@ import tools.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,7 +36,8 @@ public class CommunityProcessService {
 
     public CommunityProcessService(InteractionRepository interactionRepository,
         ResilientAiClient resilientAiClient,DistributionBatchRepository batchRepository, OciObjectStorage ociObjectStorage,
-        ObjectMapper objectMapper, TransactionTemplate transactionTemplate, @Value("${oci.bucket:communitylab-bucket}") String ociBucket) {
+        ObjectMapper objectMapper,
+        @Value("${oci.bucket:communitylab-bucket}") String ociBucket) {
         this.interactionRepository = interactionRepository;
         this.resilientAiClient = resilientAiClient;
         this.batchRepository = batchRepository;
@@ -93,15 +93,15 @@ public class CommunityProcessService {
             } catch (Exception e) {
                 // 4. Si fallan los reintentos, marcar todo como ERROR en BD y cortar el proceso
                 log.error("Fallo al procesar lote en la IA tras varios intentos", e);
-                batch.setStatus(BatchStatus.ERROR);
+                batch.setStatus(BatchStatus.PENDING);
                 batchRepository.save(batch);
 
                 entities.stream()
                         .filter(i -> i.getStatus() == InteractionStatus.PROCESSING)
-                        .forEach(InteractionEntity::markAsError);
+                        .forEach(i -> i.setStatus(InteractionStatus.PENDING));
                 interactionRepository.saveAll(entities);
 
-                return CommunityProcessResponseDto.builder().status("ERROR").build();
+                return CommunityProcessResponseDto.builder().status("PENDING").build();
             }
 
             // 5. Si la IA respondió bien, guardar el resultado en OCI Storage
