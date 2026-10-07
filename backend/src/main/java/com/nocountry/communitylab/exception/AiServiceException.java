@@ -5,7 +5,7 @@ package com.nocountry.communitylab.exception;
  * El service correspondiente debe capturarla, marcar las interacciones como ERROR
  * y devolver una respuesta con status "error".
  */
-public class AiServiceException extends  RuntimeException{
+public class AiServiceException extends RuntimeException {
 
     public AiServiceException(String message) {
         super(message);
