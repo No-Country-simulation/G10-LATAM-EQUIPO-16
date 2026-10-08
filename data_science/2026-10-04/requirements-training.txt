@@ -1,0 +1,9 @@
+# Instalar PyTorch CUDA por separado desde el índice oficial que corresponde a tu CUDA.
+-r requirements-serving.txt
+torch>=2.5,<3
+pandas>=2.2,<4
+scikit-learn>=1.5,<2
+onnx>=1.17,<2
+sentence-transformers>=3,<7
+nbclient>=0.10,<1
+ipykernel>=6,<8

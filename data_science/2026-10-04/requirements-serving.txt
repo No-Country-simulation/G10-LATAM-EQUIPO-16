@@ -1,0 +1,5 @@
+# CPU Linux/Windows. Versiones concretas de la medición en artifacts_mlp_int8/memory.json.
+numpy>=2.0,<3
+onnxruntime>=1.20,<2
+tokenizers>=0.20,<0.24
+psutil>=6,<8

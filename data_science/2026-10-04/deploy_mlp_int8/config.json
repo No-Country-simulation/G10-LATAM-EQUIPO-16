@@ -1,0 +1,69 @@
+{
+  "architecture": "deep",
+  "dims": [
+    384,
+    64,
+    32,
+    16,
+    4,
+    1
+  ],
+  "tasks": [
+    "es_faq",
+    "es_logro",
+    "sentimiento"
+  ],
+  "thresholds": {
+    "es_faq": 0.060000000000000005,
+    "es_logro": 0.41000000000000003,
+    "sentimiento": [
+      0.3999999999999999,
+      0.6000000000000001
+    ]
+  },
+  "encoder": "MiniLM multilingual L12 v2, afinado v2 en RTX, congelado en esta comparación",
+  "source_revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "precision": "MatMul/Gather encoder INT8; MatMul cabezas INT8; activaciones ReLU/Sigmoid flotantes",
+  "max_tokens": 128,
+  "max_chars": 8000,
+  "batch": 1,
+  "workers": 1,
+  "process_budget_bytes": 1000000000,
+  "application_target_bytes": 700000000,
+  "sentiment_mapping": {
+    "negativo": 0,
+    "neutro": 0.5,
+    "mixto": 0.5,
+    "positivo": 1
+  },
+  "files": {
+    "encoder.onnx": {
+      "bytes": 377779,
+      "sha256": "b4361def6f007239ead4ff0f25ae0e59acf62b158939c7f9045c0e9610281c55"
+    },
+    "tokenizer.json": {
+      "bytes": 17082833,
+      "sha256": "36bfa87c4a91548b06bfd08a341d87f833cb9750a4cb636cd7c0c0124dbb5813"
+    },
+    "weights-000.bin": {
+      "bytes": 99993216,
+      "sha256": "fd4b800a761410b45cc0a9f35538dea9148048d00be144b2b2883f6e0073348c"
+    },
+    "weights-001.bin": {
+      "bytes": 17694720,
+      "sha256": "ce7147e56057958f396a67aa4f4370d00962f107ff9cd0f3511c1b3b1a061de2"
+    },
+    "heads/es_faq.onnx": {
+      "bytes": 36350,
+      "sha256": "e690dff41d2db43d2f96b95a76be6a5762bda3fa83bc5f7ad41bed5c54905f97"
+    },
+    "heads/es_logro.onnx": {
+      "bytes": 36350,
+      "sha256": "7ee4cd4ce26fb71d05fb36c65d51f6c5e8063982fef96d90b36541153d0cc091"
+    },
+    "heads/sentimiento.onnx": {
+      "bytes": 36350,
+      "sha256": "453fe548001af7cc94e1cf3bfb4d0cd83cd9d592d190d558efc980f5610c75f9"
+    }
+  }
+}

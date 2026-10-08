@@ -1,0 +1,13 @@
+{
+  "original_sha256": "d39cde081d51d3d4f5be40af9f32b0c13629dc6c4a5b7aedde9c9f3a76ea5662",
+  "published_sha256": "fc407dfc9e936c8a25bb7fe9daec5870948f66dec7ca74f1c51cd2bb18f3de81",
+  "redacted_rows": [
+    {
+      "line": 2938,
+      "id": "es.stackoverflow:question:632874",
+      "url": "https://es.stackoverflow.com/questions/632874/github-actions-403-al-hacer-push-desde-workflow-usando-pat"
+    }
+  ],
+  "training_data_unchanged": true,
+  "scope": "Solo copia de publicación del corpus original; sin alterar títulos ni comentarios usados para entrenamiento."
+}

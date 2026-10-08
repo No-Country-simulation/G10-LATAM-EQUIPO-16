@@ -1,0 +1,12 @@
+# Ejemplo de integración en Linux; adaptar usuario y ruta. No se ha desplegado en OCI.
+# El padre conecta JSONL mediante un socket/pipe: stdin de este ejemplo no es una API HTTP.
+[Service]
+Type=simple
+WorkingDirectory=/opt/mlp/2026-10-04
+ExecStart=/opt/mlp/.venv/bin/python /opt/mlp/2026-10-04/serve_jsonl.py
+Environment=OMP_NUM_THREADS=1
+Environment=TOKENIZERS_PARALLELISM=false
+MemoryHigh=600000000
+MemoryMax=700000000
+TasksMax=32
+Restart=no

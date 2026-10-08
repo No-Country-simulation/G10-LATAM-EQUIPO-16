@@ -1,0 +1,30 @@
+{
+  "platform": "Windows-10-10.0.26200-SP0",
+  "cpu": "AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",
+  "batch": 1,
+  "max_tokens": 128,
+  "max_chars": 8000,
+  "requests": 104,
+  "stages_mb": {
+    "before_load": 30.851072,
+    "after_load": 345.976832,
+    "after_inference": 353.697792
+  },
+  "p50_ms": 8.256500004790723,
+  "p95_ms": 30.71431999487686,
+  "example": {
+    "id_mensaje": 123,
+    "es_faq": 0.00041484832763671875,
+    "es_logro": 0.5956413745880127,
+    "sentimiento": 0.9855363368988037
+  },
+  "boundary_checks": 5,
+  "imported_heavy_modules": [],
+  "cold_to_hot_peak_rss_mb": 357.134336,
+  "sampling_ms": 10,
+  "samples": 235,
+  "budget_bytes": 1000000000,
+  "under_1000_mb": true,
+  "under_700_mb": true,
+  "scope": "Proceso Windows local; no incluye SO/API ni comprueba OCI"
+}
