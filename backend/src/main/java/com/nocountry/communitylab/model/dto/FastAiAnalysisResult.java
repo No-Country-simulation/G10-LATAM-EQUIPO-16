@@ -3,6 +3,8 @@ package com.nocountry.communitylab.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -19,14 +21,7 @@ public class FastAiAnalysisResult {
     @JsonProperty("activos_distribucion_generados")
     private DistributionAssetsDto distributionAssets;
 
-    /**
-     * mock de respaldo mientras el servicio python no esta disponible.
-     */
-    public static FastAiAnalysisResult mock() {
-        return FastAiAnalysisResult.builder()
-                .status("mock_processed")
-                .summary(null)
-                .distributionAssets(null)
-                .build();
-    }
+    @JsonProperty("interacciones_analizadas")
+    private List<InteractionAnalysisDto> analyzedInteractions;
+
 }

@@ -3,6 +3,7 @@ package com.nocountry.communitylab.controller;
 import com.nocountry.communitylab.model.dto.CommunityProcessRequestDto;
 import com.nocountry.communitylab.model.dto.CommunityProcessResponseDto;
 import com.nocountry.communitylab.service.CommunityProcessService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class CommunityController {
     //Procesa un lote de interacciones y devuelve el resumen y los activos generados.
     @PostMapping("/process")
     public ResponseEntity<CommunityProcessResponseDto> processCommunityBatch(
-            @RequestBody CommunityProcessRequestDto request) {
+            @Valid @RequestBody CommunityProcessRequestDto request) {
         CommunityProcessResponseDto response = communityProcessService.process(request);
         return ResponseEntity.ok(response);
     }
