@@ -6,18 +6,21 @@ import pandas as pd
 st.set_page_config(page_title="CommunityLab", layout="wide")
 st.title("CommunityLab - Panel MVP")
 
+# Constantes
+MAX_INTERACCIONES = 10
+
 url_backend = "http://localhost:8080/api/v1/community/process"
 
 st.markdown("### Cargar interacciones")
 
-modo = st.radio("Como quieres cargarlas?", ["Subir archivo", "Pegar JSON"])
+modo = st.radio("¿Cómo desea cargarlas?", ["Subir archivo", "Pegar JSON"])
 
 interacciones = None
 origen = st.text_input("Origen comunidad", "Discord_Grupo_ONE_G10")
 periodo = st.text_input("Periodo", "Semana_01")
 
 if modo == "Subir archivo":
-    archivo = st.file_uploader("CSV o JSON", type=["csv", "json"])
+    archivo = st.file_uploader("Archivo CSV o JSON", type=["csv", "json"])
     if archivo:
         if archivo.name.endswith(".json"):
             try:
@@ -39,7 +42,7 @@ if modo == "Subir archivo":
         else:
             try:
                 df = pd.read_csv(archivo)
-                # Replace NaN with None/empty strings
+                # Reemplazar NaN por cadenas vacías
                 df = df.fillna("")
                 interacciones = df.to_dict(orient="records")
             except Exception as e:
@@ -47,37 +50,37 @@ if modo == "Subir archivo":
                 interacciones = None
 
         if interacciones:
-            st.write(f"cargadas {len(interacciones)} interacciones")
+            st.write(f"Se cargaron {len(interacciones)} interacciones")
             st.dataframe(pd.DataFrame(interacciones))
 else:
-    texto = st.text_area("Pega el JSON aqui", height=200)
+    texto = st.text_area("Pegue el JSON aquí", height=200)
     if texto:
         try:
             data = json.loads(texto)
             if isinstance(data, list):
                 interacciones = data
             else:
-                # Try common keys
+                # Intentar claves comunes
                 if isinstance(data, dict):
                     for key in ["interacciones", "data", "items", "mensajes"]:
                         if key in data and isinstance(data[key], list):
                             interacciones = data[key]
                             break
                     if interacciones is None:
-                        # If it's a dict, maybe it's a single item
+                        # Si es un dict, tal vez sea un solo elemento
                         interacciones = [data] if data else []
                 else:
                     interacciones = []
         except (json.JSONDecodeError, ValueError):
-            st.error("ese json no sirve, revisalo")
+            st.error("El JSON proporcionado no es válido. Revise el formato e intente nuevamente.")
             interacciones = None
 
-st.markdown("### Mandar al backend")
-st.caption(f"pegándole a: {url_backend}")
+st.markdown("### Enviar al backend")
+st.caption(f"Enviando a: {url_backend}")
 
 if st.button("Procesar"):
     if not interacciones:
-        st.warning("falta cargar algo primero")
+        st.warning("Debe cargar datos antes de procesar")
     else:
         payload = {
             "origen_comunidad": origen,
@@ -85,13 +88,13 @@ if st.button("Procesar"):
             "interacciones": interacciones
         }
 
-        # Validar límite de 10 interacciones antes de enviar
-        if len(interacciones) > 10:
-            st.error("El backend acepta máximo 10 interacciones por lote. Por favor, reduce el número de interacciones.")
+        # Validar límite de interacciones antes de enviar
+        if len(interacciones) > MAX_INTERACCIONES:
+            st.error(f"El backend acepta máximo {MAX_INTERACCIONES} interacciones por lote. Por favor, reduzca el número de interacciones.")
         else:
             try:
                 r = requests.post(url_backend, json=payload, timeout=(10, 90))
-                st.write("status:", r.status_code)
+                st.write("Código de estado:", r.status_code)
                 if not r.ok:
                     try:
                         error_data = r.json()
@@ -103,7 +106,7 @@ if st.button("Procesar"):
                     try:
                         resp = r.json()
                     except json.JSONDecodeError:
-                        st.error("Respuesta del backend no es JSON válido")
+                        st.error("La respuesta del backend no es JSON válido")
                         st.text(r.text)
                         resp = None
 
@@ -130,14 +133,16 @@ if st.button("Procesar"):
                     with st.expander("Respuesta completa del backend"):
                         try:
                             st.json(resp if resp is not None else r.json())
-                        except:
+                        except ValueError:
                             st.text(r.text)
+            except requests.exceptions.Timeout:
+                st.error("La solicitud tardó demasiado en responder. Intente nuevamente.")
             except requests.exceptions.ConnectionError:
-                st.error("no conecta al backend, seguro no esta corriendo en local")
+                st.error("No fue posible conectarse con el backend. Verifique que el servicio esté disponible.")
             except Exception as e:
-                st.error(f"algo se rompió: {e}")
+                st.error(f"Ocurrió un error al procesar la solicitud: {e}")
 
-with st.expander("ver el payload que se manda"):
+with st.expander("Ver el payload enviado"):
     st.json({
         "origen_comunidad": origen,
         "periodo_referencia": periodo,
