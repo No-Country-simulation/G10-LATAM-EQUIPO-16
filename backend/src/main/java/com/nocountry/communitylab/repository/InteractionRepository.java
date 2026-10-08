@@ -10,5 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface InteractionRepository extends JpaRepository<InteractionEntity, UUID> {
+    // Método para el futuro: Permite buscar interacciones que hayan fallado (ERROR) o estén procesadas.
     List<InteractionEntity> findByStatus(InteractionStatus status);
 }

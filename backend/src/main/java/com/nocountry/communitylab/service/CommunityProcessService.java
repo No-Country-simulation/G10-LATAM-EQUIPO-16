@@ -1,119 +1,135 @@
 package com.nocountry.communitylab.service;
 
-import com.nocountry.communitylab.client.FastAiClient;
+import com.nocountry.communitylab.client.ResilientAiClient;
 import com.nocountry.communitylab.model.dto.*;
+import com.nocountry.communitylab.model.entity.DistributionBatch;
 import com.nocountry.communitylab.model.entity.InteractionEntity;
+import com.nocountry.communitylab.model.enums.BatchStatus;
 import com.nocountry.communitylab.model.enums.InteractionStatus;
+import com.nocountry.communitylab.repository.DistributionBatchRepository;
 import com.nocountry.communitylab.repository.InteractionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nocountry.communitylab.storage.OciObjectStorage;
+import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
-/**
- * Servicio que orquesta el procesamiento de un lote de interacciones de la comunidad.
+/**Servicio que orquesta el procesamiento de un lote de interacciones de la comunidad.
  * Flujo: staging -> filtro conservador -> envio a IA -> almacenamiento OCI -> respuesta.
  */
-
+@Slf4j
 @Service
 public class CommunityProcessService {
 
-    private static final Logger log = LoggerFactory.getLogger(CommunityProcessService.class);
-
     private final InteractionRepository interactionRepository;
-    private final FastAiClient fastAiClient;
+    private final ResilientAiClient resilientAiClient;
+    private final DistributionBatchRepository batchRepository;
+    private final OciObjectStorage ociObjectStorage;
+    private final ObjectMapper objectMapper;
+    private final String ociBucket;
 
-    public CommunityProcessService(InteractionRepository interactionRepository, FastAiClient fastAiClient) {
+    public CommunityProcessService(InteractionRepository interactionRepository,
+        ResilientAiClient resilientAiClient,DistributionBatchRepository batchRepository, OciObjectStorage ociObjectStorage,
+        ObjectMapper objectMapper,
+        @Value("${oci.bucket:communitylab-bucket}") String ociBucket) {
         this.interactionRepository = interactionRepository;
-        this.fastAiClient = fastAiClient;
+        this.resilientAiClient = resilientAiClient;
+        this.batchRepository = batchRepository;
+        this.ociObjectStorage = ociObjectStorage;
+        this.objectMapper = objectMapper;
+        this.ociBucket = ociBucket;
     }
 
+    // @Transactional garantiza que si falla a la mitad, no se guarden datos corruptos
+        @Transactional
+        public CommunityProcessResponseDto process(CommunityProcessRequestDto request) {
+            log.info("Iniciando procesamiento de lote para origen: {}", request.getCommunitySource());
 
-    public CommunityProcessResponseDto process(CommunityProcessRequestDto request) {
-        log.info("Processing batch: source={}, period={}, interactions={}", request.getCommunitySource(), request.getReferencePeriod(), request.getInteractions() != null ? request.getInteractions().size() : 0);
+            // 1. Guardar el lote inicial como "PROCESANDO" en la Base de Datos
+            DistributionBatch batch = DistributionBatch.builder()
+                    .communitySource(request.getCommunitySource())
+                    .referencePeriod(request.getReferencePeriod())
+                    .status(BatchStatus.PROCESSING)
+                    .ociBucket(ociBucket)
+                    .build();
+            batch = batchRepository.save(batch);
 
-        // 1. Convertir DTOs a entidades de dominio
-        List<InteractionEntity> interactions = toEntities(request);
+            // 2. Filtrar interacciones vacías y guardar todo en la Base de Datos
+            List<InteractionEntity> entities = new ArrayList<>();
+            if (request.getInteractions() != null) {
+                for (InteractionRequestDto dto : request.getInteractions()) {
+                    InteractionEntity entity = InteractionEntity.builder()
+                            .communitySource(request.getCommunitySource())
+                            .referencePeriod(request.getReferencePeriod())
+                            .author(dto.getAuthor())
+                            .channel(dto.getChannel())
+                            .type(dto.getType())
+                            .text(dto.getText())
+                            .receivedAt(LocalDateTime.now())
+                            .status(InteractionStatus.PENDING)
+                            .build();
 
-        // 2. Aplicar filtro conservador (marcar DESCARTADO si es trivialmente vacía)
-        for (InteractionEntity interaction : interactions) {
-            if (interaction.isTriviallyEmpty()) {
-                interaction.markAsDiscarded();
-            } else {
-                interaction.setStatus(InteractionStatus.PENDING);
+                    // Usa las reglas de negocio establecidas por el equipo en la Entidad
+                    if (entity.isTriviallyEmpty()) {
+                        entity.markAsDiscarded();
+                    } else {
+                        entity.markAsProcessing();
+                    }
+                    entities.add(entity);
+                }
+                interactionRepository.saveAll(entities);
             }
+
+            FastAiAnalysisResult aiResult;
+            try {
+                // 3. Enviar a la IA usando el cliente con reintentos
+                aiResult = resilientAiClient.analyzeWithRetry(request);
+            } catch (Exception e) {
+                // 4. Si fallan los reintentos, marcar todo como ERROR en BD y cortar el proceso
+                log.error("Fallo al procesar lote en la IA tras varios intentos", e);
+                batch.setStatus(BatchStatus.PENDING);
+                batchRepository.save(batch);
+
+                entities.stream()
+                        .filter(i -> i.getStatus() == InteractionStatus.PROCESSING)
+                        .forEach(i -> i.setStatus(InteractionStatus.PENDING));
+                interactionRepository.saveAll(entities);
+
+                return CommunityProcessResponseDto.builder().status("PENDING").build();
+            }
+
+            // 5. Si la IA respondió bien, guardar el resultado en OCI Storage
+            String objectRoute = "activos/" + batch.getId() + "/paquete.json";
+            try {
+                byte[] content = objectMapper.writeValueAsBytes(aiResult);
+                ociObjectStorage.putObject(ociBucket, objectRoute, content);
+
+                // Actualizar entidades a "PROCESADAS" con la ruta del archivo
+                batch.setOciObjectRoute(objectRoute);
+                batch.setStatus(BatchStatus.PROCESSED);
+                batchRepository.save(batch);
+
+                entities.stream()
+                        .filter(i -> i.getStatus() == InteractionStatus.PROCESSING)
+                        .forEach(i -> i.markAsProcessed(objectRoute));
+                interactionRepository.saveAll(entities);
+            } catch (Exception e) {
+                log.error("Error al persistir resultado en OCI Storage", e);
+                batch.setStatus(BatchStatus.ERROR);
+                batchRepository.save(batch);
+            }
+
+            // 6. Armar la bandeja (DTO) que se le entregará de vuelta al Controlador
+            return CommunityProcessResponseDto.builder()
+                    .status(aiResult.getStatus() != null ? aiResult.getStatus() : "PROCESSED")
+                    .summary(aiResult.getSummary())
+                    .distributionAssets(aiResult.getDistributionAssets())
+                    .build();
         }
-
-        // 3. Guardar todas en BD (staging)
-        List<InteractionEntity> saved = interactionRepository.saveAll(interactions);
-
-        // 4. Filtrar las válidas para enviar a IA
-        List<InteractionEntity> validInteractions = saved.stream().filter(i -> i.getStatus() == InteractionStatus.PENDING).collect(Collectors.toList());
-
-        if (validInteractions.isEmpty()) {
-            log.info("No valid interactions to send to AI (all discarded)");
-            return buildEmptyResponse(saved);
-        }
-
-        // 5. Marcar como PROCESANDO
-        validInteractions.forEach(InteractionEntity::markAsProcessing);
-        interactionRepository.saveAll(validInteractions);
-
-        // 6. Llamar a la IA
-
-        try {
-            FastAiAnalysisResult aiResult = fastAiClient.analyzeBatch(validInteractions);
-
-            // 7. Simular almacenamiento en OCI (por ahora)
-            String ociRoute = "oci://community-bucket/batch_" + UUID.randomUUID() + ".json";
-
-            // 8. Marcar como PROCESADO
-            validInteractions.forEach(i -> i.markAsProcessed(ociRoute));
-            interactionRepository.saveAll(validInteractions);
-
-            log.info("Batch processed successfully: {} interactions -> {}", validInteractions.size(), ociRoute);
-
-            // 9. Construir respuesta
-            return buildResponse(request, saved, aiResult, ociRoute);
-
-        } catch (Exception ex) {
-            log.error("Error processing batch, marking interactions as ERROR", ex);
-
-            validInteractions.forEach(InteractionEntity::markAsError);
-            interactionRepository.saveAll(validInteractions);
-
-            return buildErrorResponse(saved);
-        }
     }
-
-
-    // helpers
-
-    private List<InteractionEntity> toEntities(CommunityProcessRequestDto request) {
-        return request.getInteractions().stream().map(dto -> InteractionEntity.builder().id(UUID.randomUUID()).communitySource(request.getCommunitySource()).referencePeriod(request.getReferencePeriod()).author(dto.getAuthor()).channel(dto.getChannel()).type(dto.getType()).text(dto.getText()).receivedAt(LocalDateTime.now()).build()).collect(Collectors.toList());
-    }
-
-    private CommunityProcessResponseDto buildEmptyResponse(List<InteractionEntity> saved) {
-        return CommunityProcessResponseDto.builder().status("exito").summary(CommunitySummaryDto.builder().totalProcessedInteractions(saved.size()).dominantSentiment("Sin contenido válido").mainTopics(List.of()).build()).distributionAssets(null).build();
-    }
-
-    private CommunityProcessResponseDto buildErrorResponse(List<InteractionEntity> saved) {
-        return CommunityProcessResponseDto.builder().status("error").summary(CommunitySummaryDto.builder().totalProcessedInteractions(saved.size()).dominantSentiment("Error al procesar con IA").mainTopics(List.of()).build()).distributionAssets(null).build();
-    }
-
-    private CommunityProcessResponseDto buildResponse(CommunityProcessRequestDto request, List<InteractionEntity> saved, FastAiAnalysisResult aiResult, String ociRoute) {
-        // Si la IA devuelve mock, construimos una respuesta con valores por defecto
-        CommunitySummaryDto summary = aiResult.getSummary() != null ? aiResult.getSummary() : CommunitySummaryDto.builder().totalProcessedInteractions(saved.size()).dominantSentiment("PENDING de análisis IA").mainTopics(List.of()).build();
-
-        DistributionAssetsDto assets = aiResult.getDistributionAssets() != null ? aiResult.getDistributionAssets() : DistributionAssetsDto.builder().build();
-
-        // Sobrescribir la info de OCI con la ruta real generada
-        assets.setOciStorage(OciStorageInfoDto.builder().bucket("community-bucket").objectRoute(ociRoute).status("guardado_con_exito").build());
-
-        return CommunityProcessResponseDto.builder().status(aiResult.getStatus() != null ? aiResult.getStatus() : "exito").summary(summary).distributionAssets(assets).build();
-    }
-}
