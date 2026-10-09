@@ -2,7 +2,7 @@
 
 ## Motor inteligente de transformación y distribución de contenido para comunidades digitales
 
-![Java](https://img.shields.io/badge/Java-21-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-backend-6DB33F) ![Python](https://img.shields.io/badge/Python-3.12-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-AI%20Engine-009688)
+![Java](https://img.shields.io/badge/Java-21-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-backend-6DB33F) ![Python](https://img.shields.io/badge/Python-3.12%2B-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-AI%20Engine-009688)
 <br>
 ![LangGraph](https://img.shields.io/badge/LangGraph-routing-1C3C3C) ![Gemini](https://img.shields.io/badge/Google-Gemini%20Flash--Lite-4285F4) ![Oracle](https://img.shields.io/badge/Oracle-Autonomous%20DB-F80000) ![Streamlit](https://img.shields.io/badge/Streamlit-UI-FF4B4B) ![Status](https://img.shields.io/badge/status-en%20desarrollo-yellow)
 
@@ -36,8 +36,8 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
-* **Genera el activo de contenido** → con el tono de voz del equipo y anonimización de autores a iniciales. Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar).
-* **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar.
+* **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz y la anonimización de autores están planificadas, aún no integradas). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar).
+* **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar (planificado: los endpoints de curaduría aún no existen).
 
 ## 🏗️ Arquitectura
 
@@ -47,9 +47,9 @@ CommunityLab está dividido en tres servicios:
 | --- | --- | --- |
 | Interfaz | Streamlit | Carga del lote (CSV, JSON o JSON pegado) y visualización de la respuesta |
 | Backend | Java · Spring Boot · Spring Data JPA | Valida, persiste, filtra, orquesta y devuelve los activos |
-| Motor de IA | Python 3.12 · FastAPI · Uvicorn | Expone `/api/v1/analyze-batch` |
+| Motor de IA | Python 3.12+ · FastAPI · Uvicorn | Expone `/api/v1/analyze-batch` |
 | Análisis | Google Gemini Flash-Lite (GenAI SDK) · Pydantic | Análisis estructurado y validado de cada interacción |
-| Enrutamiento | LangGraph · LangChain | Decide qué activo generar según el análisis |
+| Enrutamiento | LangGraph | Decide qué activo generar según el análisis |
 | Base de datos | Oracle Autonomous Database (mTLS con wallet) | Persistencia de interacciones y lotes |
 | Almacenamiento | OCI Object Storage | Guarda los activos generados (simulado por ahora; la subida real está en progreso) |
 
@@ -75,7 +75,7 @@ graph LR
 | `GET /api/v1/assets/pending` | Lista activos pendientes de curaduría | ⏳ En progreso |
 | `PATCH /api/v1/assets/{id}/curate` | Aprueba, edita o rechaza un activo | ⏳ En progreso |
 
-Errores: `400` (cuerpo inválido) y `503` (servicio de IA no disponible). El AI Engine recibe hasta 10 interacciones por lote y conserva el `id` de cada una para trazabilidad.
+Errores: `400` (cuerpo inválido; con más de 10 interacciones se rechaza el lote completo), `503` (servicio de IA no disponible) y `500` (error interno; responde con el campo `message` y no `mensaje`). Si alguna interacción falla, la respuesta llega con `status: "parcial"`. El AI Engine recibe hasta 10 interacciones por lote y usa el `id` de cada una dentro del lote; por ahora el análisis por interacción no se persiste.
 
 ## 🛠️ Instalación
 
@@ -93,7 +93,7 @@ cd G10-LATAM-EQUIPO-16
 ```bash
 cd ai-engine
 python -m venv .venv
-source .venv/bin/activate        # En Windows: .\.venv\Scripts\Activate.ps1
+source .venv/bin/activate        # Windows PowerShell: .\.venv\Scripts\Activate.ps1 (si la política de ejecución lo bloquea: Set-ExecutionPolicy -Scope Process RemoteSigned) | Git Bash: source .venv/Scripts/activate
 ```
 
 1. Instala las dependencias:
@@ -106,7 +106,7 @@ pip install -r requirements.txt
 
    | Variable | Descripción |
    | --- | --- |
-   | `GEMINI_API_KEY` | API key de Gemini |
+   | `GEMINI_API_KEY` | API key de Gemini (obligatoria: el AI Engine no arranca sin ella) |
 
 ### Backend (Java)
 
@@ -182,6 +182,7 @@ G10-LATAM-EQUIPO-16/
 * [x] Entidades, repositorios y endpoint `POST /community/process`
 * [x] AI Engine con Gemini, LangGraph y `/analyze-batch`
 * [x] Integración Backend → AI Engine → Backend
+* [x] AI Engine desplegado en OCI (pendiente: URL configurable, conexión segura y documentar el despliegue)
 
 ### Documentación
 
@@ -194,7 +195,7 @@ G10-LATAM-EQUIPO-16/
 * [ ] Reintentos ante errores temporales de la IA
 * [ ] MVP del Frontend en Streamlit y vista de resultados (en revisión: PR #6 y #11)
 * [ ] Subida real de los activos a OCI Object Storage
-* [ ] Despliegue del AI Engine en OCI
+* [ ] Integrar la guía de tono de voz y anonimizar autores antes de enviar el texto a Gemini
 * [ ] Filtro previo de Data Science
 
 ## 👥 Equipo
