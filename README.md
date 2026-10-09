@@ -36,7 +36,7 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
-* **Genera el activo de contenido** → con el tono de voz del equipo y anonimización de autores a iniciales.
+* **Genera el activo de contenido** → con el tono de voz del equipo y anonimización de autores a iniciales. Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar).
 * **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar.
 
 ## 🏗️ Arquitectura
@@ -51,7 +51,7 @@ CommunityLab está dividido en tres servicios:
 | Análisis | Google Gemini Flash-Lite (GenAI SDK) · Pydantic | Análisis estructurado y validado de cada interacción |
 | Enrutamiento | LangGraph · LangChain | Decide qué activo generar según el análisis |
 | Base de datos | Oracle Autonomous Database (mTLS con wallet) | Persistencia de interacciones y lotes |
-| Almacenamiento | OCI Object Storage | Guarda los activos generados |
+| Almacenamiento | OCI Object Storage | Guarda los activos generados (simulado por ahora; la subida real está en progreso) |
 
 ### Pipeline
 
@@ -132,7 +132,7 @@ uvicorn api:app --reload --host 127.0.0.1 --port 8000
 # Backend (desde backend/)
 ./mvnw spring-boot:run
 
-# Frontend (desde frontend/)
+# Frontend (desde frontend/), disponible cuando se mergee el PR #6
 streamlit run app.py
 ```
 
@@ -164,7 +164,7 @@ La respuesta incluye `resumen_comunidad` (total procesado, sentimiento predomina
 G10-LATAM-EQUIPO-16/
 ├── ai-engine/          # Servicio Python: análisis y generación de contenido
 ├── backend/            # API Java Spring Boot: ingesta, persistencia, orquestación, OCI
-├── frontend/           # Interfaz Streamlit
+├── frontend/           # Interfaz Streamlit (en revisión, PR #6)
 ├── workflows/          # Automatización de flujos
 ├── docs/               # Guía de tono y prompts, dataset de prueba
 ├── .env.example        # Plantilla de variables de entorno
@@ -182,7 +182,6 @@ G10-LATAM-EQUIPO-16/
 * [x] Entidades, repositorios y endpoint `POST /community/process`
 * [x] AI Engine con Gemini, LangGraph y `/analyze-batch`
 * [x] Integración Backend → AI Engine → Backend
-* [x] MVP del Frontend en Streamlit
 
 ### Documentación
 
@@ -193,6 +192,8 @@ G10-LATAM-EQUIPO-16/
 
 * [ ] Endpoints de curaduría (`/assets/pending` y `/assets/{id}/curate`)
 * [ ] Reintentos ante errores temporales de la IA
+* [ ] MVP del Frontend en Streamlit y vista de resultados (en revisión: PR #6 y #11)
+* [ ] Subida real de los activos a OCI Object Storage
 * [ ] Despliegue del AI Engine en OCI
 * [ ] Filtro previo de Data Science
 
