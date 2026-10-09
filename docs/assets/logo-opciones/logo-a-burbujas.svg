@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 180" width="800" height="180" role="img" aria-labelledby="t d">
+  <title id="t">CommunityLab</title>
+  <desc id="d">Dos burbujas de chat superpuestas: la azul representa los mensajes de la comunidad y la verde azulada el contenido generado.</desc>
+  <style>
+    :root { --bg:#ffffff; --ink:#0f172a; --muted:#475569; --blue:#2563eb; --teal:#0d9488; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0d1117; --ink:#f1f5f9; --muted:#94a3b8; --blue:#60a5fa; --teal:#2dd4bf; }
+    }
+    .name { font: 700 58px system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; letter-spacing: -1px; }
+    .sub  { font: 400 19px system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+
+  <!-- Isotipo -->
+  <g transform="translate(8 14)">
+    <!-- Burbuja de chat (mensajes de la comunidad) -->
+    <path d="M20 8h92a18 18 0 0 1 18 18v52a18 18 0 0 1-18 18H56l-24 22v-22h-12A18 18 0 0 1 2 78V26A18 18 0 0 1 20 8z" fill="var(--blue)"/>
+    <circle cx="36" cy="52" r="7" fill="#fff"/>
+    <circle cx="66" cy="52" r="7" fill="#fff"/>
+    <circle cx="96" cy="52" r="7" fill="#fff"/>
+    <!-- Burbuja de contenido (activo generado) -->
+    <path d="M78 62h66a18 18 0 0 1 18 18v46a18 18 0 0 1-18 18h-8v20l-22-20H78a18 18 0 0 1-18-18V80A18 18 0 0 1 78 62z"
+          fill="var(--teal)" stroke="var(--bg)" stroke-width="6" paint-order="stroke"/>
+    <rect x="78" y="86" width="64" height="8" rx="4" fill="#fff"/>
+    <rect x="78" y="104" width="46" height="8" rx="4" fill="#fff" opacity=".85"/>
+    <rect x="78" y="122" width="54" height="8" rx="4" fill="#fff" opacity=".7"/>
+  </g>
+
+  <!-- Nombre -->
+  <text class="name" x="196" y="96"><tspan fill="var(--ink)">Community</tspan><tspan fill="var(--teal)">Lab</tspan></text>
+  <text class="sub" x="198" y="132" fill="var(--muted)">Del chat de la comunidad al contenido publicable</text>
+</svg>
