@@ -11,6 +11,8 @@ from analyzer import (
 )
 
 from graph import decide_route, graph
+from models import Interaction
+from privacy import anonymize_interaction
 
 
 app = FastAPI(
@@ -49,11 +51,15 @@ def health():
 
 @app.post("/analyze")
 def analyze(interaction: InteractionRequest):
-    analysis, metrics = analyze_text(interaction.texto)
+    safe_interaction = anonymize_interaction(
+        Interaction(**interaction.model_dump())
+    )
+    
+    analysis, metrics = analyze_text(safe_interaction.texto)
 
     graph_result = graph.invoke(
         {
-            "interaction": interaction,
+            "interaction": safe_interaction,
             "analysis": analysis,
             "route": "",
             "content": "",
@@ -75,6 +81,18 @@ def analyze(interaction: InteractionRequest):
 def analyze_batch(batch: BatchRequest):
     results = []
 
+    safe_interactions = {
+        interaction.id: anonymize_interaction(
+            Interaction(
+                autor=interaction.autor,
+                canal=interaction.canal,
+                tipo=interaction.tipo,
+                texto=interaction.texto,
+            )
+        )
+        for interaction in batch.interacciones
+    }
+
     assets = {
         "post_linkedin": None,
         "destaque_newsletter_semanal": None,
@@ -84,7 +102,7 @@ def analyze_batch(batch: BatchRequest):
     batch_input = [
         {
             "id": interaction.id,
-            "texto": interaction.texto,
+            "texto": safe_interactions[interaction.id].texto,
         }
         for interaction in batch.interacciones
     ]
@@ -170,12 +188,13 @@ def analyze_batch(batch: BatchRequest):
 
     for route, candidate in candidates.items():
         interaction = candidate["interaction"]
+        safe_interaction = safe_interactions[interaction.id]
         analysis = candidate["analysis"]
 
         try:
             graph_result = graph.invoke(
                 {
-                    "interaction": interaction,
+                    "interaction": safe_interaction,
                     "analysis": analysis,
                     "route": "",
                     "content": "",
