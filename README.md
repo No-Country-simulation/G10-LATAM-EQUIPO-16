@@ -8,7 +8,7 @@
 
 > CommunityLab recibe interacciones de una comunidad digital, las analiza con IA y genera contenido listo para revisar (post de LinkedIn, FAQ y destacado de newsletter), con curaduría humana antes de publicar. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
 
-* Última actualización: 8 de octubre de 2026.
+* Última actualización: 9 de octubre de 2026.
 
 ## 📑 Tabla de contenidos
 
@@ -36,7 +36,7 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
-* **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz y la anonimización de autores están planificadas, aún no integradas). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar).
+* **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz y la anonimización de autores están planificadas, aún no integradas). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar). Límites actuales: el FAQ devuelve tema, origen y estado (la pregunta y la respuesta generadas aún no llegan en la respuesta), y el destacado de newsletter todavía no tiene formato definido.
 * **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar (planificado: los endpoints de curaduría aún no existen).
 
 ## 🏗️ Arquitectura
@@ -75,7 +75,7 @@ graph LR
 | `GET /api/v1/assets/pending` | Lista activos pendientes de curaduría | ⏳ En progreso |
 | `PATCH /api/v1/assets/{id}/curate` | Aprueba, edita o rechaza un activo | ⏳ En progreso |
 
-Errores: `400` (cuerpo inválido; con más de 10 interacciones se rechaza el lote completo), `503` (servicio de IA no disponible) y `500` (error interno; responde con el campo `message` y no `mensaje`). Si alguna interacción falla, la respuesta llega con `status: "parcial"`. El AI Engine recibe hasta 10 interacciones por lote y usa el `id` de cada una dentro del lote; por ahora el análisis por interacción no se persiste.
+Errores: `400` (cuerpo inválido; con más de 10 interacciones se rechaza el lote completo), `503` (falla del servicio de IA: el backend convierte cualquier error del AI Engine en 503) y `500` (error interno; responde con el campo `message` y no `mensaje`). Si alguna interacción falla, la respuesta llega con `status: "parcial"`. El AI Engine recibe hasta 10 interacciones por lote y usa el `id` de cada una dentro del lote; por ahora el análisis por interacción no se persiste.
 
 ## 🛠️ Instalación
 
@@ -118,6 +118,7 @@ Requiere JDK 21. Copia `.env.example` de la raíz a `.env` y completa:
 | `ORACLE_DB_PASSWORD` | Contraseña del usuario |
 | `ORACLE_WALLET_PATH` | Ruta absoluta a la wallet mTLS |
 | `ORACLE_DB_URL` | Cadena de conexión JDBC |
+| `AI_SERVICE_URL` | URL del AI Engine (por defecto `http://localhost:8000`; aún no figura en `.env.example`) |
 
 > El archivo `.env` contiene credenciales y no se sube al repositorio.
 
@@ -138,6 +139,7 @@ streamlit run app.py
 
 * AI Engine: `http://127.0.0.1:8000/docs` (documentación interactiva) y `GET /health`.
 * Backend: `http://localhost:8080/api/v1/health`.
+* El Frontend apunta fijo a `http://localhost:8080`; la URL configurable está pendiente.
 
 ### Ejemplo: procesar un lote
 
@@ -186,8 +188,8 @@ G10-LATAM-EQUIPO-16/
 
 ### Documentación
 
-* [x] Guía de tono de voz y prompts Few-Shot
-* [x] Dataset inicial de prueba
+* [x] Guía de tono de voz y prompts Few-Shot (pendiente corregir ejemplos con datos inventados antes de integrarlos)
+* [x] Dataset inicial de prueba (9 mensajes)
 
 ### En progreso
 
@@ -196,6 +198,7 @@ G10-LATAM-EQUIPO-16/
 * [ ] MVP del Frontend en Streamlit y vista de resultados (en revisión: PR #6 y #11)
 * [ ] Subida real de los activos a OCI Object Storage
 * [ ] Integrar la guía de tono de voz y anonimizar autores antes de enviar el texto a Gemini
+* [ ] Dataset de demo balanceado (un mensaje por tipo de activo)
 * [ ] Filtro previo de Data Science
 
 ## 👥 Equipo
