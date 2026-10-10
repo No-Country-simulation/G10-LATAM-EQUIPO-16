@@ -133,7 +133,7 @@ uvicorn api:app --reload --host 127.0.0.1 --port 8000
 # Backend (desde backend/)
 ./mvnw spring-boot:run
 
-# Frontend (desde frontend/), disponible cuando se mergee el PR #6
+# Frontend (desde frontend/)
 streamlit run app.py
 ```
 
@@ -166,7 +166,7 @@ La respuesta incluye `resumen_comunidad` (total procesado, sentimiento predomina
 G10-LATAM-EQUIPO-16/
 ├── ai-engine/          # Servicio Python: análisis y generación de contenido
 ├── backend/            # API Java Spring Boot: ingesta, persistencia, orquestación, OCI
-├── frontend/           # Interfaz Streamlit (en revisión, PR #6)
+├── frontend/           # Interfaz Streamlit
 ├── workflows/          # Automatización de flujos
 ├── docs/               # Guía de tono y prompts, dataset de prueba
 ├── .env.example        # Plantilla de variables de entorno
@@ -183,7 +183,8 @@ G10-LATAM-EQUIPO-16/
 * [x] Estructura del backend y conexión a Oracle Autonomous Database
 * [x] Entidades, repositorios y endpoint `POST /community/process`
 * [x] AI Engine con Gemini, LangGraph y `/analyze-batch`
-* [x] Integración Backend → AI Engine → Backend
+* [x] Integración Backend → AI Engine → Backend (validación extremo a extremo con el AI Engine en OCI pendiente)
+* [x] MVP del Frontend en Streamlit y vista de resultados (PR #6 y #11)
 * [x] AI Engine desplegado en OCI (pendiente: URL configurable, conexión segura y documentar el despliegue)
 
 ### Documentación
@@ -195,7 +196,6 @@ G10-LATAM-EQUIPO-16/
 
 * [ ] Endpoints de curaduría (`/assets/pending` y `/assets/{id}/curate`)
 * [ ] Reintentos ante errores temporales de la IA
-* [ ] MVP del Frontend en Streamlit y vista de resultados (en revisión: PR #6 y #11)
 * [ ] Subida real de los activos a OCI Object Storage
 * [ ] Integrar la guía de tono de voz y anonimizar autores antes de enviar el texto a Gemini
 * [ ] Dataset de demo balanceado (un mensaje por tipo de activo)
