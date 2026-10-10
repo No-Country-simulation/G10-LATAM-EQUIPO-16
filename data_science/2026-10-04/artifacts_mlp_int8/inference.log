@@ -1,0 +1,10 @@
+[INFERENCIA 1] caracteres: 39 tokens procesados: 11 truncado: False batch: 1
+[INFERENCIA 2] llamada encoder INT8 CPU: {'input_ids': [1, 11], 'attention_mask': [1, 11], 'token_type_ids': [1, 11]}
+[INFERENCIA 3] embedding: (1, 384) primeros 8: [0.2182409167289734, -0.03402449190616608, 0.3634309470653534, -0.3045717775821686, 0.00033970398362725973, 0.13664472103118896, 0.512833833694458, 0.9588077068328857] RAM MB: 347.987968
+[INFERENCIA 4] cargar desde SSD: es_faq [384, 64, 32, 16, 4, 1] RAM MB: 348.000256
+[INFERENCIA 5] es_faq sigmoide: 0.00041484832763671875 sesión liberada; RAM MB: 348.11904
+[INFERENCIA 4] cargar desde SSD: es_logro [384, 64, 32, 16, 4, 1] RAM MB: 348.123136
+[INFERENCIA 5] es_logro sigmoide: 0.5956413745880127 sesión liberada; RAM MB: 348.131328
+[INFERENCIA 4] cargar desde SSD: sentimiento [384, 64, 32, 16, 4, 1] RAM MB: 348.131328
+[INFERENCIA 5] sentimiento sigmoide: 0.9855363368988037 sesión liberada; RAM MB: 348.135424
+{"platform": "Windows-10-10.0.26200-SP0", "cpu": "AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD", "batch": 1, "max_tokens": 128, "max_chars": 8000, "requests": 104, "stages_mb": {"before_load": 30.851072, "after_load": 345.976832, "after_inference": 353.697792}, "p50_ms": 8.256500004790723, "p95_ms": 30.71431999487686, "example": {"id_mensaje": 123, "es_faq": 0.00041484832763671875, "es_logro": 0.5956413745880127, "sentimiento": 0.9855363368988037}, "boundary_checks": 5, "imported_heavy_modules": []}

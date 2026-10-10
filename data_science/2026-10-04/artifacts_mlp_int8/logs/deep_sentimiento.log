@@ -1,0 +1,38 @@
+[1] RTX DETECTADA: NVIDIA GeForce RTX 4070 Ti SUPER
+PyTorch 2.5.1+cu121 CUDA 12.1 VRAM GiB 15.99169921875
+[2] DATAFRAME sentimiento shape= (4781, 11)
+ id_mensaje                                                                                                                                                                                                                                                                                                                                                                         mensaje  sentimiento split sentimiento_gemini
+          1                                                                                                                                                                                                                                                                                                                                    Y probaste instalar los paquetes faltantes??          0.5  test             neutro
+          2 Varias cosas.. Esto no es una red social. Arrobar a alguien que no participa en la publicación no sirve de nada porque no seran notificados. Despues, creo que tenes un error de concepto terrible, tu archivo se esta llamando a si mismo, con una llamada asincronica, que es basicamente que estas llamando a otro archivo? no tiene mucho sentido lo que estas planteando..          0.0 train           negativo
+          3                                                                                                                                                                                                                                          Estás poniendo solo partes del código que no contienen errores. Tampoco pones el error real. Sin esa información, no podemos ayudarte.          0.5 train             neutro
+          4                        Si lo armas de una vez, tal vez llegue; inténtalo y también haz un var_dump(). No es pecado capital llamar al mismo archivo, se puede manejar sin problemas, aunque hasta el momento, tu código parece absurdo al hacer en el servidor algo que puede hacerse en el cliente, supongo -con optimismo- que librado el obstáculo hará algo más interesante.          0.5 train             neutro
+          5                                                                                                                                                                                                 Pero ¿por qué armas la sentencia en una cadena? si estas en t-sql mejor ejecuta directamente la sentencia parametrizando los valores. ¿El archivo binario esta en el servidor?.          0.5 train             neutro
+Etiquetas y soporte: {0.0: 342, 0.5: 3915, 1.0: 524}
+Ejemplo target 0.0 : Varias cosas.. Esto no es una red social. Arrobar a alguien que no participa en la publicación no sirve de nada porque no seran notificados. Despues, creo que tenes un error de concepto terrible, tu archivo se esta llamando a si mismo, con una llamada asincronica, que es basicamente que estas llamando a otro archivo? no tiene mucho sentido lo que estas planteando..
+Ejemplo target 0.5 : Y probaste instalar los paquetes faltantes??
+Ejemplo target 1.0 : Gracias a tu respuesta, vi la enorme contradicción que tenía la mía, gracias... totales!!!.
+[3] SSD mmap (9782, 384) train/validation/test {'train': 3851, 'validation': 512, 'test': 418}
+[4] MODELO: Sequential(
+  (0): Linear(in_features=384, out_features=64, bias=True)
+  (1): ReLU()
+  (2): Linear(in_features=64, out_features=32, bias=True)
+  (3): ReLU()
+  (4): Linear(in_features=32, out_features=16, bias=True)
+  (5): ReLU()
+  (6): Linear(in_features=16, out_features=4, bias=True)
+  (7): ReLU()
+  (8): Linear(in_features=4, out_features=1, bias=True)
+)
+Parámetros: 27321 device: cuda:0
+CHECK CUDA: features cuda:0 torch.Size([128, 384]) target cuda:0 head cuda:0
+[5] TRAIN {'epoch': 1, 'train_loss': 0.6813910757341692, 'validation_loss': 0.6804324984550476}
+[5] TRAIN {'epoch': 10, 'train_loss': 0.6382414141008931, 'validation_loss': 0.6535614728927612}
+[5] TRAIN {'epoch': 20, 'train_loss': 0.6375054755518513, 'validation_loss': 0.6569344401359558}
+Parada temprana en época 24
+[6] EXPORTAR CABEZA FP32 ONNX; salida Sigmoid.
+Validación CUDA vs ONNX FP32, error: 5.960464477539063e-08
+[7] CUANTIZAR CABEZA -> INT8, MatMul; ReLU y Sigmoid conservados.
+WARNING:root:Please consider to run pre-processing before quantization. Refer to example: https://github.com/microsoft/onnxruntime-inference-examples/blob/main/quantization/image_classification/cpu/ReadMe.md
+[8] TEST con encoder INT8 + cabeza INT8: {'f1_macro': 0.6683159545601995, 'mae': 0.0913723036646843, 'confusion_matrix': [[12, 11, 0], [20, 310, 16], [2, 14, 33]], 'support': 418} cortes validation: [0.3999999999999999, 0.6500000000000001]
+ONNX INT8 guardado SSD: C:\Users\saul_\Documents\Codex\2026-10-04\artifacts_mlp_int8\deep\sentimiento\head_int8.onnx 36350 bytes
+[9] FIN. Proceso terminado antes de otra cabeza.

@@ -1,0 +1,66 @@
+{
+  "generated_utc": "2026-09-28T02:49:55.063464+00:00",
+  "total_records": 10000,
+  "unique_ids": 10000,
+  "unique_normalized_texts": 9782,
+  "duplicates_by_text": 218,
+  "source_counts": {
+    "comment": 5000,
+    "question": 5000
+  },
+  "language_site_counts": {
+    "es": 5000,
+    "en": 5000
+  },
+  "licenses": {
+    "CC BY-SA 4.0": 10000
+  },
+  "gemini_labeled_comments": 5000,
+  "pending_comments": 0,
+  "intent_counts": {
+    "respuesta_tecnica": 2522,
+    "pregunta_tecnica": 5570,
+    "moderacion": 655,
+    "agradecimiento": 257,
+    "testimonio": 172,
+    "logro": 151,
+    "conversacion_trivial": 114,
+    "otro": 140,
+    "feedback": 134,
+    "solicitud_aclaracion": 284,
+    "ambiguo": 1
+  },
+  "sentiment_counts": {
+    "neutro": 4114,
+    "positivo": 530,
+    "negativo": 344,
+    "mixto": 11,
+    "not_labeled": 5000,
+    "indeterminado": 1
+  },
+  "testimonio_positive_silver": 631,
+  "logro_positive_silver": 248,
+  "evidence_not_literal": 160,
+  "eligible_silver_training": 4624,
+  "split_counts": {
+    "train": 8111,
+    "test": 905,
+    "validation": 984
+  },
+  "human_reviewed": 0,
+  "synthetic_records": 0,
+  "resolved_answer_parents": 1118,
+  "site_date_ranges": {
+    "es.stackoverflow": {
+      "from": "2024-09-11T01:59:23+00:00",
+      "to": "2026-09-27T20:07:36+00:00"
+    },
+    "stackoverflow": {
+      "from": "2026-07-21T12:48:39+00:00",
+      "to": "2026-09-28T02:24:14+00:00"
+    }
+  },
+  "successful_annotation_calls": 91,
+  "successful_annotation_tokens": 875779,
+  "token_count_note": "Successful batches only; excludes probes and rejected attempts."
+}

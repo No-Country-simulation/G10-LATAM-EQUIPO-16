@@ -1,0 +1,122 @@
+{
+  "task": "es_faq",
+  "architecture": "small",
+  "dims": [
+    384,
+    16,
+    4,
+    1
+  ],
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "cuda_checks": true,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.2817457402425428,
+      "validation_loss": 0.09243489801883698
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.030794715659031944,
+      "validation_loss": 0.05285729840397835
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.015087608893912646,
+      "validation_loss": 0.05366174876689911
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.01307845048441161,
+      "validation_loss": 0.05428389832377434
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.01244953325799396,
+      "validation_loss": 0.0554245226085186
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.012271513721169603,
+      "validation_loss": 0.056187473237514496
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.012067593793730222,
+      "validation_loss": 0.05600620433688164
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.012352053154890815,
+      "validation_loss": 0.05581890046596527
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.011871717958485769,
+      "validation_loss": 0.0551835335791111
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.011743418748430427,
+      "validation_loss": 0.054966993629932404
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.01165101790027092,
+      "validation_loss": 0.05442779138684273
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.011686790165596551,
+      "validation_loss": 0.05474728345870972
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.011462454486923714,
+      "validation_loss": 0.0535484254360199
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.011477756849114572,
+      "validation_loss": 0.053344566375017166
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.011701335929589527,
+      "validation_loss": 0.0533352829515934
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.011416681587786203,
+      "validation_loss": 0.05425073206424713
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.011213956620439046,
+      "validation_loss": 0.05305252969264984
+    }
+  ],
+  "parameters": 6233,
+  "epochs": 17,
+  "train_seconds": 1.758700599995791,
+  "peak_training_vram_mb": 18.750976,
+  "threshold": 0.11,
+  "fp32_parity_error": 1.1920928955078125e-07,
+  "validation": {
+    "f1": 0.9862433862433863,
+    "f1_macro": 0.9867177522349937,
+    "support": 980,
+    "positives": 468
+  },
+  "test": {
+    "f1": 0.9796334012219959,
+    "f1_macro": 0.9776807782809009,
+    "support": 903,
+    "positives": 485
+  },
+  "encoder": "fine-tuned v2 frozen INT8",
+  "data_cache": "embeddings_int8.npy",
+  "precision": "encoder INT8 + MLP MatMul INT8",
+  "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+  "seed": 42
+}

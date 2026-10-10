@@ -1,0 +1,159 @@
+{
+  "tasks": {
+    "es_faq": {
+      "threshold": 0.060000000000000005,
+      "validation_batch1": {
+        "f1": 0.9873150105708245,
+        "f1_macro": 0.9877403455220987,
+        "f1_per_class": [
+          0.9881656804733728,
+          0.9873150105708245
+        ],
+        "confusion_matrix": [
+          [
+            501,
+            11
+          ],
+          [
+            1,
+            467
+          ]
+        ],
+        "support": 980,
+        "positives": 468
+      },
+      "test_batch1": {
+        "f1": 0.9776422764227642,
+        "f1_macro": 0.9754391430775622,
+        "f1_per_class": [
+          0.9732360097323601,
+          0.9776422764227642
+        ],
+        "confusion_matrix": [
+          [
+            400,
+            18
+          ],
+          [
+            4,
+            481
+          ]
+        ],
+        "support": 903,
+        "positives": 485
+      },
+      "truncated_test": 25,
+      "rejected_test": 0
+    },
+    "es_logro": {
+      "threshold": 0.41000000000000003,
+      "validation_batch1": {
+        "f1": 0.625,
+        "f1_macro": 0.8032786885245902,
+        "f1_per_class": [
+          0.9815573770491803,
+          0.625
+        ],
+        "confusion_matrix": [
+          [
+            479,
+            11
+          ],
+          [
+            7,
+            15
+          ]
+        ],
+        "support": 512,
+        "positives": 22
+      },
+      "test_batch1": {
+        "f1": 0.43243243243243246,
+        "f1_macro": 0.7030747894327369,
+        "f1_per_class": [
+          0.9737171464330413,
+          0.43243243243243246
+        ],
+        "confusion_matrix": [
+          [
+            389,
+            11
+          ],
+          [
+            10,
+            8
+          ]
+        ],
+        "support": 418,
+        "positives": 18
+      },
+      "truncated_test": 25,
+      "rejected_test": 0
+    },
+    "sentimiento": {
+      "threshold": [
+        0.3999999999999999,
+        0.6000000000000001
+      ],
+      "validation_batch1": {
+        "f1_macro": 0.643248578587368,
+        "mae": 0.09234553197165951,
+        "f1_per_class": [
+          0.2716049382716049,
+          0.8978102189781022,
+          0.7603305785123967
+        ],
+        "confusion_matrix": [
+          [
+            11,
+            27,
+            0
+          ],
+          [
+            30,
+            369,
+            20
+          ],
+          [
+            2,
+            7,
+            46
+          ]
+        ],
+        "support": 512
+      },
+      "test_batch1": {
+        "f1_macro": 0.6577803214783923,
+        "mae": 0.09124926367159665,
+        "f1_per_class": [
+          0.39285714285714285,
+          0.9072164948453608,
+          0.6732673267326733
+        ],
+        "confusion_matrix": [
+          [
+            11,
+            12,
+            0
+          ],
+          [
+            20,
+            308,
+            18
+          ],
+          [
+            2,
+            13,
+            34
+          ]
+        ],
+        "support": 418
+      },
+      "truncated_test": 25,
+      "rejected_test": 0
+    }
+  },
+  "max_embedding_error_vs_cache": 0.0,
+  "seconds": 14.686186199993244,
+  "scope": "encoder INT8 y cabeza INT8 reales CPU, test batch 1; umbrales solo validation batch 1"
+}

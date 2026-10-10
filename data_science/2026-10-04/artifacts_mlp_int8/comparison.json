@@ -1,0 +1,1097 @@
+{
+  "architectures": {
+    "small": {
+      "es_faq": {
+        "task": "es_faq",
+        "architecture": "small",
+        "dims": [
+          384,
+          16,
+          4,
+          1
+        ],
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "cuda_checks": true,
+        "history": [
+          {
+            "epoch": 1,
+            "train_loss": 0.2817457402425428,
+            "validation_loss": 0.09243489801883698
+          },
+          {
+            "epoch": 2,
+            "train_loss": 0.030794715659031944,
+            "validation_loss": 0.05285729840397835
+          },
+          {
+            "epoch": 3,
+            "train_loss": 0.015087608893912646,
+            "validation_loss": 0.05366174876689911
+          },
+          {
+            "epoch": 4,
+            "train_loss": 0.01307845048441161,
+            "validation_loss": 0.05428389832377434
+          },
+          {
+            "epoch": 5,
+            "train_loss": 0.01244953325799396,
+            "validation_loss": 0.0554245226085186
+          },
+          {
+            "epoch": 6,
+            "train_loss": 0.012271513721169603,
+            "validation_loss": 0.056187473237514496
+          },
+          {
+            "epoch": 7,
+            "train_loss": 0.012067593793730222,
+            "validation_loss": 0.05600620433688164
+          },
+          {
+            "epoch": 8,
+            "train_loss": 0.012352053154890815,
+            "validation_loss": 0.05581890046596527
+          },
+          {
+            "epoch": 9,
+            "train_loss": 0.011871717958485769,
+            "validation_loss": 0.0551835335791111
+          },
+          {
+            "epoch": 10,
+            "train_loss": 0.011743418748430427,
+            "validation_loss": 0.054966993629932404
+          },
+          {
+            "epoch": 11,
+            "train_loss": 0.01165101790027092,
+            "validation_loss": 0.05442779138684273
+          },
+          {
+            "epoch": 12,
+            "train_loss": 0.011686790165596551,
+            "validation_loss": 0.05474728345870972
+          },
+          {
+            "epoch": 13,
+            "train_loss": 0.011462454486923714,
+            "validation_loss": 0.0535484254360199
+          },
+          {
+            "epoch": 14,
+            "train_loss": 0.011477756849114572,
+            "validation_loss": 0.053344566375017166
+          },
+          {
+            "epoch": 15,
+            "train_loss": 0.011701335929589527,
+            "validation_loss": 0.0533352829515934
+          },
+          {
+            "epoch": 16,
+            "train_loss": 0.011416681587786203,
+            "validation_loss": 0.05425073206424713
+          },
+          {
+            "epoch": 17,
+            "train_loss": 0.011213956620439046,
+            "validation_loss": 0.05305252969264984
+          }
+        ],
+        "parameters": 6233,
+        "epochs": 17,
+        "train_seconds": 1.758700599995791,
+        "peak_training_vram_mb": 18.750976,
+        "threshold": 0.11,
+        "fp32_parity_error": 1.1920928955078125e-07,
+        "validation": {
+          "f1": 0.9862433862433863,
+          "f1_macro": 0.9867177522349937,
+          "support": 980,
+          "positives": 468
+        },
+        "test": {
+          "f1": 0.9796334012219959,
+          "f1_macro": 0.9776807782809009,
+          "support": 903,
+          "positives": 485
+        },
+        "encoder": "fine-tuned v2 frozen INT8",
+        "data_cache": "embeddings_int8.npy",
+        "precision": "encoder INT8 + MLP MatMul INT8",
+        "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+        "seed": 42
+      },
+      "es_logro": {
+        "task": "es_logro",
+        "architecture": "small",
+        "dims": [
+          384,
+          16,
+          4,
+          1
+        ],
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "cuda_checks": true,
+        "history": [
+          {
+            "epoch": 1,
+            "train_loss": 0.2281831696389183,
+            "validation_loss": 0.127455472946167
+          },
+          {
+            "epoch": 2,
+            "train_loss": 0.08756490087797565,
+            "validation_loss": 0.10529224574565887
+          },
+          {
+            "epoch": 3,
+            "train_loss": 0.06714973971247673,
+            "validation_loss": 0.10289250314235687
+          },
+          {
+            "epoch": 4,
+            "train_loss": 0.062484187344389576,
+            "validation_loss": 0.10373452305793762
+          },
+          {
+            "epoch": 5,
+            "train_loss": 0.0478359911470644,
+            "validation_loss": 0.10639874637126923
+          },
+          {
+            "epoch": 6,
+            "train_loss": 0.04198723193258047,
+            "validation_loss": 0.11387210339307785
+          },
+          {
+            "epoch": 7,
+            "train_loss": 0.039000042744221225,
+            "validation_loss": 0.11973606795072556
+          },
+          {
+            "epoch": 8,
+            "train_loss": 0.03711915014672183,
+            "validation_loss": 0.12388233840465546
+          },
+          {
+            "epoch": 9,
+            "train_loss": 0.035929789045645345,
+            "validation_loss": 0.126581609249115
+          },
+          {
+            "epoch": 10,
+            "train_loss": 0.038110042802028114,
+            "validation_loss": 0.12859240174293518
+          },
+          {
+            "epoch": 11,
+            "train_loss": 0.035061847538717335,
+            "validation_loss": 0.12999293208122253
+          },
+          {
+            "epoch": 12,
+            "train_loss": 0.034804703157034614,
+            "validation_loss": 0.1309327781200409
+          },
+          {
+            "epoch": 13,
+            "train_loss": 0.03428340421880655,
+            "validation_loss": 0.1313450038433075
+          },
+          {
+            "epoch": 14,
+            "train_loss": 0.03832571556971919,
+            "validation_loss": 0.13292446732521057
+          },
+          {
+            "epoch": 15,
+            "train_loss": 0.03380843244057389,
+            "validation_loss": 0.13210630416870117
+          },
+          {
+            "epoch": 16,
+            "train_loss": 0.034375174812251524,
+            "validation_loss": 0.1310979723930359
+          },
+          {
+            "epoch": 17,
+            "train_loss": 0.03369367368999989,
+            "validation_loss": 0.13141551613807678
+          },
+          {
+            "epoch": 18,
+            "train_loss": 0.03343147982377559,
+            "validation_loss": 0.13416224718093872
+          }
+        ],
+        "parameters": 6233,
+        "epochs": 18,
+        "train_seconds": 1.0635588000004645,
+        "peak_training_vram_mb": 18.629632,
+        "threshold": 0.3,
+        "fp32_parity_error": 2.9802322387695312e-08,
+        "validation": {
+          "f1": 0.5957446808510638,
+          "f1_macro": 0.7881486966179576,
+          "support": 512,
+          "positives": 22
+        },
+        "test": {
+          "f1": 0.4444444444444444,
+          "f1_macro": 0.7097222222222221,
+          "support": 418,
+          "positives": 18
+        },
+        "encoder": "fine-tuned v2 frozen INT8",
+        "data_cache": "embeddings_int8.npy",
+        "precision": "encoder INT8 + MLP MatMul INT8",
+        "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+        "seed": 42
+      },
+      "sentimiento": {
+        "task": "sentimiento",
+        "architecture": "small",
+        "dims": [
+          384,
+          16,
+          4,
+          1
+        ],
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "cuda_checks": true,
+        "history": [
+          {
+            "epoch": 1,
+            "train_loss": 0.7157783565982696,
+            "validation_loss": 0.6978591680526733
+          },
+          {
+            "epoch": 2,
+            "train_loss": 0.6905707563123396,
+            "validation_loss": 0.6791905760765076
+          },
+          {
+            "epoch": 3,
+            "train_loss": 0.6685751772695973,
+            "validation_loss": 0.6627777814865112
+          },
+          {
+            "epoch": 4,
+            "train_loss": 0.6558449191431845,
+            "validation_loss": 0.6589468121528625
+          },
+          {
+            "epoch": 5,
+            "train_loss": 0.6521173292590726,
+            "validation_loss": 0.6571425199508667
+          },
+          {
+            "epoch": 6,
+            "train_loss": 0.6477403160064451,
+            "validation_loss": 0.6561852693557739
+          },
+          {
+            "epoch": 7,
+            "train_loss": 0.6474188104752572,
+            "validation_loss": 0.6557239294052124
+          },
+          {
+            "epoch": 8,
+            "train_loss": 0.6482248440865548,
+            "validation_loss": 0.6551494598388672
+          },
+          {
+            "epoch": 9,
+            "train_loss": 0.6477007404450448,
+            "validation_loss": 0.6546967029571533
+          },
+          {
+            "epoch": 10,
+            "train_loss": 0.6447391990692385,
+            "validation_loss": 0.6537009477615356
+          },
+          {
+            "epoch": 11,
+            "train_loss": 0.6466567227917333,
+            "validation_loss": 0.6535937190055847
+          },
+          {
+            "epoch": 12,
+            "train_loss": 0.6467702004217333,
+            "validation_loss": 0.6527823209762573
+          },
+          {
+            "epoch": 13,
+            "train_loss": 0.6460834837728932,
+            "validation_loss": 0.6522324085235596
+          },
+          {
+            "epoch": 14,
+            "train_loss": 0.6478223127703513,
+            "validation_loss": 0.6522862911224365
+          },
+          {
+            "epoch": 15,
+            "train_loss": 0.6453876437679413,
+            "validation_loss": 0.6520552635192871
+          },
+          {
+            "epoch": 16,
+            "train_loss": 0.6424697579876069,
+            "validation_loss": 0.6518367528915405
+          },
+          {
+            "epoch": 17,
+            "train_loss": 0.6424938113458695,
+            "validation_loss": 0.6521737575531006
+          },
+          {
+            "epoch": 18,
+            "train_loss": 0.6441950144306305,
+            "validation_loss": 0.6520757675170898
+          },
+          {
+            "epoch": 19,
+            "train_loss": 0.6404515331791293,
+            "validation_loss": 0.651287317276001
+          },
+          {
+            "epoch": 20,
+            "train_loss": 0.6427440489492109,
+            "validation_loss": 0.6523568630218506
+          },
+          {
+            "epoch": 21,
+            "train_loss": 0.6425215159693072,
+            "validation_loss": 0.6529037356376648
+          },
+          {
+            "epoch": 22,
+            "train_loss": 0.6398462806978533,
+            "validation_loss": 0.6524405479431152
+          },
+          {
+            "epoch": 23,
+            "train_loss": 0.6399551456974398,
+            "validation_loss": 0.6522324085235596
+          },
+          {
+            "epoch": 24,
+            "train_loss": 0.6396227113662227,
+            "validation_loss": 0.6515437364578247
+          },
+          {
+            "epoch": 25,
+            "train_loss": 0.6368552600183794,
+            "validation_loss": 0.6510390043258667
+          },
+          {
+            "epoch": 26,
+            "train_loss": 0.6392761641933072,
+            "validation_loss": 0.6515100598335266
+          },
+          {
+            "epoch": 27,
+            "train_loss": 0.6384243311420563,
+            "validation_loss": 0.650428056716919
+          },
+          {
+            "epoch": 28,
+            "train_loss": 0.6380813698614797,
+            "validation_loss": 0.651011049747467
+          },
+          {
+            "epoch": 29,
+            "train_loss": 0.6389113453126722,
+            "validation_loss": 0.6506215333938599
+          },
+          {
+            "epoch": 30,
+            "train_loss": 0.637740385147833,
+            "validation_loss": 0.6508951783180237
+          },
+          {
+            "epoch": 31,
+            "train_loss": 0.6373529626477149,
+            "validation_loss": 0.6502026319503784
+          },
+          {
+            "epoch": 32,
+            "train_loss": 0.6368162766579659,
+            "validation_loss": 0.6513524651527405
+          },
+          {
+            "epoch": 33,
+            "train_loss": 0.6360170552807469,
+            "validation_loss": 0.6506358981132507
+          },
+          {
+            "epoch": 34,
+            "train_loss": 0.63351543295768,
+            "validation_loss": 0.6504831314086914
+          },
+          {
+            "epoch": 35,
+            "train_loss": 0.6392740664943573,
+            "validation_loss": 0.6506922245025635
+          },
+          {
+            "epoch": 36,
+            "train_loss": 0.6363366034723097,
+            "validation_loss": 0.6505212783813477
+          },
+          {
+            "epoch": 37,
+            "train_loss": 0.6384309184166693,
+            "validation_loss": 0.6501579284667969
+          },
+          {
+            "epoch": 38,
+            "train_loss": 0.6359801523147091,
+            "validation_loss": 0.6507459878921509
+          },
+          {
+            "epoch": 39,
+            "train_loss": 0.6332187441087538,
+            "validation_loss": 0.6515177488327026
+          },
+          {
+            "epoch": 40,
+            "train_loss": 0.6334673550821119,
+            "validation_loss": 0.651130199432373
+          },
+          {
+            "epoch": 41,
+            "train_loss": 0.6378268368782536,
+            "validation_loss": 0.6510794162750244
+          },
+          {
+            "epoch": 42,
+            "train_loss": 0.636932578779036,
+            "validation_loss": 0.6511679887771606
+          },
+          {
+            "epoch": 43,
+            "train_loss": 0.6372044278729346,
+            "validation_loss": 0.6517118215560913
+          },
+          {
+            "epoch": 44,
+            "train_loss": 0.6365432796939727,
+            "validation_loss": 0.6521167755126953
+          },
+          {
+            "epoch": 45,
+            "train_loss": 0.6350270855811334,
+            "validation_loss": 0.6527352333068848
+          },
+          {
+            "epoch": 46,
+            "train_loss": 0.6360341945002156,
+            "validation_loss": 0.650803804397583
+          },
+          {
+            "epoch": 47,
+            "train_loss": 0.6363158841286937,
+            "validation_loss": 0.6512916088104248
+          },
+          {
+            "epoch": 48,
+            "train_loss": 0.6360867696423684,
+            "validation_loss": 0.651265025138855
+          },
+          {
+            "epoch": 49,
+            "train_loss": 0.6360599360158367,
+            "validation_loss": 0.6521652936935425
+          },
+          {
+            "epoch": 50,
+            "train_loss": 0.6338996271933278,
+            "validation_loss": 0.6523486375808716
+          },
+          {
+            "epoch": 51,
+            "train_loss": 0.632082833397773,
+            "validation_loss": 0.6512430310249329
+          },
+          {
+            "epoch": 52,
+            "train_loss": 0.6346625897192186,
+            "validation_loss": 0.6514148712158203
+          }
+        ],
+        "parameters": 6233,
+        "epochs": 52,
+        "train_seconds": 2.445186900004046,
+        "peak_training_vram_mb": 18.628096,
+        "threshold": [
+          0.42499999999999993,
+          0.7500000000000002
+        ],
+        "fp32_parity_error": 1.1920928955078125e-07,
+        "validation": {
+          "f1_macro": 0.667444586159438,
+          "mae": 0.08575010299682617,
+          "confusion_matrix": [
+            [
+              16,
+              22,
+              0
+            ],
+            [
+              37,
+              373,
+              9
+            ],
+            [
+              2,
+              14,
+              39
+            ]
+          ],
+          "support": 512
+        },
+        "test": {
+          "f1_macro": 0.6769588083166886,
+          "mae": 0.08472999185323715,
+          "confusion_matrix": [
+            [
+              15,
+              8,
+              0
+            ],
+            [
+              31,
+              305,
+              10
+            ],
+            [
+              2,
+              15,
+              32
+            ]
+          ],
+          "support": 418
+        },
+        "encoder": "fine-tuned v2 frozen INT8",
+        "data_cache": "embeddings_int8.npy",
+        "precision": "encoder INT8 + MLP MatMul INT8",
+        "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+        "seed": 42
+      }
+    },
+    "deep": {
+      "es_faq": {
+        "task": "es_faq",
+        "architecture": "deep",
+        "dims": [
+          384,
+          64,
+          32,
+          16,
+          4,
+          1
+        ],
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "cuda_checks": true,
+        "history": [
+          {
+            "epoch": 1,
+            "train_loss": 0.34666226527863936,
+            "validation_loss": 0.07697533071041107
+          },
+          {
+            "epoch": 2,
+            "train_loss": 0.016775008315415754,
+            "validation_loss": 0.06235611066222191
+          },
+          {
+            "epoch": 3,
+            "train_loss": 0.013922140028538001,
+            "validation_loss": 0.06041303649544716
+          },
+          {
+            "epoch": 4,
+            "train_loss": 0.013385241443756968,
+            "validation_loss": 0.05801961198449135
+          },
+          {
+            "epoch": 5,
+            "train_loss": 0.01237329741519305,
+            "validation_loss": 0.0552702471613884
+          },
+          {
+            "epoch": 6,
+            "train_loss": 0.012309365342521379,
+            "validation_loss": 0.05407183989882469
+          },
+          {
+            "epoch": 7,
+            "train_loss": 0.012156877616014812,
+            "validation_loss": 0.05144534632563591
+          },
+          {
+            "epoch": 8,
+            "train_loss": 0.011985362970247684,
+            "validation_loss": 0.058300215750932693
+          },
+          {
+            "epoch": 9,
+            "train_loss": 0.012358116146530054,
+            "validation_loss": 0.0515754297375679
+          },
+          {
+            "epoch": 10,
+            "train_loss": 0.011623083729289411,
+            "validation_loss": 0.049297232180833817
+          },
+          {
+            "epoch": 11,
+            "train_loss": 0.011584274971204239,
+            "validation_loss": 0.0514889620244503
+          },
+          {
+            "epoch": 12,
+            "train_loss": 0.011514373640004065,
+            "validation_loss": 0.049697961658239365
+          },
+          {
+            "epoch": 13,
+            "train_loss": 0.011424861761042848,
+            "validation_loss": 0.048763472586870193
+          },
+          {
+            "epoch": 14,
+            "train_loss": 0.010996017841652276,
+            "validation_loss": 0.04711779206991196
+          },
+          {
+            "epoch": 15,
+            "train_loss": 0.01166815344890159,
+            "validation_loss": 0.051952820271253586
+          },
+          {
+            "epoch": 16,
+            "train_loss": 0.01092641934331867,
+            "validation_loss": 0.05073143169283867
+          },
+          {
+            "epoch": 17,
+            "train_loss": 0.010819414305695963,
+            "validation_loss": 0.05429103597998619
+          },
+          {
+            "epoch": 18,
+            "train_loss": 0.0110530685070121,
+            "validation_loss": 0.056671593338251114
+          },
+          {
+            "epoch": 19,
+            "train_loss": 0.01214968437805862,
+            "validation_loss": 0.06991872191429138
+          },
+          {
+            "epoch": 20,
+            "train_loss": 0.011189320072111103,
+            "validation_loss": 0.05240732431411743
+          },
+          {
+            "epoch": 21,
+            "train_loss": 0.010806800818236003,
+            "validation_loss": 0.04985355958342552
+          },
+          {
+            "epoch": 22,
+            "train_loss": 0.010868129241580685,
+            "validation_loss": 0.05679529160261154
+          },
+          {
+            "epoch": 23,
+            "train_loss": 0.011153702074924724,
+            "validation_loss": 0.05269382894039154
+          },
+          {
+            "epoch": 24,
+            "train_loss": 0.010574547681889887,
+            "validation_loss": 0.048639532178640366
+          },
+          {
+            "epoch": 25,
+            "train_loss": 0.009812865251367311,
+            "validation_loss": 0.05303126201033592
+          },
+          {
+            "epoch": 26,
+            "train_loss": 0.009702414736121653,
+            "validation_loss": 0.05315948277711868
+          },
+          {
+            "epoch": 27,
+            "train_loss": 0.009926926212257615,
+            "validation_loss": 0.05542413517832756
+          },
+          {
+            "epoch": 28,
+            "train_loss": 0.009548878172344918,
+            "validation_loss": 0.052533138543367386
+          },
+          {
+            "epoch": 29,
+            "train_loss": 0.010246782990795891,
+            "validation_loss": 0.06061486527323723
+          }
+        ],
+        "parameters": 27321,
+        "epochs": 29,
+        "train_seconds": 3.0751233999908436,
+        "peak_training_vram_mb": 19.168768,
+        "threshold": 0.060000000000000005,
+        "fp32_parity_error": 5.960464477539063e-08,
+        "validation": {
+          "f1": 0.9873150105708245,
+          "f1_macro": 0.9877403455220987,
+          "support": 980,
+          "positives": 468
+        },
+        "test": {
+          "f1": 0.9776422764227642,
+          "f1_macro": 0.9754391430775622,
+          "support": 903,
+          "positives": 485
+        },
+        "encoder": "fine-tuned v2 frozen INT8",
+        "data_cache": "embeddings_int8.npy",
+        "precision": "encoder INT8 + MLP MatMul INT8",
+        "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+        "seed": 42
+      },
+      "es_logro": {
+        "task": "es_logro",
+        "architecture": "deep",
+        "dims": [
+          384,
+          64,
+          32,
+          16,
+          4,
+          1
+        ],
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "cuda_checks": true,
+        "history": [
+          {
+            "epoch": 1,
+            "train_loss": 0.4478697042551733,
+            "validation_loss": 0.11580726504325867
+          },
+          {
+            "epoch": 2,
+            "train_loss": 0.059303022139976104,
+            "validation_loss": 0.11494192481040955
+          },
+          {
+            "epoch": 3,
+            "train_loss": 0.04865871465975238,
+            "validation_loss": 0.1207156702876091
+          },
+          {
+            "epoch": 4,
+            "train_loss": 0.05308765969088962,
+            "validation_loss": 0.1224365159869194
+          },
+          {
+            "epoch": 5,
+            "train_loss": 0.03928744300238548,
+            "validation_loss": 0.12306445837020874
+          },
+          {
+            "epoch": 6,
+            "train_loss": 0.03723631585918127,
+            "validation_loss": 0.13593360781669617
+          },
+          {
+            "epoch": 7,
+            "train_loss": 0.037048256775784875,
+            "validation_loss": 0.13574977219104767
+          },
+          {
+            "epoch": 8,
+            "train_loss": 0.036739854814274414,
+            "validation_loss": 0.13419915735721588
+          },
+          {
+            "epoch": 9,
+            "train_loss": 0.03687481593196055,
+            "validation_loss": 0.1354585587978363
+          },
+          {
+            "epoch": 10,
+            "train_loss": 0.03866264545508931,
+            "validation_loss": 0.13327066600322723
+          },
+          {
+            "epoch": 11,
+            "train_loss": 0.03728715344397877,
+            "validation_loss": 0.1293545961380005
+          },
+          {
+            "epoch": 12,
+            "train_loss": 0.03357693500396225,
+            "validation_loss": 0.1287229359149933
+          },
+          {
+            "epoch": 13,
+            "train_loss": 0.033259260000645996,
+            "validation_loss": 0.12858237326145172
+          },
+          {
+            "epoch": 14,
+            "train_loss": 0.03666833331508021,
+            "validation_loss": 0.13161134719848633
+          },
+          {
+            "epoch": 15,
+            "train_loss": 0.03399409094427322,
+            "validation_loss": 0.12785083055496216
+          },
+          {
+            "epoch": 16,
+            "train_loss": 0.033234165125196016,
+            "validation_loss": 0.12970001995563507
+          },
+          {
+            "epoch": 17,
+            "train_loss": 0.0328621857409035,
+            "validation_loss": 0.1297098994255066
+          }
+        ],
+        "parameters": 27321,
+        "epochs": 17,
+        "train_seconds": 1.2075246000022162,
+        "peak_training_vram_mb": 19.047424,
+        "threshold": 0.41000000000000003,
+        "fp32_parity_error": 5.960464477539063e-08,
+        "validation": {
+          "f1": 0.625,
+          "f1_macro": 0.8032786885245902,
+          "support": 512,
+          "positives": 22
+        },
+        "test": {
+          "f1": 0.43243243243243246,
+          "f1_macro": 0.7030747894327369,
+          "support": 418,
+          "positives": 18
+        },
+        "encoder": "fine-tuned v2 frozen INT8",
+        "data_cache": "embeddings_int8.npy",
+        "precision": "encoder INT8 + MLP MatMul INT8",
+        "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+        "seed": 42
+      },
+      "sentimiento": {
+        "task": "sentimiento",
+        "architecture": "deep",
+        "dims": [
+          384,
+          64,
+          32,
+          16,
+          4,
+          1
+        ],
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "cuda_checks": true,
+        "history": [
+          {
+            "epoch": 1,
+            "train_loss": 0.6813910757341692,
+            "validation_loss": 0.6804324984550476
+          },
+          {
+            "epoch": 2,
+            "train_loss": 0.6694916063739408,
+            "validation_loss": 0.6638191938400269
+          },
+          {
+            "epoch": 3,
+            "train_loss": 0.6517330119686742,
+            "validation_loss": 0.6557291746139526
+          },
+          {
+            "epoch": 4,
+            "train_loss": 0.6469386969843218,
+            "validation_loss": 0.653784990310669
+          },
+          {
+            "epoch": 5,
+            "train_loss": 0.6452970312487695,
+            "validation_loss": 0.6527921557426453
+          },
+          {
+            "epoch": 6,
+            "train_loss": 0.6414559272027784,
+            "validation_loss": 0.6520400047302246
+          },
+          {
+            "epoch": 7,
+            "train_loss": 0.6412762249669721,
+            "validation_loss": 0.6513764262199402
+          },
+          {
+            "epoch": 8,
+            "train_loss": 0.6415370971925797,
+            "validation_loss": 0.6514064073562622
+          },
+          {
+            "epoch": 9,
+            "train_loss": 0.6415618946475368,
+            "validation_loss": 0.6511666774749756
+          },
+          {
+            "epoch": 10,
+            "train_loss": 0.6382414141008931,
+            "validation_loss": 0.6535614728927612
+          },
+          {
+            "epoch": 11,
+            "train_loss": 0.6417658540510363,
+            "validation_loss": 0.6525310277938843
+          },
+          {
+            "epoch": 12,
+            "train_loss": 0.6405793140011449,
+            "validation_loss": 0.6571279764175415
+          },
+          {
+            "epoch": 13,
+            "train_loss": 0.6421545205577728,
+            "validation_loss": 0.6511618494987488
+          },
+          {
+            "epoch": 14,
+            "train_loss": 0.6418414923452562,
+            "validation_loss": 0.6520923376083374
+          },
+          {
+            "epoch": 15,
+            "train_loss": 0.6392858528321789,
+            "validation_loss": 0.6551302671432495
+          },
+          {
+            "epoch": 16,
+            "train_loss": 0.6360298356702251,
+            "validation_loss": 0.6535122394561768
+          },
+          {
+            "epoch": 17,
+            "train_loss": 0.6356112880091513,
+            "validation_loss": 0.6517280340194702
+          },
+          {
+            "epoch": 18,
+            "train_loss": 0.6373120584795552,
+            "validation_loss": 0.6523876190185547
+          },
+          {
+            "epoch": 19,
+            "train_loss": 0.6332435761728594,
+            "validation_loss": 0.6540838479995728
+          },
+          {
+            "epoch": 20,
+            "train_loss": 0.6375054755518513,
+            "validation_loss": 0.6569344401359558
+          },
+          {
+            "epoch": 21,
+            "train_loss": 0.6378198092983615,
+            "validation_loss": 0.6531038880348206
+          },
+          {
+            "epoch": 22,
+            "train_loss": 0.6344746293560151,
+            "validation_loss": 0.6530411839485168
+          },
+          {
+            "epoch": 23,
+            "train_loss": 0.6343101090000521,
+            "validation_loss": 0.6534540057182312
+          },
+          {
+            "epoch": 24,
+            "train_loss": 0.6352864023177854,
+            "validation_loss": 0.65352463722229
+          }
+        ],
+        "parameters": 27321,
+        "epochs": 24,
+        "train_seconds": 1.6414441999950213,
+        "peak_training_vram_mb": 19.045888,
+        "threshold": [
+          0.3999999999999999,
+          0.6500000000000001
+        ],
+        "fp32_parity_error": 5.960464477539063e-08,
+        "validation": {
+          "f1_macro": 0.643530261396463,
+          "mae": 0.09218735247850418,
+          "confusion_matrix": [
+            [
+              11,
+              27,
+              0
+            ],
+            [
+              29,
+              374,
+              16
+            ],
+            [
+              2,
+              10,
+              43
+            ]
+          ],
+          "support": 512
+        },
+        "test": {
+          "f1_macro": 0.6683159545601995,
+          "mae": 0.0913723036646843,
+          "confusion_matrix": [
+            [
+              12,
+              11,
+              0
+            ],
+            [
+              20,
+              310,
+              16
+            ],
+            [
+              2,
+              14,
+              33
+            ]
+          ],
+          "support": 418
+        },
+        "encoder": "fine-tuned v2 frozen INT8",
+        "data_cache": "embeddings_int8.npy",
+        "precision": "encoder INT8 + MLP MatMul INT8",
+        "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+        "seed": 42
+      }
+    }
+  },
+  "validation_macro_f1": {
+    "small": 0.8141036783374632,
+    "deep": 0.8115164318143839
+  },
+  "selected": "deep",
+  "selection_rule": "F1 macro medio de validation. Deep si no pierde m\u00e1s de 0.005 frente a small; los pesos siguen siendo peque\u00f1os. Test no selecciona."
+}

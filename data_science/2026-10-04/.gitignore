@@ -1,0 +1,13 @@
+deps/
+__pycache__/
+.ipynb_checkpoints/
+jupyter_runtime/
+artifacts_mlp_int8/*.npy
+artifacts_mlp_int8/*.incomplete
+artifacts_pca8/
+base_encoder/
+artifacts/
+artifacts_v2/*/encoder/
+github_delivery/
+!artifacts_mlp_int8/logs/*.log
+!artifacts_mlp_int8/inference.log

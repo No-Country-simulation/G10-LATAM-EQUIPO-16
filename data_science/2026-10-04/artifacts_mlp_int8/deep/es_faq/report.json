@@ -1,0 +1,184 @@
+{
+  "task": "es_faq",
+  "architecture": "deep",
+  "dims": [
+    384,
+    64,
+    32,
+    16,
+    4,
+    1
+  ],
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "cuda_checks": true,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.34666226527863936,
+      "validation_loss": 0.07697533071041107
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.016775008315415754,
+      "validation_loss": 0.06235611066222191
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.013922140028538001,
+      "validation_loss": 0.06041303649544716
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.013385241443756968,
+      "validation_loss": 0.05801961198449135
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.01237329741519305,
+      "validation_loss": 0.0552702471613884
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.012309365342521379,
+      "validation_loss": 0.05407183989882469
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.012156877616014812,
+      "validation_loss": 0.05144534632563591
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.011985362970247684,
+      "validation_loss": 0.058300215750932693
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.012358116146530054,
+      "validation_loss": 0.0515754297375679
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.011623083729289411,
+      "validation_loss": 0.049297232180833817
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.011584274971204239,
+      "validation_loss": 0.0514889620244503
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.011514373640004065,
+      "validation_loss": 0.049697961658239365
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.011424861761042848,
+      "validation_loss": 0.048763472586870193
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.010996017841652276,
+      "validation_loss": 0.04711779206991196
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.01166815344890159,
+      "validation_loss": 0.051952820271253586
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.01092641934331867,
+      "validation_loss": 0.05073143169283867
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.010819414305695963,
+      "validation_loss": 0.05429103597998619
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.0110530685070121,
+      "validation_loss": 0.056671593338251114
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.01214968437805862,
+      "validation_loss": 0.06991872191429138
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.011189320072111103,
+      "validation_loss": 0.05240732431411743
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.010806800818236003,
+      "validation_loss": 0.04985355958342552
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.010868129241580685,
+      "validation_loss": 0.05679529160261154
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.011153702074924724,
+      "validation_loss": 0.05269382894039154
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.010574547681889887,
+      "validation_loss": 0.048639532178640366
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.009812865251367311,
+      "validation_loss": 0.05303126201033592
+    },
+    {
+      "epoch": 26,
+      "train_loss": 0.009702414736121653,
+      "validation_loss": 0.05315948277711868
+    },
+    {
+      "epoch": 27,
+      "train_loss": 0.009926926212257615,
+      "validation_loss": 0.05542413517832756
+    },
+    {
+      "epoch": 28,
+      "train_loss": 0.009548878172344918,
+      "validation_loss": 0.052533138543367386
+    },
+    {
+      "epoch": 29,
+      "train_loss": 0.010246782990795891,
+      "validation_loss": 0.06061486527323723
+    }
+  ],
+  "parameters": 27321,
+  "epochs": 29,
+  "train_seconds": 3.0751233999908436,
+  "peak_training_vram_mb": 19.168768,
+  "threshold": 0.060000000000000005,
+  "fp32_parity_error": 5.960464477539063e-08,
+  "validation": {
+    "f1": 0.9873150105708245,
+    "f1_macro": 0.9877403455220987,
+    "support": 980,
+    "positives": 468
+  },
+  "test": {
+    "f1": 0.9776422764227642,
+    "f1_macro": 0.9754391430775622,
+    "support": 903,
+    "positives": 485
+  },
+  "encoder": "fine-tuned v2 frozen INT8",
+  "data_cache": "embeddings_int8.npy",
+  "precision": "encoder INT8 + MLP MatMul INT8",
+  "preprocessing": "primeros 128 tokens; sin PCA; sin normalizaci\u00f3n del embedding",
+  "seed": 42
+}
