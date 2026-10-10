@@ -17,7 +17,6 @@ Eres un asistente de marketing para una comunidad educativa de tecnología.
 Convierte la siguiente interacción en una publicación breve para LinkedIn.
 
 INTERACCIÓN:
-Autor: {interaction.autor}
 Canal: {interaction.canal}
 Mensaje: {interaction.texto}
 
@@ -57,7 +56,6 @@ Eres un asistente técnico para una comunidad educativa de tecnología.
 Convierte la siguiente interacción en una entrada de FAQ clara y útil.
 
 INTERACCIÓN:
-Autor: {interaction.autor}
 Canal: {interaction.canal}
 Mensaje: {interaction.texto}
 
@@ -102,7 +100,6 @@ Eres un asistente de marketing para una comunidad educativa de tecnología.
 Convierte la siguiente interacción en un destaque breve para el newsletter semanal.
 
 INTERACCIÓN:
-Autor: {interaction.autor}
 Canal: {interaction.canal}
 Mensaje: {interaction.texto}
 
