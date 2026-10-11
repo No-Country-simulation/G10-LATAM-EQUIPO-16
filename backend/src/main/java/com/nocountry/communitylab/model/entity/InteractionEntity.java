@@ -2,6 +2,8 @@ package com.nocountry.communitylab.model.entity;
 
 import com.nocountry.communitylab.model.enums.InteractionStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -38,7 +40,7 @@ public class InteractionEntity {
     private String channel;
     private String type;
 
-    @Column(columnDefinition = "TEXT")
+    @JdbcTypeCode(SqlTypes.LONG32VARCHAR)
     private String text;
 
     @Enumerated(EnumType.STRING)
