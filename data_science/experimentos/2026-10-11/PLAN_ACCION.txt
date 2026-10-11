@@ -277,3 +277,12 @@ Ante fallo intermedio, responder error de solicitud sin resultados parciales
 exitosos; los vectores ya persistidos deben permitir reintento idempotente,
 validando ID, hash del texto y versión del encoder.
 Medir latencia del lote completo y RAM pico con 15 mensajes y 3,500 caracteres.
+
+13. CORRECCIÓN DE ALCANCE CONFIRMADA POR EL USUARIO
+Solo se reconstruye la BD de es_logro por su F1 bajo. Las BDs oficiales de
+pregunta (es_faq.jsonl) y sentimiento de 2026-10-04 se conservan byte a byte,
+con textos, etiquetas y particiones intactos. No se reetiquetan con Qwen.
+El archivo es_pregunta.jsonl será una copia de es_faq.jsonl; la columna es_faq
+se conserva y su mapeo al nombre de cabeza se documentará al entrenar.
+Esta decisión sustituye cualquier propuesta anterior de reetiquetar esas tareas.
+El notebook se revisa y ejecuta primero en VS Code local antes de publicarlo.
