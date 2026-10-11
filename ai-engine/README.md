@@ -264,10 +264,10 @@ El AI Engine de CommunityLab está desplegado en una instancia de Oracle Cloud I
 |---|---|
 | Proveedor | Oracle Cloud Infrastructure |
 | Sistema operativo | Ubuntu Linux |
-| IP pública actual | `155.181.177.178` |
-| Usuario SSH | `ubuntu` |
-| Directorio del repositorio | `/home/ubuntu/G10-LATAM-EQUIPO-16` |
-| Directorio del motor | `/home/ubuntu/G10-LATAM-EQUIPO-16/ai-engine` |
+| IP pública actual | `<IP_PUBLICA>` |
+| Usuario SSH | `<USUARIO_SSH>` |
+| Directorio del repositorio | `<DIRECTORIO_REPOSITORIO>` |
+| Directorio del motor | `<DIRECTORIO_REPOSITORIO>/ai-engine` |
 | Framework | FastAPI |
 | Servidor ASGI | Uvicorn |
 | Puerto interno | `8001` |
@@ -281,7 +281,7 @@ El AI Engine de CommunityLab está desplegado en una instancia de Oracle Cloud I
 Desde un equipo autorizado, conectarse mediante SSH utilizando la clave privada correspondiente:
 
 ```bash
-ssh -i /ruta/a/clave_privada ubuntu@155.181.177.178
+ssh -i /ruta/a/clave_privada <USUARIO_SSH>@<IP_PUBLICA>
 ```
 
 No compartir ni subir claves privadas SSH al repositorio.
@@ -298,7 +298,7 @@ sudo apt install -y python3 python3-venv python3-pip git
 Clonar el repositorio:
 
 ```bash
-cd /home/ubuntu
+cd <DIRECTORIO_BASE>
 git clone https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16.git
 cd G10-LATAM-EQUIPO-16/ai-engine
 ```
@@ -379,9 +379,78 @@ Para consultar los registros:
 sudo journalctl -u nocountry-ai -n 100 --no-pager
 ```
 
-La configuración exacta de la unidad systemd debe consultarse en la instancia antes de reproducirla en otro servidor.
+La unidad `nocountry-ai.service` utiliza la siguiente configuración. Para reproducirla en otro servidor, reemplazar los valores genéricos según el entorno:
 
-### 7. Verificación del servicio
+```ini
+[Unit]
+Description=No Country AI Engine - FastAPI
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=<USUARIO_SERVICIO>
+Group=<GRUPO_SERVICIO>
+WorkingDirectory=<DIRECTORIO_REPOSITORIO>/ai-engine
+Environment=PYTHONUNBUFFERED=1
+ExecStart=<DIRECTORIO_REPOSITORIO>/ai-engine/.venv/bin/python -m uvicorn api:app --host 127.0.0.1 --port 8001
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Guardar la configuración en `/etc/systemd/system/nocountry-ai.service` y ejecutar:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now nocountry-ai
+sudo systemctl status nocountry-ai
+```
+
+Los valores `<USUARIO_SERVICIO>`, `<GRUPO_SERVICIO>` y `<DIRECTORIO_REPOSITORIO>` deben adaptarse al servidor.
+
+### 7. Proxy inverso con Nginx
+
+Nginx está instalado y funcionando como proxy inverso del AI Engine.
+
+La configuración actual utiliza el siguiente flujo:
+
+```text
+Nginx (127.0.0.1:8080)
+          |
+          v
+FastAPI / Uvicorn (127.0.0.1:8001)
+```
+
+Configuración del servidor Nginx:
+
+```nginx
+server {
+    listen 127.0.0.1:8080;
+    server_name localhost;
+
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+Para verificar la configuración:
+
+```bash
+sudo nginx -t
+sudo systemctl status nginx
+curl http://127.0.0.1:8080/health
+```
+
+**Estado actual:** Nginx solo escucha en la interfaz local. La comunicación desde la instancia Java todavía no está habilitada. Antes de permitir conexiones privadas deben configurarse las reglas de red, la autenticación entre servicios y la protección del transporte.
+
+### 8. Verificación del servicio
 
 Desde la propia instancia OCI:
 
@@ -397,14 +466,14 @@ Endpoints disponibles:
 
 Estos endpoints fueron probados desde la instancia OCI con datos de prueba.
 
-### 8. Actualización del despliegue
+### 9. Actualización del despliegue
 
 Antes de actualizar, confirmar que los cambios estén aprobados y fusionados en la rama de despliegue.
 
 Desde el servidor:
 
 ```bash
-cd /home/ubuntu/G10-LATAM-EQUIPO-16
+cd <DIRECTORIO_REPOSITORIO>
 git status
 git fetch origin
 ```
@@ -428,7 +497,7 @@ curl http://127.0.0.1:8001/health
 
 Los cambios deben probarse antes de considerarse desplegados correctamente.
 
-### 9. Integración pendiente con Java
+### 10. Integración pendiente con Java
 
 Actualmente FastAPI escucha únicamente en `127.0.0.1:8001`.
 
@@ -444,7 +513,7 @@ Antes de habilitar la integración remota se requiere:
 
 No se recomienda exponer directamente el puerto interno de FastAPI a Internet sin controles de seguridad.
 
-### 10. Estado del despliegue
+### 11. Estado del despliegue
 
 **Completado:**
 - Instalación y configuración del motor en OCI.
@@ -459,3 +528,15 @@ No se recomienda exponer directamente el puerto interno de FastAPI a Internet si
 - Despliegue de los cambios posteriores a la versión instalada en OCI.
 
 Esta documentación describe la configuración conocida del despliegue y debe mantenerse actualizada cuando cambien la infraestructura o los mecanismos de acceso.
+
+### 12. Actualización pendiente de minimización de datos
+
+La implementación de minimización de datos de autores está incluida en el PR #16:
+
+https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/pull/16
+
+**Estado:** los cambios del PR #16 todavía no están desplegados en la instancia OCI.
+
+Una vez aprobado y fusionado el PR, será necesario actualizar el código en OCI, instalar cualquier dependencia nueva, reiniciar `nocountry-ai.service` y verificar los endpoints.
+
+Hasta completar ese procedimiento, no debe considerarse activa en OCI la protección incorporada por el PR #16.
