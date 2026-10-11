@@ -78,7 +78,36 @@ def test_generator_prompts():
         assert "[AUTOR]" in prompt
 
 
+def test_sanitize_generated_content():
+    from privacy import sanitize_generated_content
+
+    original = "Celebramos el éxito de [AUTOR]."
+    resultado = sanitize_generated_content(original)
+
+    assert "[AUTOR]" not in resultado
+    assert "una persona de la comunidad" in resultado
+
+
+def test_sanitize_analysis():
+    from privacy import sanitize_analysis
+
+    original = {
+        "tema": "Logro profesional de [AUTOR]",
+        "insight": "[AUTOR] consiguió empleo.",
+        "sentimiento": "positivo",
+    }
+
+    resultado = sanitize_analysis(original)
+
+    assert "[AUTOR]" not in resultado["tema"]
+    assert "[AUTOR]" not in resultado["insight"]
+    assert resultado["sentimiento"] == "positivo"
+
+
 if __name__ == "__main__":
     test_anonymization()
     test_generator_prompts()
-    print("OK: pruebas de anonimización superadas")
+    test_sanitize_generated_content()
+    test_sanitize_analysis()
+
+    print("OK: pruebas de anonimización y sanitización superadas")

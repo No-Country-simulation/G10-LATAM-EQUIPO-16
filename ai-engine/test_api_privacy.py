@@ -44,13 +44,13 @@ def fake_analyze_batch(interactions):
     analysis = SimpleNamespace(
         id="MSG-001",
         sentimiento="positivo",
-        tema="empleabilidad",
+        tema="Empleabilidad de [AUTOR]",
         tipo="logro",
         relevancia="alta",
         insight="Conseguí mi primer empleo.",
         model_dump=lambda: {
             "sentimiento": "positivo",
-            "tema": "empleabilidad",
+            "tema": "Empleabilidad de [AUTOR]",
             "tipo": "logro",
             "relevancia": "alta",
             "insight": "Conseguí mi primer empleo.",
@@ -65,7 +65,7 @@ def fake_graph_invoke(state):
 
     return {
         "route": "linkedin",
-        "content": "Publicación de prueba",
+        "content": "Celebramos el éxito de [AUTOR] por conseguir empleo.",
     }
 
 
@@ -86,6 +86,12 @@ def test_single_endpoint():
 
     assert response.status_code == 200, response.text
     assert response.json()["route"] == "linkedin"
+
+    data = response.json()
+
+    assert "[AUTOR]" not in data["content"]
+    assert "[AUTOR]" not in str(data["analysis"])
+    assert AUTHOR not in str(data)
 
 
 def test_batch_endpoint():
@@ -117,6 +123,12 @@ def test_batch_endpoint():
     assert data["status"] == "exito"
     assert data["interacciones_analizadas"][0]["id"] == "MSG-001"
     assert data["activos_distribucion_generados"]["post_linkedin"] is not None
+
+    assert "[AUTOR]" not in str(data)
+    assert AUTHOR not in str(data)
+    assert "una persona de la comunidad" in (
+        data["activos_distribucion_generados"]["post_linkedin"]["copy"]
+    )
 
 
 if __name__ == "__main__":

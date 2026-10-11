@@ -31,6 +31,10 @@ INSTRUCCIONES:
 - Escribe en español.
 - Mantén un tono profesional, positivo y humano.
 - No inventes información que no aparezca en la interacción.
+- El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
+- Si aparece [AUTOR] en el mensaje o análisis, reformula la oración de manera natural sin incluir ese marcador ni intentar recuperar el nombre.
+- No deduzcas el género de una persona únicamente por su profesión, cargo o términos como "desarrollador".
+- Cuando el género no sea explícito, utiliza expresiones neutrales como "una persona de la comunidad".
 - Máximo 100 palabras.
 - Devuelve únicamente el texto de la publicación.
 """
@@ -72,6 +76,10 @@ INSTRUCCIONES:
 - Responde de forma breve, didáctica y útil.
 - No inventes información que no pueda justificarse.
 - Si falta información para responder con precisión, indícalo.
+- El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
+- Si aparece [AUTOR] en el mensaje o análisis, reformula la oración de manera natural sin incluir ese marcador ni intentar recuperar el nombre.
+- No deduzcas el género de una persona únicamente por su profesión, cargo o términos como "desarrollador".
+- Cuando el género no sea explícito, utiliza expresiones neutrales como "una persona de la comunidad".
 - Máximo 150 palabras.
 - Usa exactamente este formato:
 
@@ -119,6 +127,10 @@ INSTRUCCIONES:
 - No inventes compromisos, soluciones, mejoras, avances, estados de trabajo ni promesas de la organización.
 - No conviertas una sugerencia, queja o dificultad del usuario en una acción confirmada de la organización.
 - Puedes reformular el mensaje para hacerlo más claro, pero sin agregar hechos nuevos.
+- El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
+- Si aparece [AUTOR] en el mensaje o análisis, reformula la oración de manera natural sin incluir ese marcador ni intentar recuperar el nombre.
+- No deduzcas el género de una persona únicamente por su profesión, cargo o términos como "desarrollador".
+- Cuando el género no sea explícito, utiliza expresiones neutrales como "una persona de la comunidad".
 - Máximo 80 palabras.
 - Devuelve únicamente el texto del destaque.
 """

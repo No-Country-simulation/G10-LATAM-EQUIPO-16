@@ -12,7 +12,11 @@ from analyzer import (
 
 from graph import decide_route, graph
 from models import Interaction
-from privacy import anonymize_interaction
+from privacy import (
+    anonymize_interaction,
+    sanitize_generated_content,
+    sanitize_analysis,
+)
 
 
 app = FastAPI(
@@ -70,9 +74,9 @@ def analyze(interaction: InteractionRequest):
 
     return {
         "status": "processed",
-        "analysis": analysis.model_dump(),
+        "analysis": sanitize_analysis(analysis.model_dump()),
         "route": graph_result["route"],
-        "content": graph_result["content"],
+        "content": sanitize_generated_content(graph_result["content"]),
         "metrics": metrics,
     }
 
@@ -171,7 +175,7 @@ def analyze_batch(batch: BatchRequest):
                 {
                     "id": interaction.id,
                     "status": "processed",
-                    "analysis": analysis.model_dump(),
+                    "analysis": sanitize_analysis(analysis.model_dump()),
                     "route": route,
                     "content": "",
                 }
@@ -203,11 +207,11 @@ def analyze_batch(batch: BatchRequest):
                 }
             )
 
-            content = graph_result["content"]
+            content = sanitize_generated_content(graph_result["content"])
 
             if route == "linkedin" and content:
                 assets["post_linkedin"] = {
-                    "titulo": analysis.tema,
+                    "titulo": sanitize_generated_content(analysis.tema),
                     "copy": content,
                     "canal_recomendado": "LinkedIn Oficial",
                     "potencial_engagement": {
@@ -219,14 +223,14 @@ def analyze_batch(batch: BatchRequest):
 
             elif route == "newsletter" and content:
                 assets["destaque_newsletter_semanal"] = {
-                    "seccion": analysis.tema,
-                    "titular": analysis.insight,
+                    "seccion": sanitize_generated_content(analysis.tema),
+                    "titular": sanitize_generated_content(analysis.insight),
                     "resumen": content,
                 }
 
             elif route == "faq" and content:
                 assets["sugerencia_contenido_faq"] = {
-                    "tema": analysis.tema,
+                    "tema": sanitize_generated_content(analysis.tema),
                     "origen": interaction.canal,
                     "status": "BORRADOR",
                 }
