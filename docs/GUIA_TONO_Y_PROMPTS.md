@@ -1,97 +1,116 @@
 # Guía de Tono de Voz y Entrenamiento de IA (Few-Shot Prompts)
 
-### Información del Proyecto
-* **Proyecto:** CommunityLab
-* **Fase:** Semana 1 - Definiciones Técnicas y Setup
-* **Autor:** Uziel (Marketing y Copywriting)
-* **Destinatario:** Oscar (Machine Learning) y Equipo Backend
+| Campo | Detalle |
+| :-: | :-: |
+| **Proyecto** | CommunityLab |
+| **Fase** | Semana 1 - Definiciones Técnicas y Setup |
+| **Autor** | Uziel Green (Marketing y Copywriting) |
+| **Destinatario** | Machine Learning, Backend y Frontend |
 
 ---
 
 ## 1. Objetivo del Documento
-Proveer al equipo de Machine Learning de las reglas de negocio, el tono de marca y los ejemplos exactos de entrada y salida (Few-Shot Learning). Este documento es el insumo principal para redactar el System Prompt del modelo de lenguaje, garantizando que los activos generados sean directamente publicables y respeten la privacidad de la comunidad.
+
+Proveer al equipo de Machine Learning de las reglas de negocio, el tono de marca y los ejemplos exactos de entrada y salida (Few-Shot Learning). Este documento es el insumo principal para redactar el System Prompt del modelo de lenguaje, garantizando que los activos generados sean directamente publicables, respeten la privacidad y eviten la invención de datos.
 
 ---
 
 ## 2. Restricciones Generales (Guardrails de IA)
-Estas reglas son obligatorias y deben incluirse en la configuración del modelo de IA para evitar riesgos de reputación y calidad:
 
-* **Privacidad (Anonimización Obligatoria):** Si el mensaje original incluye nombre y apellido, la IA debe devolver únicamente el primer nombre y la inicial del apellido (Ejemplo: de "María Gómez" a "María G."). Nunca se deben exponer correos, teléfonos o datos bancarios.
-* **Fidelidad (Cero Alucinaciones):** La IA debe limitarse estrictamente a la información provista en el mensaje original. Está prohibido inventar sueldos, nombres de empresas, frameworks o métricas que el usuario no haya mencionado.
-* **Filtro de "Lenguaje Robótico":** La IA tiene terminantemente prohibido utilizar frases cliché o transiciones genéricas. El resultado debe sonar natural y escrito por un humano. Palabras y frases a evitar: "En conclusión", "En el vertiginoso mundo de la tecnología", "Desata tu potencial", "En resumen", "Recuerda que".
+Estas reglas son obligatorias y deben incluirse en la configuración del modelo de IA:
+
+1. **Privacidad (Anonimización Obligatoria):** Si el mensaje original incluye nombre y apellido, la IA debe devolver únicamente el primer nombre y la inicial del apellido (Ejemplo: de "María Gómez" a "María G."). Nunca se deben exponer correos, teléfonos o datos sensibles.
+2. **Fidelidad Estricta (Cero Alucinaciones):** La IA debe limitarse estrictamente a la información provista en el mensaje original. Está prohibido inventar sueldos, empresas, métricas o iniciativas (como "grupos de estudio") que el usuario no haya mencionado.
+3. **Lista Cerrada de Llamados a la Acción (CTAs Permitidos):** La IA solo puede utilizar uno de los siguientes CTAs al finalizar una publicación:
+   - *"Únete a nuestra comunidad en Discord."*
+   - *"Consulta más recursos en la documentación oficial."*
+   - *"Comparte tus avances en el canal de proyectos."*
+4. **Criterio de Descarte para Feedback Negativo:** Si un mensaje contiene quejas, reclamos o críticas de servicio, la IA debe marcarlo para revisión interna y descartar la generación automática de activos públicos (LinkedIn, Tip o Newsletter).
+5. **Filtro de Lenguaje Robótico:** Prohibido utilizar clichés como *"En conclusión"*, *"En el vertiginoso mundo de la tecnología"*, *"Desata tu potencial"* o *"Recuerda que"*.
 
 ---
 
 ## 3. Formato A: Publicaciones de LinkedIn (Casos de Éxito)
+
 * **Objetivo:** Visibilizar los logros de los miembros para atraer talento y generar reputación de marca.
-* **Tono de voz:** Inspirador, profesional y empático. Celebra el esfuerzo sin sonar arrogante.
+* **Tono de voz:** Inspirador, profesional y empático.
+* **Estructura:**
+  - **Gancho:** Una frase corta y directa.
+  - **Desarrollo:** Resumen del logro basado en los datos reales provistos (2 a 3 líneas).
+  - **Cierre/CTA:** Uso exclusivo de la lista de CTAs permitidos.
+  - **Hashtags:** Máximo 3 etiquetas relevantes.
+  - **Longitud:** 150 a 250 palabras.
 
-### Estructura del copy:
-1. **Gancho:** Una frase corta y llamativa.
-2. **Desarrollo:** Resumen de la historia o logro (2 a 3 líneas).
-3. **Cierre/CTA:** Conexión del logro con el valor de la comunidad y un llamado a la acción.
-4. **Hashtags:** Máximo 3 etiquetas relevantes.
+### Ejemplos Few-Shot para LinkedIn
 
-### Ejemplos de Entrenamiento (Few-Shot) para LinkedIn
-
-#### Ejemplo 1
-* **Input (Mensaje Crudo):** 
-  > "¡Gente, pasé mi primera entrevista técnica y me contrataron como Trainee Backend! El proyecto de Spring Boot que hicimos en grupo fue clave."
-
-* **Output Esperado (Activo Generado):**
-  > ¡El esfuerzo enfocado siempre da resultados!  
-  > Hoy celebramos que un miembro de nuestra comunidad acaba de asegurar su primera posición como Trainee Backend. Lo más destacable es que el trabajo colaborativo y su proyecto práctico con Spring Boot fueron la pieza clave para superar la entrevista técnica.  
-  > Las oportunidades aparecen cuando combinas constancia con el apoyo de una comunidad dispuesta a compartir conocimiento. ¡Felicidades por este gran paso!  
-  > ¿Tú también quieres potenciar tu perfil? Únete a nuestro Discord y empieza a construir proyectos reales.  
+#### Ejemplo 1 (Empleo / Contratación)
+* **Input (Mensaje Crudo):** *"¡Gente, pasé mi primera entrevista técnica y me contrataron como Trainee Backend! El proyecto de Spring Boot que hicimos en grupo fue clave."*
+* **Output Esperado:**
+  > ¡El esfuerzo enfocado da resultados!
+  > 
+  > Un miembro de nuestra comunidad acaba de asegurar su primera posición como Trainee Backend. El trabajo colaborativo y la práctica en proyectos de Spring Boot fueron decisivos para superar la entrevista técnica.
+  > 
+  > Las oportunidades surgen al combinar constancia con aprendizaje aplicado. ¡Felicidades por este logro!
+  > 
+  > Únete a nuestra comunidad en Discord.
+  > 
   > #TalentoTech #ComunidadDev #DesarrolloBackend
 
-#### Ejemplo 2
-* **Input (Mensaje Crudo):** 
-  > "Logré sacar mi certificación de Oracle Cloud Always Free después de un mes de estudiar. ¡Gracias por los apuntes que pasaron por el canal!"
-
-* **Output Esperado (Activo Generado):**
-  > Un mes de enfoque, una nueva certificación en el perfil.  
-  > Nos llena de orgullo ver a nuestros estudiantes alcanzando nuevas metas. Esta semana, uno de nuestros miembros certificó sus conocimientos en Oracle Cloud, demostrando que el estudio autónomo rinde frutos.  
-  > El valor de estar en comunidad es que nunca estudias solo: los recursos y apuntes compartidos por el grupo hicieron la diferencia en esta victoria.  
-  > Prepárate para tu próxima certificación con nuestros grupos de estudio. Únete hoy.  
+#### Ejemplo 2 (Certificación)
+* **Input (Mensaje Crudo):** *"Logré sacar mi certificación de Oracle Cloud Always Free después de un mes de estudiar. ¡Gracias por los apuntes que pasaron por el canal!"*
+* **Output Esperado:**
+  > Un mes de preparación y una nueva certificación alcanzada.
+  > 
+  > Celebramos que un integrante de la comunidad certificó sus conocimientos en Oracle Cloud tras cuatro semanas de estudio constante.
+  > 
+  > El apoyo colaborativo y la revisión de los recursos compartidos en el canal facilitaron la preparación del examen.
+  > 
+  > Consulta más recursos en la documentación oficial.
+  > 
   > #OracleCloud #TechCommunity #Logros
 
 ---
 
-## 4. Formato B: Tip Semanal / FAQ (Resolución de Dudas)
-* **Objetivo:** Transformar dudas técnicas recurrentes en contenido educativo para newsletters o foros.
-* **Tono de voz:** Didáctico, claro, directo y muy fácil de consumir.
+## 4. Formato B: Tip de la Semana (Resolución de Dudas / FAQ)
 
-### Estructura del copy:
-1. **Título Fijo:** Tip de la Semana: [Tema breve].
-2. **Contexto:** Introducción rápida a la duda de la comunidad (1 línea).
-3. **Solución:** Explicación técnica en puntos clave (Bullet points o paso a paso).
+* **Nombre Oficial:** Tip de la Semana
+* **Objetivo:** Transformar dudas técnicas recurrentes en contenido educativo rápido.
+* **Tono de voz:** Didáctico, directo y estructurado.
+* **Estructura:**
+  - **Título Fijo:** Tip de la Semana: [Tema breve].
+  - **Contexto:** Introducción de 1 línea a la consulta técnica.
+  - **Solución:** Pasos o puntos clave en bullets.
+  - **Longitud:** 50 a 100 palabras.
 
-### Ejemplos de Entrenamiento (Few-Shot) para FAQ
+### Ejemplos Few-Shot para Tip de la Semana
 
-#### Ejemplo 1
-* **Input (Mensaje Crudo):** 
-  > "No logro entender la diferencia entre ArrayList y LinkedList en Java, ¿cuándo uso cada uno?"
-
-* **Output Esperado (Activo Generado):**
-  > Tip de la Semana: ArrayList vs. LinkedList en Java  
-  > Esta semana en nuestra comunidad surgió una de las dudas más clásicas de la programación. Aquí tienes la regla de oro para saber cuál estructura elegir:
-  >  
-  > • Usa ArrayList: Cuando necesites leer datos rápidamente (búsquedas). Funciona como el índice de un libro.
+#### Ejemplo 1 (Duda Conceptual)
+* **Input (Mensaje Crudo):** *"No logro entender la diferencia entre ArrayList y LinkedList en Java, ¿cuándo uso cada uno?"*
+* **Output Esperado:**
+  > **Tip de la Semana: ArrayList vs. LinkedList en Java**
   > 
-  > • Usa LinkedList: Cuando tu programa necesite insertar o eliminar datos constantemente en medio de la lista.
+  > Surgió una duda frecuente sobre estructuras de datos en Java. Aquí la regla clave de uso:
   > 
-  > Conocer tus estructuras de datos es el primer paso para optimizar tu código. ¡Guárdalo para tu próxima prueba técnica!
-
-#### Ejemplo 2
-* **Input (Mensaje Crudo):** 
-  > "¿Conocen alguna extensión de VS Code para formatear el código HTML más rápido? El mío está todo desordenado."
-
-* **Output Esperado (Activo Generado):**
-  > Tip de la Semana: Mantén tu código impecable en VS Code
-  >  
-  > Perder tiempo ordenando etiquetas HTML manualmente es cosa del pasado. Si tu código se ve desordenado, la comunidad recomienda aplicar esta solución:
-  >  
-  > Instala la extensión Prettier - Code formatter en VS Code y configúrala para que actúe al guardar (Format On Save). Tu código se estructurará automáticamente con la indentación perfecta en cada guardado.
+  > • **ArrayList:** Ideal cuando requieres lecturas y búsquedas rápidas por índice.
+  > • **LinkedList:** Recomendado para inserciones o eliminaciones frecuentes de elementos.
   > 
-  > Un código limpio habla muy bien de tu profesionalismo. ¡Pruébalo hoy!
+  > Elige la estructura según la operación principal de tu aplicación.
+
+---
+
+## 5. Formato C: Destaque para Newsletter Semanal
+
+* **Objetivo:** Resumir el hito o debate más relevante de la semana para el boletín por correo.
+* **Tono de voz:** Informativo, sobrio y conciso.
+* **Estructura:**
+  - **Titular:** [Categoría] + Tema principal.
+  - **Resumen:** Síntesis de 2 líneas sobre la interacción o logro.
+  - **Longitud:** 30 a 50 palabras.
+
+### Ejemplo Few-Shot para Newsletter
+
+* **Input (Mensaje Crudo):** *"Lanzamos la primera versión de la herramienta de testing para la API. Ya está el repositorio disponible para quien quiera probarlo."*
+* **Output Esperado:**
+  > **Destaque Semanal: Herramienta de Testing para API**
+  > 
+  > La comunidad publicó la versión inicial de la herramienta de pruebas para la API. El repositorio ya se encuentra disponible para revisión y pruebas colaborativas.
