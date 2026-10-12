@@ -16,21 +16,44 @@ import java.util.UUID;
 @Service
 public class OciObjectStorageService {
 
-    @Value("${oci.os.namespace}")
+    @Value("${oci.os.mode:mock}")
+    private String mode;
+
+    @Value("${oci.os.namespace:}")
     private String namespace;
 
-    @Value("${oci.os.bucket}")
+    @Value("${oci.os.bucket:communitylab-local}")
     private String bucket;
 
-    @Value("${oci.os.region}")
+    @Value("${oci.os.region:}")
     private String region;
 
     public String getBucket() {
         return bucket;
     }
 
+    public boolean isMockMode() {
+        return "mock".equalsIgnoreCase(mode);
+    }
+
     public String uploadJson(String json) throws Exception {
         String objectName = "resultados/batch_" + UUID.randomUUID() + ".json";
+        if ("mock".equalsIgnoreCase(mode)) {
+            return "mock://" + bucket + "/" + objectName;
+        }
+
+        if (!"real".equalsIgnoreCase(mode)) {
+            throw new IllegalStateException(
+                    "Modo de almacenamiento no válido: " + mode
+            );
+        }
+
+        if (namespace.isBlank() || region.isBlank()) {
+            throw new IllegalStateException(
+                    "Falta configurar OCI_OS_NAMESPACE o OCI_REGION"
+            );
+        }
+
         byte[] content = json.getBytes(StandardCharsets.UTF_8);
 
         var provider = InstancePrincipalsAuthenticationDetailsProvider

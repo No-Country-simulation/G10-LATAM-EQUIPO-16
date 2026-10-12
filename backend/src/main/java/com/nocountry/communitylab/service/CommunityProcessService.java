@@ -138,7 +138,7 @@ public class CommunityProcessService {
         DistributionAssetsDto assets = aiResult.getDistributionAssets() != null ? aiResult.getDistributionAssets() : DistributionAssetsDto.builder().build();
 
         // Sobrescribir la info de OCI con la ruta real generada
-        assets.setOciStorage(OciStorageInfoDto.builder().bucket(objectStorageService.getBucket()).objectRoute(ociRoute).status("guardado_con_exito").build());
+        assets.setOciStorage(OciStorageInfoDto.builder().bucket(objectStorageService.getBucket()).objectRoute(ociRoute).status(objectStorageService.isMockMode() ? "simulado" : "guardado_con_exito").build());
 
         return CommunityProcessResponseDto.builder().status(aiResult.getStatus() != null ? aiResult.getStatus() : "exito").summary(summary).distributionAssets(assets).build();
     }
