@@ -233,6 +233,36 @@ Después, LangGraph selecciona la ruta correspondiente para generar el activo de
 
 > Los textos generados pueden variar entre ejecuciones porque son producidos dinámicamente por el modelo de IA.
 
+## 🔐 Protección de datos y anonimización
+
+El AI Engine incorpora un mecanismo de anonimización para reducir la exposición de datos personales antes de enviar interacciones a Google Gemini.
+
+### Funcionamiento
+
+* El módulo privacy.py crea una copia anonimizada de cada interacción.
+* El nombre del autor se sustituye por Usuario anónimo.
+* Las coincidencias del nombre completo del autor dentro del mensaje se reemplazan por [AUTOR].
+* Los prompts de LinkedIn, FAQ y newsletter no incluyen el campo autor.
+* Los endpoints /analyze y /api/v1/analyze-batch utilizan las interacciones anonimizadas durante el análisis y la generación de contenido.
+* Se conserva el identificador original de cada interacción para mantener la trazabilidad.
+
+### Pruebas de privacidad
+
+Se incorporaron pruebas automatizadas para verificar la anonimización y el procesamiento de ambos endpoints, sin realizar llamadas reales a Gemini.
+
+Desde la raíz del repositorio:
+
+```powershell
+python ai-engine/test_privacy.py
+python ai-engine/test_api_privacy.py
+```
+
+### Limitaciones
+
+La implementación actual protege el nombre completo conocido del autor, pero no garantiza la eliminación de nombres parciales, nombres de terceros, correos electrónicos, números telefónicos u otros datos personales incluidos en los mensajes.
+
+Por ello, esta funcionalidad constituye una protección inicial y no una anonimización completa de toda la información personal.
+
 ## 🔄 Manejo de errores y reintentos
 
 El AI Engine diferencia entre errores transitorios y errores permanentes durante la comunicación con Gemini.

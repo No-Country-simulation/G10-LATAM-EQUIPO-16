@@ -11,6 +11,12 @@ from analyzer import (
 )
 
 from graph import decide_route, graph
+from models import Interaction
+from privacy import (
+    anonymize_interaction,
+    sanitize_generated_content,
+    sanitize_analysis,
+)
 
 
 app = FastAPI(
@@ -49,11 +55,15 @@ def health():
 
 @app.post("/analyze")
 def analyze(interaction: InteractionRequest):
-    analysis, metrics = analyze_text(interaction.texto)
+    safe_interaction = anonymize_interaction(
+        Interaction(**interaction.model_dump())
+    )
+    
+    analysis, metrics = analyze_text(safe_interaction.texto)
 
     graph_result = graph.invoke(
         {
-            "interaction": interaction,
+            "interaction": safe_interaction,
             "analysis": analysis,
             "route": "",
             "content": "",
@@ -64,9 +74,9 @@ def analyze(interaction: InteractionRequest):
 
     return {
         "status": "processed",
-        "analysis": analysis.model_dump(),
+        "analysis": sanitize_analysis(analysis.model_dump()),
         "route": graph_result["route"],
-        "content": graph_result["content"],
+        "content": sanitize_generated_content(graph_result["content"]),
         "metrics": metrics,
     }
 
@@ -74,6 +84,18 @@ def analyze(interaction: InteractionRequest):
 @app.post("/api/v1/analyze-batch")
 def analyze_batch(batch: BatchRequest):
     results = []
+
+    safe_interactions = {
+        interaction.id: anonymize_interaction(
+            Interaction(
+                autor=interaction.autor,
+                canal=interaction.canal,
+                tipo=interaction.tipo,
+                texto=interaction.texto,
+            )
+        )
+        for interaction in batch.interacciones
+    }
 
     assets = {
         "post_linkedin": None,
@@ -84,7 +106,7 @@ def analyze_batch(batch: BatchRequest):
     batch_input = [
         {
             "id": interaction.id,
-            "texto": interaction.texto,
+            "texto": safe_interactions[interaction.id].texto,
         }
         for interaction in batch.interacciones
     ]
@@ -153,7 +175,7 @@ def analyze_batch(batch: BatchRequest):
                 {
                     "id": interaction.id,
                     "status": "processed",
-                    "analysis": analysis.model_dump(),
+                    "analysis": sanitize_analysis(analysis.model_dump()),
                     "route": route,
                     "content": "",
                 }
@@ -170,12 +192,13 @@ def analyze_batch(batch: BatchRequest):
 
     for route, candidate in candidates.items():
         interaction = candidate["interaction"]
+        safe_interaction = safe_interactions[interaction.id]
         analysis = candidate["analysis"]
 
         try:
             graph_result = graph.invoke(
                 {
-                    "interaction": interaction,
+                    "interaction": safe_interaction,
                     "analysis": analysis,
                     "route": "",
                     "content": "",
@@ -184,11 +207,11 @@ def analyze_batch(batch: BatchRequest):
                 }
             )
 
-            content = graph_result["content"]
+            content = sanitize_generated_content(graph_result["content"])
 
             if route == "linkedin" and content:
                 assets["post_linkedin"] = {
-                    "titulo": analysis.tema,
+                    "titulo": sanitize_generated_content(analysis.tema),
                     "copy": content,
                     "canal_recomendado": "LinkedIn Oficial",
                     "potencial_engagement": {
@@ -200,14 +223,14 @@ def analyze_batch(batch: BatchRequest):
 
             elif route == "newsletter" and content:
                 assets["destaque_newsletter_semanal"] = {
-                    "seccion": analysis.tema,
-                    "titular": analysis.insight,
+                    "seccion": sanitize_generated_content(analysis.tema),
+                    "titular": sanitize_generated_content(analysis.insight),
                     "resumen": content,
                 }
 
             elif route == "faq" and content:
                 assets["sugerencia_contenido_faq"] = {
-                    "tema": analysis.tema,
+                    "tema": sanitize_generated_content(analysis.tema),
                     "origen": interaction.canal,
                     "status": "BORRADOR",
                 }
