@@ -6,6 +6,7 @@ import com.oracle.bmc.objectstorage.ObjectStorage;
 import com.oracle.bmc.objectstorage.ObjectStorageClient;
 import com.oracle.bmc.objectstorage.requests.PutObjectRequest;
 import com.oracle.bmc.objectstorage.responses.PutObjectResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -15,8 +16,18 @@ import java.util.UUID;
 @Service
 public class OciObjectStorageService {
 
-    private static final String NAMESPACE = "axfj94golgwj";
-    private static final String BUCKET = "communitylab-results";
+    @Value("${oci.os.namespace}")
+    private String namespace;
+
+    @Value("${oci.os.bucket}")
+    private String bucket;
+
+    @Value("${oci.os.region}")
+    private String region;
+
+    public String getBucket() {
+        return bucket;
+    }
 
     public String uploadJson(String json) throws Exception {
         String objectName = "resultados/batch_" + UUID.randomUUID() + ".json";
@@ -27,12 +38,12 @@ public class OciObjectStorageService {
                 .build();
 
         try (ObjectStorage client = ObjectStorageClient.builder()
-                .region(Region.SA_SANTIAGO_1)
+                .region(Region.fromRegionId(region))
                 .build(provider)) {
 
             PutObjectRequest request = PutObjectRequest.builder()
-                    .namespaceName(NAMESPACE)
-                    .bucketName(BUCKET)
+                    .namespaceName(namespace)
+                    .bucketName(bucket)
                     .objectName(objectName)
                     .contentLength((long) content.length)
                     .putObjectBody(new ByteArrayInputStream(content))
@@ -47,7 +58,7 @@ public class OciObjectStorageService {
                 );
             }
 
-            return "oci://" + BUCKET + "/" + objectName;
+            return "oci://" + bucket + "/" + objectName;
         }
     }
 }
