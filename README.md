@@ -8,7 +8,7 @@
 
 > CommunityLab recibe interacciones de una comunidad digital, las analiza con IA y genera contenido listo para revisar (post de LinkedIn, FAQ y destacado de newsletter), con curaduría humana antes de publicar. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
 
-* Última actualización: 9 de octubre de 2026.
+* Última actualización: 11 de octubre de 2026.
 
 ## 📑 Tabla de contenidos
 
@@ -21,6 +21,8 @@
 * [Instalación](#-instalación)
 * [Uso](#-uso)
 * [Estructura del proyecto](#-estructura-del-proyecto)
+* [Cumplimiento del reto](#-cumplimiento-del-reto)
+* [Decisiones y límites conocidos](#-decisiones-y-límites-conocidos)
 * [Roadmap](#-roadmap)
 * [Equipo](#-equipo)
 * [Licencia](#-licencia)
@@ -175,6 +177,60 @@ G10-LATAM-EQUIPO-16/
 ```
 
 > No versionados por seguridad (ver `.gitignore`): `.env` y la wallet de Oracle.
+
+## ✅ Cumplimiento del reto
+
+Estado frente al checklist de requisitos mínimos del reto, al 11 de octubre de 2026.
+
+| Requisito del reto | Estado | Dónde verlo |
+| --- | --- | --- |
+| Ingestión de interacciones (CSV o JSON) | ✅ Cumplido | `POST /api/v1/community/process` y carga de archivo en Streamlit |
+| Análisis de sentimiento y temas con LLM | ✅ Cumplido | Gemini en el AI Engine (`ai-engine/`) |
+| Al menos 2 formatos de activos | 🟡 Parcial | Post de LinkedIn funcional. El FAQ devuelve tema y origen, pero no la pregunta ni la respuesta generadas. El newsletter no tiene formato definido |
+| Orquestación del flujo | ✅ Cumplido | LangGraph enruta cada interacción al activo que corresponde |
+| Integración con OCI Object Storage (obligatorio) | 🔴 Pendiente | La subida está simulada en `main`; la implementación real está en revisión (ver #22 y #12) |
+| Demostración de 3 o más ejemplos de transformación | 🟡 En preparación | Hay un lote ficticio y balanceado de 6 mensajes que cubre las rutas de enrutamiento; falta ejecutarlo con Gemini real y publicar los resultados |
+| Repositorio con documentación y diagrama del pipeline | 🟡 En progreso | Diagrama incluido y logo del proyecto en `docs/assets/logo/`; la guía de despliegue en OCI está en revisión (ver #17) |
+
+Recursos opcionales:
+
+| Recurso opcional | Estado |
+| --- | --- |
+| AI Engine desplegado en OCI Compute | 🟡 Desplegado, pero con una versión anterior a la minimización de datos del autor; falta redesplegar, y también URL configurable, conexión segura y documentar el despliegue (ver #17) |
+| Panel de curaduría en Streamlit | ⏳ Planificado; los endpoints de curaduría aún no existen |
+
+## 🧭 Decisiones y límites conocidos
+
+Lo que decidimos, por qué, y lo que sabemos que todavía no está.
+
+### Decisiones de diseño
+
+* **Curaduría humana antes de publicar.** El sistema genera borradores; una persona aprueba, edita o rechaza. Preferimos eso a publicar automáticamente contenido de una comunidad real.
+* **Un activo por tipo y por lote.** De cada tipo (LinkedIn, FAQ, newsletter) se genera el de mayor relevancia; ante empate, el primero en llegar. Mantiene el costo y la revisión acotados.
+* **Hasta 10 interacciones por lote.** Si se superan, se rechaza el lote completo (`400`) en vez de procesarlo a medias.
+* **Errores del servicio de IA.** Los fallos temporales (límite de uso o saturación de Gemini) se distinguen de los permanentes (formato inválido). Reintentar solo los temporales está planificado; hoy el backend responde `503` ante cualquier error del AI Engine.
+* **Minimización de datos del autor.** Antes de enviar texto a Gemini, el módulo `privacy.py` quita el campo `autor` de los prompts y reemplaza el nombre completo del autor, si aparece en el mensaje, por un marcador. El contenido generado no nombra a la persona: usa "una persona de la comunidad". Esto difiere a propósito del ejemplo del reto, donde el post nombra a la autora. Preferimos no publicar ni enviar a un servicio externo datos personales sin consentimiento, porque un error ahí es difícil de revertir y omitir el nombre solo resta calidez al texto. Cómo mencionar al autor en el futuro (por ejemplo, con consentimiento explícito) está por decidir (ver #20).
+* **Datos de demostración y de entrenamiento por separado.** La demo usa mensajes ficticios; el dataset real de Stack Exchange vive en `data_science/` con su atribución y licencia (CC BY-SA), y se usa para entrenar y evaluar el modelo.
+* **Secretos fuera del repositorio.** `.env` y la wallet de Oracle no se versionan.
+
+### Límites conocidos
+
+| Límite | Por qué importa | Estado |
+| --- | --- | --- |
+| La subida a OCI Object Storage está simulada en `main` | Es el requisito obligatorio del MVP | En revisión (ver #22 y #12) |
+| La minimización solo cubre el nombre completo conocido del autor | No elimina nombres parciales, nombres de terceros, correos ni teléfonos dentro del mensaje. Es una protección inicial, no una anonimización completa | Conocido; ampliar queda para después |
+| El AI Engine desplegado en OCI aún no incluye la minimización | La protección existe en el código, no en el servicio desplegado | Pendiente de redespliegue |
+| Los posts no mencionan al autor | Los testimonios resultan menos personales que en el ejemplo del reto | Por decidir (ver #20) |
+| El FAQ no devuelve la pregunta ni la respuesta generadas | El activo llega incompleto | Planificado |
+| El newsletter no tiene formato definido | Solo un formato de activo está completo | Por definir |
+| Los endpoints de curaduría no existen | Aún no se puede aprobar o editar desde la interfaz | En progreso |
+| Si falla una interacción, el lote llega con `status: "parcial"` | El detalle de cuáles fallaron todavía no es consistente | Planificado |
+| Los ids de las interacciones deben ser únicos en el lote | Un id repetido puede mezclar resultados | Planificado (#18) |
+| El análisis por interacción no se persiste | No se puede auditar ni reutilizar | Planificado |
+| Tiempo y tokens por lote no se exponen | No podemos reportar costo ni límites de uso | Por medir |
+| La conexión entre servicios aún no es segura y la URL del frontend está fija en `localhost:8080` | Limita el despliegue fuera de la máquina local | Pendiente |
+
+Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se elimina de aquí.
 
 ## 🗺️ Roadmap
 
