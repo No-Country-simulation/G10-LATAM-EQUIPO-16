@@ -35,11 +35,12 @@ public class CommunityProcessService {
     public CommunityProcessService(
             InteractionRepository interactionRepository,
             FastAiClient fastAiClient,
-            OciObjectStorageService objectStorageService) {
+            OciObjectStorageService objectStorageService,
+            ObjectMapper objectMapper) {
         this.interactionRepository = interactionRepository;
         this.fastAiClient = fastAiClient;
         this.objectStorageService = objectStorageService;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = objectMapper;
     }
 
 

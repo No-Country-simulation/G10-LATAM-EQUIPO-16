@@ -60,8 +60,17 @@ public class OciObjectStorageService {
                 .builder()
                 .build();
 
+        Region ociRegion;
+        try {
+            ociRegion = Region.fromRegionId(region);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalStateException(
+                    "Región OCI inválida: " + region, ex
+            );
+        }
+
         try (ObjectStorage client = ObjectStorageClient.builder()
-                .region(Region.fromRegionId(region))
+                .region(ociRegion)
                 .build(provider)) {
 
             PutObjectRequest request = PutObjectRequest.builder()
