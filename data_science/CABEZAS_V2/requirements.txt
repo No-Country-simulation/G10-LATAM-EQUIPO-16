@@ -1,0 +1,11 @@
+pandas
+numpy
+matplotlib
+scikit-learn
+sentence-transformers
+datasets
+onnx
+onnxruntime
+ipykernel
+ipywidgets
+# Instalar PyTorch CUDA según el entorno local antes de entrenar.

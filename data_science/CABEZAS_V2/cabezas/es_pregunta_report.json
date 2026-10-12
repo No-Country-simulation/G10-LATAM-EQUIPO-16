@@ -1,0 +1,31 @@
+{
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "task": "es_pregunta",
+  "architecture": [
+    384,
+    64,
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "weighting": {
+    "pos_weight": 0.9518161601186064
+  },
+  "best_epoch": 8,
+  "threshold": 0.45,
+  "f1": 0.9440488301119023,
+  "precision": 0.9317269076305221,
+  "recall": 0.9567010309278351,
+  "confusion_matrix": [
+    [
+      384,
+      34
+    ],
+    [
+      21,
+      464
+    ]
+  ]
+}

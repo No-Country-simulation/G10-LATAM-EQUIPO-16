@@ -1,0 +1,29 @@
+[
+  {
+    "head": "es_pregunta",
+    "checkpoint": "es_pregunta",
+    "precision": "fp32",
+    "test_samples": 903,
+    "max_score_error": 5.960464477539062e-07,
+    "mean_score_error": 4.822457100317479e-08,
+    "bytes": 111982
+  },
+  {
+    "head": "es_logro",
+    "checkpoint": "es_logro",
+    "precision": "fp32",
+    "test_samples": 380,
+    "max_score_error": 2.384185791015625e-07,
+    "mean_score_error": 3.770508527622951e-08,
+    "bytes": 111982
+  },
+  {
+    "head": "sentimiento",
+    "checkpoint": "sentimiento_cardiff_binario",
+    "precision": "fp32",
+    "test_samples": 1160,
+    "max_score_error": 3.5762786865234375e-07,
+    "mean_score_error": 2.51007499230127e-08,
+    "bytes": 111982
+  }
+]
