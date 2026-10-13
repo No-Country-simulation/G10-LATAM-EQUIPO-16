@@ -535,8 +535,8 @@ La implementación de minimización de datos de autores está incluida en el PR 
 
 https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/pull/16
 
-**Estado:** los cambios del PR #16 todavía no están desplegados en la instancia OCI.
+**Estado:** PR #16 fusionado en main. Despliegue y funcionamiento de la anonimización en OCI pendientes de verificación.
 
-Una vez aprobado y fusionado el PR, será necesario actualizar el código en OCI, instalar cualquier dependencia nueva, reiniciar `nocountry-ai.service` y verificar los endpoints.
+Aunque el PR #16 ya fue fusionado en `main`, todavía es necesario verificar si sus cambios están desplegados en OCI. Para ello, se deberá revisar la versión instalada, actualizar el código si corresponde, instalar las dependencias necesarias, reiniciar `nocountry-ai.service` cuando sea necesario y validar los endpoints y la anonimización de datos.
 
 Hasta completar ese procedimiento, no debe considerarse activa en OCI la protección incorporada por el PR #16.
