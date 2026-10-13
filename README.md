@@ -186,7 +186,7 @@ Estado frente al checklist de requisitos mínimos del reto, al 12 de octubre de 
 | --- | --- | --- |
 | Ingestión de interacciones (CSV o JSON) | ✅ Cumplido | `POST /api/v1/community/process` y carga de archivo en Streamlit |
 | Análisis de sentimiento y temas con LLM | ✅ Cumplido | Gemini en el AI Engine (`ai-engine/`) |
-| Al menos 2 formatos de activos | 🟡 Parcial | Post de LinkedIn funcional. El FAQ devuelve tema y origen, pero no la pregunta ni la respuesta generadas. El newsletter no tiene formato definido |
+| Al menos 2 formatos de activos | ✅ Cumplido | El post de LinkedIn y el destaque de newsletter (sección, titular y resumen) se generan completos. El FAQ devuelve tema y origen, pero todavía no la pregunta ni la respuesta generadas |
 | Orquestación del flujo | ✅ Cumplido | LangGraph enruta cada interacción al activo que corresponde |
 | Integración con OCI Object Storage (obligatorio) | ✅ Cumplido | Subida real con Instance Principals, fusionada en `main` (#22) y verificada en una instancia de OCI. Por defecto el backend simula la subida (`mock://`); para guardar en el bucket se ejecuta con `OCI_OS_MODE=real`. Ver `docs/OCI_DEPLOYMENT.md` |
 | Demostración de 3 o más ejemplos de transformación | 🟡 En preparación | Hay un lote ficticio y balanceado de 6 mensajes que cubre las rutas de enrutamiento; falta ejecutarlo con Gemini real y publicar los resultados |
@@ -223,12 +223,12 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 | El AI Engine desplegado en OCI aún no incluye la minimización | La protección existe en el código, no en el servicio desplegado | Pendiente de redespliegue |
 | Los posts no mencionan al autor | Los testimonios resultan menos personales que en el ejemplo del reto | Por decidir (ver #20) |
 | El FAQ no devuelve la pregunta ni la respuesta generadas | El activo llega incompleto | Planificado |
-| El newsletter no tiene formato definido | Solo un formato de activo está completo | Por definir |
+| El titular del newsletter sale del análisis y puede afirmar más de lo que dice el mensaje original | Un reporte individual puede presentarse como un hecho de la comunidad. El panel de curaduría humana, que lo revisaría antes de publicar, está planificado y aún no existe | Conocido; a cubrir con la curaduría |
 | Los endpoints de curaduría no existen | Aún no se puede aprobar o editar desde la interfaz | En progreso |
 | Si falla una interacción, el lote llega con `status: "parcial"` | El detalle de cuáles fallaron todavía no es consistente | Planificado |
 | Los ids de las interacciones deben ser únicos en el lote | Un id repetido puede mezclar resultados | Planificado (#18) |
 | El análisis por interacción no se persiste | No se puede auditar ni reutilizar | Planificado |
-| Tiempo y tokens por lote no se exponen | No podemos reportar costo ni límites de uso | Por medir |
+| El servicio no expone tiempo ni tokens por lote | En corridas de demostración con mensajes ficticios se midieron de 2 a 4 llamadas a Gemini, de unos 750 a 2.500 tokens y de 3 a 19 s de extremo a extremo según el lote y la corrida; el costo y los límites de uso aún no están calculados | Parcialmente medido |
 | La conexión entre servicios aún no es segura y la URL del frontend está fija en `localhost:8080` | Limita el despliegue fuera de la máquina local | Pendiente |
 
 Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se elimina de aquí.
