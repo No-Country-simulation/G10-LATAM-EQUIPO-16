@@ -8,7 +8,7 @@
 
 > CommunityLab recibe interacciones de una comunidad digital, las analiza con IA y genera contenido listo para revisar (post de LinkedIn, FAQ y destacado de newsletter), con curaduría humana antes de publicar. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
 
-* Última actualización: 11 de octubre de 2026.
+* Última actualización: 12 de octubre de 2026.
 
 ## 📑 Tabla de contenidos
 
@@ -180,7 +180,7 @@ G10-LATAM-EQUIPO-16/
 
 ## ✅ Cumplimiento del reto
 
-Estado frente al checklist de requisitos mínimos del reto, al 11 de octubre de 2026.
+Estado frente al checklist de requisitos mínimos del reto, al 12 de octubre de 2026.
 
 | Requisito del reto | Estado | Dónde verlo |
 | --- | --- | --- |
@@ -188,7 +188,7 @@ Estado frente al checklist de requisitos mínimos del reto, al 11 de octubre de 
 | Análisis de sentimiento y temas con LLM | ✅ Cumplido | Gemini en el AI Engine (`ai-engine/`) |
 | Al menos 2 formatos de activos | 🟡 Parcial | Post de LinkedIn funcional. El FAQ devuelve tema y origen, pero no la pregunta ni la respuesta generadas. El newsletter no tiene formato definido |
 | Orquestación del flujo | ✅ Cumplido | LangGraph enruta cada interacción al activo que corresponde |
-| Integración con OCI Object Storage (obligatorio) | 🔴 Pendiente | La subida está simulada en `main`; la implementación real está en revisión (ver #22 y #12) |
+| Integración con OCI Object Storage (obligatorio) | ✅ Cumplido | Subida real con Instance Principals, fusionada en `main` (#22) y verificada en una instancia de OCI. Por defecto el backend simula la subida (`mock://`); para guardar en el bucket se ejecuta con `OCI_OS_MODE=real`. Ver `docs/OCI_DEPLOYMENT.md` |
 | Demostración de 3 o más ejemplos de transformación | 🟡 En preparación | Hay un lote ficticio y balanceado de 6 mensajes que cubre las rutas de enrutamiento; falta ejecutarlo con Gemini real y publicar los resultados |
 | Repositorio con documentación y diagrama del pipeline | 🟡 En progreso | Diagrama incluido y logo del proyecto en `docs/assets/logo/`; la guía de despliegue en OCI está en revisión (ver #17) |
 
@@ -217,7 +217,8 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 
 | Límite | Por qué importa | Estado |
 | --- | --- | --- |
-| La subida a OCI Object Storage está simulada en `main` | Es el requisito obligatorio del MVP | En revisión (ver #22 y #12) |
+| El backend simula la subida a OCI por defecto | Si se despliega sin `OCI_OS_MODE=real`, los resultados no llegan al bucket y la ruta devuelta es `mock://` | Documentado en `docs/OCI_DEPLOYMENT.md` |
+| El esquema de Oracle se crea a mano | No hay migraciones automáticas (Flyway): se ejecuta `V1__initial_schema.sql` al crear una base nueva e Hibernate solo valida las tablas | Documentado en `docs/OCI_DEPLOYMENT.md` |
 | La minimización solo cubre el nombre completo conocido del autor | No elimina nombres parciales, nombres de terceros, correos ni teléfonos dentro del mensaje. Es una protección inicial, no una anonimización completa | Conocido; ampliar queda para después |
 | El AI Engine desplegado en OCI aún no incluye la minimización | La protección existe en el código, no en el servicio desplegado | Pendiente de redespliegue |
 | Los posts no mencionan al autor | Los testimonios resultan menos personales que en el ejemplo del reto | Por decidir (ver #20) |
