@@ -60,7 +60,22 @@
             <optional>true</optional>
         </dependency>
 
-		<!-- Driver JDBC de Oracle para OCI -->
+
+        <!-- OCI Object Storage SDK -->
+        <dependency>
+            <groupId>com.oracle.oci.sdk</groupId>
+            <artifactId>oci-java-sdk-objectstorage</artifactId>
+            <version>3.81.0</version>
+        </dependency>
+
+        <!-- Cliente HTTP para OCI Java SDK -->
+        <dependency>
+            <groupId>com.oracle.oci.sdk</groupId>
+            <artifactId>oci-java-sdk-common-httpclient-jersey3</artifactId>
+            <version>3.81.0</version>
+        </dependency>
+
+        <!-- Driver JDBC de Oracle para OCI -->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
@@ -83,7 +98,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-	</dependencies>
+	        <!-- H2 exclusivo para pruebas -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

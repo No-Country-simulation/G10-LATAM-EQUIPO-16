@@ -1,0 +1,75 @@
+# Despliegue de CommunityLab en Oracle Cloud Infrastructure
+
+## 1. Requisitos
+- Oracle Autonomous Database configurada.
+- OCI Object Storage con un bucket existente.
+- OCI Compute con Java 21.
+- Acceso a Oracle Database y permisos IAM para Object Storage.
+
+## 2. Inicialización de Oracle Database
+El esquema se encuentra en:
+`backend/src/main/resources/db/oracle/V1__initial_schema.sql`
+
+El archivo crea las tablas `interaccion_cruda` y `lote_distribucion`.
+Debe ejecutarse manualmente en una base de datos Oracle nueva.
+No se utiliza Flyway ni migración automática.
+Hibernate utiliza `spring.jpa.hibernate.ddl-auto=validate`.
+Por lo tanto, valida las tablas existentes, pero no las crea.
+
+## 3. Variables de entorno
+
+Para utilizar Oracle Database:
+- `SPRING_PROFILES_ACTIVE=oracle`
+- `ORACLE_DB_URL`: conexión JDBC.
+- `ORACLE_DB_USER`: usuario de Oracle.
+- `ORACLE_DB_PASSWORD`: contraseña de Oracle.
+
+Para utilizar OCI Object Storage:
+- `OCI_OS_NAMESPACE`: namespace de OCI.
+- `OCI_OS_BUCKET`: nombre del bucket.
+- `OCI_REGION`: región de OCI.
+- `OCI_OS_MODE`: modo de almacenamiento.
+
+No incluir contraseñas, wallets ni credenciales en GitHub.
+
+## 4. Modos de almacenamiento
+
+El modo predeterminado es `mock`, incluso con el perfil Oracle.
+
+- `mock`: simula el almacenamiento y devuelve una ruta `mock://`.
+- `real`: utiliza OCI Object Storage mediante Instance Principals y devuelve una ruta `oci://` después de confirmar la carga.
+
+Para producción, establecer explícitamente `OCI_OS_MODE=real`.
+
+## 5. Identidad y permisos IAM
+
+La integración utiliza OCI Instance Principals.
+Grupo dinámico: communitylab-vm-dg
+Política: communitylab-object-storage-policy
+
+Permisos IAM verificados:
+- Allow dynamic-group 'Default'/'communitylab-vm-dg' to read buckets in tenancy where target.bucket.name = 'communitylab-results'
+- Allow dynamic-group 'Default'/'communitylab-vm-dg' to manage objects in tenancy where target.bucket.name = 'communitylab-results'
+
+Los permisos están restringidos al bucket communitylab-results.
+manage objects también permite eliminar objetos; no equivale a permisos exclusivos de escritura.
+
+## 6. Verificación funcional
+
+Con el backend activo y OCI_OS_MODE=real:
+
+1. Enviar una solicitud POST a /api/v1/community/process.
+2. Verificar que la respuesta HTTP sea 200.
+3. Confirmar almacenamiento_oci.status = guardado_con_exito.
+4. Confirmar que almacenamiento_oci.ruta_objeto comience con oci://.
+5. Verificar la existencia del objeto en OCI Object Storage.
+
+Una ruta mock:// indica almacenamiento simulado.
+
+## 7. Consideraciones de despliegue
+
+- El perfil local utiliza PostgreSQL.
+- El perfil oracle utiliza Oracle Database.
+- Hibernate valida el esquema Oracle existente.
+- No subir archivos .env, wallets ni credenciales a GitHub.
+- Los nombres de recursos OCI pueden variar entre entornos.

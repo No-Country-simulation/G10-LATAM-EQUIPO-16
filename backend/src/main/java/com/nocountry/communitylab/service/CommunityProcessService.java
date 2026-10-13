@@ -1,5 +1,7 @@
 package com.nocountry.communitylab.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.databind.ObjectMapper;
 import com.nocountry.communitylab.client.FastAiClient;
 import com.nocountry.communitylab.exception.AiServiceException;
 import com.nocountry.communitylab.model.dto.*;
@@ -27,10 +29,18 @@ public class CommunityProcessService {
 
     private final InteractionRepository interactionRepository;
     private final FastAiClient fastAiClient;
+    private final OciObjectStorageService objectStorageService;
+    private final ObjectMapper objectMapper;
 
-    public CommunityProcessService(InteractionRepository interactionRepository, FastAiClient fastAiClient) {
+    public CommunityProcessService(
+            InteractionRepository interactionRepository,
+            FastAiClient fastAiClient,
+            OciObjectStorageService objectStorageService,
+            ObjectMapper objectMapper) {
         this.interactionRepository = interactionRepository;
         this.fastAiClient = fastAiClient;
+        this.objectStorageService = objectStorageService;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -87,8 +97,17 @@ public class CommunityProcessService {
             interactionRepository.saveAll(validInteractions);
             return buildErrorResponse(saved);
         }
-            // 7. Simular almacenamiento en OCI (por ahora)
-            String ociRoute = "oci://community-bucket/batch_" + UUID.randomUUID() + ".json";
+            // 7. Guardar realmente el resultado de Gemini en OCI
+            String ociRoute;
+            try {
+                String json = objectMapper.writeValueAsString(aiResult);
+                ociRoute = objectStorageService.uploadJson(json);
+            } catch (Exception ex) {
+                log.error("Error al guardar el resultado en OCI Object Storage", ex);
+                validInteractions.forEach(InteractionEntity::markAsError);
+                interactionRepository.saveAll(validInteractions);
+                throw new IllegalStateException("No se pudo guardar el resultado en OCI Object Storage", ex);
+            }
 
             // 8. Marcar como PROCESADO
             validInteractions.forEach(i -> i.markAsProcessed(ociRoute));
@@ -102,7 +121,7 @@ public class CommunityProcessService {
 
     // helpers
     private List<InteractionEntity> toEntities(CommunityProcessRequestDto request) {
-        return request.getInteractions().stream().map(dto -> InteractionEntity.builder().id(UUID.randomUUID()).communitySource(request.getCommunitySource()).referencePeriod(request.getReferencePeriod()).author(dto.getAuthor()).channel(dto.getChannel()).type(dto.getType()).text(dto.getText()).receivedAt(LocalDateTime.now()).build()).collect(Collectors.toList());
+        return request.getInteractions().stream().map(dto -> InteractionEntity.builder().communitySource(request.getCommunitySource()).referencePeriod(request.getReferencePeriod()).author(dto.getAuthor()).channel(dto.getChannel()).type(dto.getType()).text(dto.getText()).receivedAt(LocalDateTime.now()).build()).collect(Collectors.toList());
     }
 
     private CommunityProcessResponseDto buildEmptyResponse(List<InteractionEntity> saved) {
@@ -120,7 +139,7 @@ public class CommunityProcessService {
         DistributionAssetsDto assets = aiResult.getDistributionAssets() != null ? aiResult.getDistributionAssets() : DistributionAssetsDto.builder().build();
 
         // Sobrescribir la info de OCI con la ruta real generada
-        assets.setOciStorage(OciStorageInfoDto.builder().bucket("community-bucket").objectRoute(ociRoute).status("guardado_con_exito").build());
+        assets.setOciStorage(OciStorageInfoDto.builder().bucket(objectStorageService.getBucket()).objectRoute(ociRoute).status(objectStorageService.isMockMode() ? "simulado" : "guardado_con_exito").build());
 
         return CommunityProcessResponseDto.builder().status(aiResult.getStatus() != null ? aiResult.getStatus() : "exito").summary(summary).distributionAssets(assets).build();
     }
