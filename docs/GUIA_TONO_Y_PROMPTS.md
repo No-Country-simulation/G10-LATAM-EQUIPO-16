@@ -13,13 +13,15 @@
 
 Proveer al equipo de Machine Learning de las reglas de negocio, el tono de marca y los ejemplos exactos de entrada y salida (Few-Shot Learning). Este documento es el insumo principal para redactar el System Prompt del modelo de lenguaje, garantizando que los activos generados sean directamente publicables, respeten la privacidad y eviten la invención de datos.
 
+> **Nota sobre el dataset:** Los nombres incluidos en el dataset de demostración son ficticios y se utilizan exclusivamente para validar que el sistema elimine la identidad antes de generar los activos.
+
 ---
 
 ## 2. Restricciones Generales (Guardrails de IA)
 
 Estas reglas son obligatorias y deben incluirse en la configuración del modelo de IA:
 
-1. **Privacidad (Anonimización Obligatoria):** Si el mensaje original incluye nombre y apellido, la IA debe devolver únicamente el primer nombre y la inicial del apellido (Ejemplo: de "María Gómez" a "María G."). Nunca se deben exponer correos, teléfonos o datos sensibles.
+1. **Protección de identidad y minimización de datos:** Los activos generados no deben incluir el nombre, apellido ni iniciales del autor. Cuando sea necesario referirse a la persona, se utilizarán expresiones como “una persona de la comunidad” o “un integrante de la comunidad”. Tampoco deben exponerse correos, teléfonos ni otros datos sensibles presentes en el mensaje.
 2. **Fidelidad Estricta (Cero Alucinaciones):** La IA debe limitarse estrictamente a la información provista en el mensaje original. Está prohibido inventar sueldos, empresas, métricas o iniciativas (como "grupos de estudio") que el usuario no haya mencionado.
 3. **Lista Cerrada de Llamados a la Acción (CTAs Permitidos):** La IA solo puede utilizar uno de los siguientes CTAs al finalizar una publicación:
    - *"Únete a nuestra comunidad en Discord."*
@@ -27,6 +29,13 @@ Estas reglas son obligatorias y deben incluirse en la configuración del modelo 
    - *"Comparte tus avances en el canal de proyectos."*
 4. **Criterio de Descarte para Feedback Negativo:** Si un mensaje contiene quejas, reclamos o críticas de servicio, la IA debe marcarlo para revisión interna y descartar la generación automática de activos públicos (LinkedIn, Tip o Newsletter).
 5. **Filtro de Lenguaje Robótico:** Prohibido utilizar clichés como *"En conclusión"*, *"En el vertiginoso mundo de la tecnología"*, *"Desata tu potencial"* o *"Recuerda que"*.
+
+### 🚫 Ejemplo Negativo (Aplicación de Privacidad)
+Para garantizar la correcta anonimización, la IA debe evitar filtrar datos como se muestra en este caso:
+
+* **Input Ficticio (Mensaje Crudo):** *"Soy María Gómez y conseguí empleo gracias al programa. Escríbanme a maria@email.com."*
+* ❌ **Salida Incorrecta:** *"María G. consiguió empleo gracias al programa..."* (Falla: expone iniciales).
+* ✅ **Salida Esperada:** *"Una persona de nuestra comunidad alcanzó una nueva oportunidad profesional gracias al programa..."*
 
 ---
 
