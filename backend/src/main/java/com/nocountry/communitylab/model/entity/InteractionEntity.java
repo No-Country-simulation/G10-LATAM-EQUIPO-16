@@ -51,6 +51,10 @@ public class InteractionEntity {
     @Column(name = "ruta_oci")
     private String ociObjectRoute;
 
+    /** Id of the {@code DistributionBatch} that processed this interaction. Null until a batch is created. */
+    @Column(name = "lote_id")
+    private UUID batchId;
+
     @Column(name = "recibido_en")
     private LocalDateTime receivedAt;
 
