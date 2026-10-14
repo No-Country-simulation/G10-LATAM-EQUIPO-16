@@ -243,6 +243,7 @@ Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se
 * [x] Integración Backend → AI Engine → Backend (validación extremo a extremo con el AI Engine en OCI pendiente)
 * [x] MVP del Frontend en Streamlit y vista de resultados (PR #6 y #11)
 * [x] AI Engine desplegado en OCI (pendiente: URL configurable, conexión segura y documentar el despliegue)
+* [x] Subida real de los activos a OCI Object Storage (PR #22; verificada en una instancia de OCI)
 
 ### Documentación
 
@@ -253,7 +254,6 @@ Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se
 
 * [ ] Endpoints de curaduría (`/assets/pending` y `/assets/{id}/curate`)
 * [ ] Reintentos ante errores temporales de la IA
-* [ ] Subida real de los activos a OCI Object Storage
 * [ ] Integrar la guía de tono de voz en los prompts (la minimización de datos del autor ya está en `main`, #16)
 * [ ] Dataset de demo balanceado (un mensaje por tipo de activo)
 * [ ] Filtro previo de Data Science
