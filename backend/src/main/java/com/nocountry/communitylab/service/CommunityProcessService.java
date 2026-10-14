@@ -91,8 +91,8 @@ public class CommunityProcessService {
                 .build());
         UUID batchId = batch.getId();
 
-        // 6. Marcar como PROCESANDO  guardar el lote_id en cada interacción
-        validInteractions.forEach(i -> {i.setBatchId(batchId); i.markAsProcessing();});
+        // 6. Marcar como PROCESANDO
+        validInteractions.forEach(InteractionEntity::markAsProcessing);
         interactionRepository.saveAll(validInteractions);
 
         // 7. Llamar a la IA SIN transacción; los reintentos están en ResilientAiClient
@@ -103,12 +103,12 @@ public class CommunityProcessService {
         } catch (AiServiceException ex) {
             // Fallo del servicio IA: marcar interacciones como ERROR y PROPAGAR para que el
             // GlobalExceptionHandler responda 503/502 y el frontend pueda reintentar.
-            log.error("AI service failed, marking interactions as ERROR: {}", batchId,ex.getMessage(), ex);
+            log.error("AI service failed for batch {}, marking interactions as ERROR: {}", batchId, ex.getMessage(), ex);
             failBatch(batch, validInteractions);
             throw ex;
         } catch (RuntimeException ex) {
             // Otros errores inesperados (BD, NPE, etc.): se reportan como 200 + status "error"
-            log.error("Unexpected error processing batch, marking interactions as ERROR", batchId,ex);
+            log.error("Unexpected error processing batch {}, marking interactions as ERROR", batchId, ex);
             failBatch(batch, validInteractions);
             return buildErrorResponse(saved, batchId);
         }

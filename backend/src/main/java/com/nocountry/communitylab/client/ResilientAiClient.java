@@ -44,7 +44,7 @@ public class ResilientAiClient {
 
     /**
      * Se ejecuta cuando se agotan los {@value #MAX_ATTEMPTS} intentos. Registra el fallo y relanza la
-     * excepción para que el orquestador active el fallback (restaurar a PENDING).
+     * excepción para que el orquestador marque el lote como ERROR y el handler responda 503 (DEC-05).
      */
     @Recover
     public FastAiAnalysisResult recover(AiServiceUnavailableException ex,
