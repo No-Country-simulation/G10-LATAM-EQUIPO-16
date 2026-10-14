@@ -240,7 +240,7 @@ Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se
 * [x] Estructura del backend y conexión a Oracle Autonomous Database
 * [x] Entidades, repositorios y endpoint `POST /community/process`
 * [x] AI Engine con Gemini, LangGraph y `/analyze-batch`
-* [x] Integración Backend → AI Engine → Backend (validación extremo a extremo con el AI Engine en OCI pendiente)
+* [x] Integración Backend → AI Engine → Backend
 * [x] MVP del Frontend en Streamlit y vista de resultados (PR #6 y #11)
 * [x] AI Engine desplegado en OCI (pendiente: URL configurable, conexión segura y documentar el despliegue)
 * [x] Subida real de los activos a OCI Object Storage (PR #22; verificada en una instancia de OCI)
