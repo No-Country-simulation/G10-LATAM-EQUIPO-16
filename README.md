@@ -196,7 +196,7 @@ Recursos opcionales:
 
 | Recurso opcional | Estado |
 | --- | --- |
-| AI Engine desplegado en OCI Compute | 🟡 Desplegado, pero con una versión anterior a la minimización de datos del autor; falta redesplegar, y también URL configurable, conexión segura y documentar el despliegue (ver #17) |
+| AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura. Guía de despliegue en #17 |
 | Panel de curaduría en Streamlit | ⏳ Planificado; los endpoints de curaduría aún no existen |
 
 ## 🧭 Decisiones y límites conocidos
@@ -220,7 +220,6 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 | El backend simula la subida a OCI por defecto | Si se despliega sin `OCI_OS_MODE=real`, los resultados no llegan al bucket y la ruta devuelta es `mock://` | Documentado en `docs/OCI_DEPLOYMENT.md` |
 | El esquema de Oracle se crea a mano | No hay migraciones automáticas (Flyway): se ejecuta `V1__initial_schema.sql` al crear una base nueva e Hibernate solo valida las tablas | Documentado en `docs/OCI_DEPLOYMENT.md` |
 | La minimización solo cubre el nombre completo conocido del autor | No elimina nombres parciales, nombres de terceros, correos ni teléfonos dentro del mensaje. Es una protección inicial, no una anonimización completa | Conocido; ampliar queda para después |
-| El AI Engine desplegado en OCI aún no incluye la minimización | La protección existe en el código, no en el servicio desplegado | Pendiente de redespliegue |
 | Los posts no mencionan al autor | Los testimonios resultan menos personales que en el ejemplo del reto | Por decidir (ver #20) |
 | El FAQ no devuelve la pregunta ni la respuesta generadas | El activo llega incompleto | Planificado |
 | El titular del newsletter sale del análisis y puede afirmar más de lo que dice el mensaje original | Un reporte individual puede presentarse como un hecho de la comunidad. El panel de curaduría humana, que lo revisaría antes de publicar, está planificado y aún no existe | Conocido; a cubrir con la curaduría |
