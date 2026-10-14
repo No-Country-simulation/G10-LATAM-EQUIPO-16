@@ -38,7 +38,7 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
-* **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz y la anonimización de autores están planificadas, aún no integradas). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar). Límites actuales: el FAQ devuelve tema, origen y estado (la pregunta y la respuesta generadas aún no llegan en la respuesta), y el destacado de newsletter todavía no tiene formato definido.
+* **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz aún no está integrada; la minimización de datos del autor ya está en el código, #16). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar). Límite actual: el FAQ devuelve tema, origen y estado, pero la pregunta y la respuesta generadas aún no llegan en la respuesta.
 * **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar (planificado: los endpoints de curaduría aún no existen).
 
 ## 🏗️ Arquitectura
@@ -254,7 +254,7 @@ Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se
 * [ ] Endpoints de curaduría (`/assets/pending` y `/assets/{id}/curate`)
 * [ ] Reintentos ante errores temporales de la IA
 * [ ] Subida real de los activos a OCI Object Storage
-* [ ] Integrar la guía de tono de voz y anonimizar autores antes de enviar el texto a Gemini
+* [ ] Integrar la guía de tono de voz en los prompts (la minimización de datos del autor ya está en `main`, #16)
 * [ ] Dataset de demo balanceado (un mensaje por tipo de activo)
 * [ ] Filtro previo de Data Science
 
