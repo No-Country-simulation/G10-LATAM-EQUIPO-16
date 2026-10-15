@@ -196,7 +196,7 @@ Recursos opcionales:
 
 | Recurso opcional | Estado |
 | --- | --- |
-| AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura. Guía de despliegue en #17 |
+| AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura; código del AI Engine idéntico a `main`, redespliegue desde `main` sin probar. Guía de despliegue en #17 |
 | Panel de curaduría en Streamlit | ⏳ Planificado; los endpoints de curaduría aún no existen |
 
 ## 🧭 Decisiones y límites conocidos
