@@ -47,3 +47,51 @@ Las respuestas completas permiten inspeccionar cómo se generaron las etiquetas.
   Francesco Barbieri, Jose Camacho-Collados y Luis Espinosa-Anke,
   XLM-T, LREC 2022. La ficha indica CC BY 3.0 y condiciones de Twitter aplicables.
 - [MiniLM multilingüe](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2).
+
+
+## Reproducibilidad e integración (revisión PR #23)
+
+El entorno de dependencias verificado localmente el 15 de octubre de 2026 está
+fijado en `requirements.txt`. Python local: 3.11.9; PyTorch observado:
+2.5.1+cu121 (CUDA 12.1); ONNX Runtime CPU: 1.30.0.
+Estas son las versiones verificadas ahora en el equipo original, no un freeze
+capturado al iniciar cada entrenamiento. Reproducir en otra GPU puede variar
+ligeramente los resultados. La RTX 4070 Ti SUPER identifica el hardware histórico;
+el código ya acepta cualquier GPU CUDA disponible y mantiene el mismo algoritmo.
+
+`encoder_config.json` identifica MiniLM y su revisión, documentada en la entrega
+2026-10-04 de la que se copiaron los pesos base: mean pooling con máscara,
+384 dimensiones, máximo 128 tokens y sin normalización L2. No usar el encoder
+previamente afinado como sustituto de ese encoder base.
+
+Para disponer del encoder en caché en otro equipo, antes de ejecutar el notebook:
+
+```python
+from sentence_transformers import SentenceTransformer
+SentenceTransformer(
+    "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    revision="e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+)
+```
+
+### Prueba ONNX independiente (CPU)
+
+Desde esta carpeta, sin Jupyter, GPU, PyTorch ni descarga de MiniLM:
+
+```bash
+python -m pip install -r requirements-inferencia.txt
+python probar_onnx.py
+```
+
+La prueba carga los tres `.onnx`, valida `embedding` float32 `[N,384]`,
+`score` float32 `[N,1]`, valores finitos en [0,1] y equivalencia entre batch
+individual y múltiple. Termina con código 0 si pasa y error si falla.
+Los vectores predeterminados son sintéticos: prueba compatibilidad del contrato,
+no calidad semántica ni métricas de clasificación. Para usar embeddings reales:
+
+```bash
+python probar_onnx.py --embeddings ruta/a/embeddings.npy
+```
+
+Esta corrección no modifica pesos, datos ni métricas y no conecta AI Engine,
+backend o frontend. La prueba CPU local no certifica integración ni consumo OCI.

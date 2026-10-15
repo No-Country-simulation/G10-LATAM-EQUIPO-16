@@ -22,7 +22,6 @@ def train(task,epochs=100):
     root=Path(__file__).resolve().parent
     assert torch.cuda.is_available(),"Este kernel necesita PyTorch CUDA"
     gpu=torch.cuda.get_device_name(0)
-    assert "4070 Ti SUPER" in gpu, f"GPU inesperada: {gpu}"
     torch.manual_seed(42)
     torch.cuda.manual_seed_all(42)
     df=pd.read_json(root/'embeddings'/f'{task}.jsonl',lines=True)
