@@ -38,6 +38,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
+		<!-- Reintentos declarativos (@Retryable / @Recover). Spring Boot 4 ya no gestiona su versión -->
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+			<version>2.0.13</version>
+		</dependency>
+		<!-- AspectJ para los proxies de @Retryable. En Spring Boot 4 spring-boot-starter-aop se llama spring-boot-starter-aspectj -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aspectj</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -98,7 +109,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-	        <!-- H2 exclusivo para pruebas -->
+	    <!-- H2 exclusivo para pruebas -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

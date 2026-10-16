@@ -38,11 +38,28 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja fallos del servicio de IA. Devuelve 503 para que el frontend
-     * sepa que puede reintentar más tarde.
+     * Error permanente de la IA (4xx/422/400, 500 del ML, respuesta invalida): 502, no se reintenta.
+     * Spring elige este handler solo si no aplica el mas especifico de arriba.
      */
     @ExceptionHandler(AiServiceException.class)
     public ResponseEntity<Map<String, Object>> handleAiServiceException(AiServiceException ex) {
+        log.error("AI service permanent failure: {}", ex.getMessage(), ex);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.BAD_GATEWAY.value());
+        response.put("error", "Fallo definitivo en la respuesta del motor de IA");
+        response.put("mensaje", "No se pudo procesar el lote. Intente nuevamente más tarde.");
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_GATEWAY);
+    }
+
+        /**
+     * Maneja fallos del servicio de IA, tras agotar reintentos (timeout, conexion, 5xx transitorio).
+     * El frontend que puede reintentar más tarde. error 503
+     */
+    @ExceptionHandler(AiServiceUnavailableException.class)
+    public ResponseEntity<Map<String, Object>> handleAiServiceUnavailableException(AiServiceUnavailableException ex) {
         log.error("AI service unavailable: {}", ex.getMessage(), ex);
 
         Map<String, Object> response = new HashMap<>();
