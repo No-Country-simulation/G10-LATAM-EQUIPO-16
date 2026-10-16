@@ -16,6 +16,11 @@ class TransientAIError(RuntimeError):
     pass
 
 
+class QuotaExceededAIError(TransientAIError):
+    """Límite de solicitudes de Gemini (429): reintentar de inmediato no ayuda."""
+    pass
+
+
 class PermanentAIError(RuntimeError):
     """Error no transitorio; reintentar la misma solicitud no debería ayudar."""
     pass
@@ -84,7 +89,7 @@ def call_gemini(prompt: str):
             or "quota exceeded" in error_message
             or "too_many_requests" in error_message
         ):
-            raise TransientAIError(
+            raise QuotaExceededAIError(
                 "Gemini alcanzó el límite de solicitudes. "
                 "No se realizarán reintentos automáticos."
             ) from error
