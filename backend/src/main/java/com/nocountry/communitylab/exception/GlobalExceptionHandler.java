@@ -43,12 +43,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AiServiceException.class)
     public ResponseEntity<Map<String, Object>> handleAiServiceException(AiServiceException ex) {
-        log.error("AI service unavailable: {}", ex.getMessage(), ex);
+        log.error("AI service permanent failure: {}", ex.getMessage(), ex);
 
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", LocalDateTime.now());
         response.put("status", HttpStatus.BAD_GATEWAY.value());
-        response.put("error", "Servicio de IA no disponible");
+        response.put("error", "Fallo definitivo en la respuesta del motor de IA");
         response.put("mensaje", "No se pudo procesar el lote. Intente nuevamente más tarde.");
 
         return new ResponseEntity<>(response, HttpStatus.BAD_GATEWAY);

@@ -1,8 +1,6 @@
 package com.nocountry.communitylab.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import tools.jackson.databind.ObjectMapper;
-import com.nocountry.communitylab.client.FastAiClient;
 import com.nocountry.communitylab.client.ResilientAiClient;
 import com.nocountry.communitylab.exception.AiServiceException;
 import com.nocountry.communitylab.model.dto.*;

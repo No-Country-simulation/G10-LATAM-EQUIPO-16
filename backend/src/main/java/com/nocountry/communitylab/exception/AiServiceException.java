@@ -1,9 +1,10 @@
 package com.nocountry.communitylab.exception;
 
 /**
- * Excepcion lanzada cuando el servicio de IA falla o devuelve una respuesta invalida.
- * El service correspondiente debe capturarla, marcar las interacciones como ERROR
- * y devolver una respuesta con status "error".
+ * Fallo definitivo del servicio de IA: respuesta invalida, error 4xx o 500 del motor de IA.
+ * No se reintenta y la API responde 502. Los fallos temporales (timeout, conexion, 5xx distinto
+ * de 500) usan {@link AiServiceUnavailableException}. El service debe capturarla y marcar
+ * las interacciones como ERROR.
  */
 public class AiServiceException extends RuntimeException {
 

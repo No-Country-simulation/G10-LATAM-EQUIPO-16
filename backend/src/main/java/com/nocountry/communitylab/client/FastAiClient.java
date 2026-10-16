@@ -6,7 +6,6 @@ import com.nocountry.communitylab.model.dto.AiBatchRequestDto;
 import com.nocountry.communitylab.model.dto.AiInteractionDto;
 import com.nocountry.communitylab.model.dto.FastAiAnalysisResult;
 import com.nocountry.communitylab.model.entity.InteractionEntity;
-import com.nocountry.communitylab.exception.AiServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
