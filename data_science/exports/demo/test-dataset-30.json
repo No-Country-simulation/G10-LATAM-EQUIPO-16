@@ -1,0 +1,186 @@
+{
+  "origen_comunidad": "Discord/Slack",
+  "periodo_referencia": "2026-semana-41",
+  "interacciones": [
+    {
+      "autor": "carla_dev",
+      "canal": "discord:#logros",
+      "tipo": "exito",
+      "texto": "¡Por fin logré desplegar mi primera API con Spring Boot en OCI! Tardé tres días pero salió todo bien. Gracias a @mateo por la ayuda con el perfil de Oracle."
+    },
+    {
+      "autor": "mateo.r",
+      "canal": "discord:#logros",
+      "tipo": "exito",
+      "texto": "Acabo de conseguir mi primera entrevista técnica gracias al proyecto que armé en el bootcamp. El backlog de CommunityLab me dio mucho material para el portafolio."
+    },
+    {
+      "autor": "usuario_fantasma",
+      "canal": "discord:#general",
+      "tipo": "vacio",
+      "texto": ""
+    },
+    {
+      "autor": "luisa_ml",
+      "canal": "slack:#exitos",
+      "tipo": "exito",
+      "texto": "Migramos nuestro servicio a PostgreSQL 16 con Docker Compose y las pruebas pasaron al primer intento. El volumen persistente funcionó perfecto."
+    },
+    {
+      "autor": "diego_93",
+      "canal": "discord:#logros",
+      "tipo": "exito",
+      "texto": "Mi equipo terminó el sprint de la semana 3 con todas las historias cerradas. El tablero de curaduría quedó muy claro para todos."
+    },
+    {
+      "autor": "sofia.k",
+      "canal": "slack:#exitos",
+      "tipo": "exito",
+      "texto": "Implementé reintentos con backoff exponencial y ahora el servicio sobrevive a los 503 del proveedor de IA. Cero pérdidas de mensajes en la prueba de carga."
+    },
+    {
+      "autor": "emoji_fan",
+      "canal": "discord:#general",
+      "tipo": "borde",
+      "texto": "🚀🚀 ¡Terminé el módulo de Spring Boot! 🎉 Gracias a todos por el apoyo 💪🔥 #Java #Backend"
+    },
+    {
+      "autor": "andres_dev",
+      "canal": "discord:#general",
+      "tipo": "exito",
+      "texto": "Hoy se aprobó mi primer pull request al repositorio principal. Después de tres rondas de revisión por fin quedó mergeado."
+    },
+    {
+      "autor": "valen_ops",
+      "canal": "slack:#exitos",
+      "tipo": "exito",
+      "texto": "Logramos reducir el tiempo de procesamiento del lote de 40 a 12 segundos agrupando las llamadas a la IA. ¡Qué satisfacción!"
+    },
+    {
+      "autor": "camila.dev",
+      "canal": "discord:#logros",
+      "tipo": "exito",
+      "texto": "Terminé el curso de Spring Data JPA y ya estoy aplicando los repositorios en mi proyecto final. Todo lo aprendido en la comunidad vale oro."
+    },
+    {
+      "autor": "pablo_j",
+      "canal": "slack:#soporte",
+      "tipo": "duda_tecnica",
+      "texto": "¿Alguien sabe por qué Hibernate me lanza 'could not execute statement' al guardar una entidad con una columna TEXT en Oracle?"
+    },
+    {
+      "autor": "espacios_01",
+      "canal": "slack:#general",
+      "tipo": "vacio",
+      "texto": "   "
+    },
+    {
+      "autor": "nico.s",
+      "canal": "discord:#dudas-tecnicas",
+      "tipo": "duda_tecnica",
+      "texto": "Tengo dudas sobre cómo separar las transacciones de la llamada HTTP. ¿Es mejor usar TransactionTemplate o @Transactional con REQUIRES_NEW en otro bean?"
+    },
+    {
+      "autor": "poliglota_01",
+      "canal": "slack:#general",
+      "tipo": "borde",
+      "texto": "¿Cómo manejan UTF-8 en los textos? Pruebo: ñandú, pingüino, São Paulo, Zürich, 東京, Привет, مرحبا 🌎"
+    },
+    {
+      "autor": "ana_bg",
+      "canal": "slack:#soporte",
+      "tipo": "duda_tecnica",
+      "texto": "¿Cuál es la forma recomendada de configurar el wallet de Oracle Autonomous Database dentro de un contenedor? Me falla la conexión TLS."
+    },
+    {
+      "autor": "javi_code",
+      "canal": "discord:#dudas-tecnicas",
+      "tipo": "duda_tecnica",
+      "texto": "No entiendo por qué mi @Value no se inyecta en el constructor cuando uso @RequiredArgsConstructor de Lombok. ¿Qué me falta?"
+    },
+    {
+      "autor": "rocio.t",
+      "canal": "slack:#soporte",
+      "tipo": "duda_tecnica",
+      "texto": "¿Cómo puedo probar con Mockito que mi cliente reintenta tres veces antes de fallar? Me confundo con los tiempos de espera."
+    },
+    {
+      "autor": "tomas_dev",
+      "canal": "discord:#dudas-tecnicas",
+      "tipo": "duda_tecnica",
+      "texto": "¿Qué diferencia hay entre PESSIMISTIC_WRITE y SKIP LOCKED al tomar interacciones pendientes? ¿Cuándo conviene cada uno?"
+    },
+    {
+      "autor": "tabs_01",
+      "canal": "discord:#general",
+      "tipo": "vacio",
+      "texto": "\t\t"
+    },
+    {
+      "autor": "mariana.l",
+      "canal": "slack:#soporte",
+      "tipo": "duda_tecnica",
+      "texto": "Al arrancar con el perfil postgres me dice que el puerto 5432 está ocupado. ¿Cómo cambio el puerto del contenedor sin tocar la aplicación?"
+    },
+    {
+      "autor": "esteban_r",
+      "canal": "discord:#dudas-tecnicas",
+      "tipo": "duda_tecnica",
+      "texto": "¿Existe alguna forma de validar el JSON de entrada con Bean Validation y devolver mensajes en español en lugar de un error 500?"
+    },
+    {
+      "autor": "multilinea_dev",
+      "canal": "discord:#dudas-tecnicas",
+      "tipo": "borde",
+      "texto": "Hola equipo,\n\nTengo un problema con el perfil oracle:\n1. Defino DB_URL y DB_USER\n2. Arranco la aplicación\n3. Me sale ORA-01017\n\n¿Alguna idea?"
+    },
+    {
+      "autor": "gabi_ux",
+      "canal": "slack:#feedback",
+      "tipo": "feedback",
+      "texto": "El flujo de curaduría está muy intuitivo, pero me gustaría poder filtrar los activos por tipo: post de LinkedIn, newsletter o FAQ."
+    },
+    {
+      "autor": "ruben_p",
+      "canal": "discord:#feedback",
+      "tipo": "feedback",
+      "texto": "La documentación de la API es clara. Sugiero agregar más ejemplos de errores 400 y 404 para el equipo de frontend."
+    },
+    {
+      "autor": "lucia.m",
+      "canal": "slack:#feedback",
+      "tipo": "feedback",
+      "texto": "Los posts generados por la IA suenan demasiado formales. Sería ideal poder elegir el tono antes de generar los activos."
+    },
+    {
+      "autor": "ivan_dev",
+      "canal": "discord:#feedback",
+      "tipo": "feedback",
+      "texto": "La velocidad de respuesta mejoró muchísimo esta semana. Solo noté que a veces el resumen de la comunidad repite temas."
+    },
+    {
+      "autor": "saltos_01",
+      "canal": "slack:#general",
+      "tipo": "vacio",
+      "texto": " \n  \n "
+    },
+    {
+      "autor": "paula_qa",
+      "canal": "slack:#feedback",
+      "tipo": "feedback",
+      "texto": "Encontré que las preguntas frecuentes generadas a veces duplican respuestas. Dejo el caso de prueba en el canal de QA."
+    },
+    {
+      "autor": "windows_user",
+      "canal": "slack:#feedback",
+      "tipo": "borde",
+      "texto": "Feedback rápido ✅\r\n\t- La documentación está genial 📚\r\n\t- Falta un ejemplo con Slack 🤔\r\nGracias por todo!!"
+    },
+    {
+      "autor": "hector_r",
+      "canal": "discord:#feedback",
+      "tipo": "feedback",
+      "texto": "Me encanta que la comunidad pueda ver qué activos se aprobaron. Propongo agregar un historial de cambios por activo."
+    }
+  ]
+}
