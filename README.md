@@ -79,7 +79,7 @@ graph LR
 | `GET /api/v1/assets/pending` | Lista activos pendientes de curaduría | ⏳ En progreso |
 | `PATCH /api/v1/assets/{id}/curate` | Aprueba, edita o rechaza un activo | ⏳ En progreso |
 
-Errores: `400` (cuerpo inválido; con más de 10 interacciones se rechaza el lote completo), `503` (falla del servicio de IA: el backend convierte cualquier error del AI Engine en 503) y `500` (error interno; responde con el campo `message` y no `mensaje`). Si alguna interacción falla, la respuesta llega con `status: "parcial"`. El AI Engine recibe hasta 10 interacciones por lote y usa el `id` de cada una dentro del lote; por ahora el análisis por interacción no se persiste.
+Errores: `400` (cuerpo inválido; con más de 10 interacciones se rechaza el lote completo), `502` (fallo definitivo del AI Engine: respuesta rechazada con 4xx, incluido el límite de cuota 429, error 500 del motor o respuesta inválida; no se reintenta), `503` (AI Engine caído o saturado; el backend lo intenta 3 veces, con esperas de 2 y 4 segundos, antes de responder) y `500` (error interno; responde con el campo `message` y no `mensaje`). Si alguna interacción falla, la respuesta llega con `status: "parcial"`. El AI Engine recibe hasta 10 interacciones por lote y usa el `id` de cada una dentro del lote; por ahora el análisis por interacción no se persiste.
 
 ## 🛠️ Instalación
 
@@ -198,7 +198,7 @@ Recursos opcionales:
 
 | Recurso opcional | Estado |
 | --- | --- |
-| AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura; código del AI Engine idéntico a `main`, redespliegue desde `main` sin probar. Guía de despliegue en #17 |
+| AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura; redesplegado desde `main` con el manejo de errores del #28 (servicio activo, `/openapi.json` responde 200). Guía de despliegue en #17 |
 | Panel de curaduría en Streamlit | ⏳ Planificado; los endpoints de curaduría aún no existen |
 
 ## 🧭 Decisiones y límites conocidos
@@ -210,7 +210,7 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 * **Curaduría humana antes de publicar.** El sistema genera borradores; una persona aprueba, edita o rechaza. Preferimos eso a publicar automáticamente contenido de una comunidad real.
 * **Un activo por tipo y por lote.** De cada tipo (LinkedIn, FAQ, newsletter) se genera el de mayor relevancia; ante empate, el primero en llegar. Mantiene el costo y la revisión acotados.
 * **Hasta 10 interacciones por lote.** Si se superan, se rechaza el lote completo (`400`) en vez de procesarlo a medias.
-* **Errores del servicio de IA.** Los fallos temporales (límite de uso o saturación de Gemini) se distinguen de los permanentes (formato inválido). Reintentar solo los temporales está planificado; hoy el backend responde `503` ante cualquier error del AI Engine.
+* **Errores del servicio de IA.** El AI Engine distingue la saturación de Gemini (`503`) del límite de cuota (`429`) y de los fallos permanentes (`500`). El backend reintenta solo los temporales (hasta 3 intentos, con esperas de 2 y 4 segundos) y responde `503` si siguen fallando; el `429`, el `500` del motor y las respuestas inválidas se devuelven como `502` sin reintentar.
 * **Minimización de datos del autor.** Antes de enviar texto a Gemini, el módulo `privacy.py` quita el campo `autor` de los prompts y reemplaza el nombre completo del autor, si aparece en el mensaje, por un marcador. El contenido generado no nombra a la persona: usa "una persona de la comunidad". Esto difiere a propósito del ejemplo del reto, donde el post nombra a la autora. Preferimos no publicar ni enviar a un servicio externo datos personales sin consentimiento, porque un error ahí es difícil de revertir y omitir el nombre solo resta calidez al texto. Cómo mencionar al autor en el futuro (por ejemplo, con consentimiento explícito) está por decidir (ver #20).
 * **Datos de demostración y de entrenamiento por separado.** La demo usa mensajes ficticios; el dataset real de Stack Exchange vive en `data_science/` con su atribución y licencia (CC BY-SA), y se usa para entrenar y evaluar el modelo.
 * **Secretos fuera del repositorio.** `.env` y la wallet de Oracle no se versionan.
@@ -254,7 +254,7 @@ Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se
 ### En progreso
 
 * [ ] Endpoints de curaduría (`/assets/pending` y `/assets/{id}/curate`)
-* [ ] Reintentos ante errores temporales de la IA
+* [x] Reintentos ante errores temporales de la IA (#26)
 * [ ] Integrar la guía de tono de voz en los prompts (la minimización de datos del autor ya está en `main`, #16)
 * [ ] Dataset de demo balanceado (un mensaje por tipo de activo)
 * [ ] Filtro previo de Data Science
