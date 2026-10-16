@@ -10,7 +10,7 @@
 
 > CommunityLab recibe interacciones de una comunidad digital, las analiza con IA y genera contenido listo para revisar (post de LinkedIn, FAQ y destacado de newsletter), con curaduría humana antes de publicar. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
 
-* Última actualización: 12 de octubre de 2026.
+* Última actualización: 16 de octubre de 2026.
 
 ## 📑 Tabla de contenidos
 
@@ -41,7 +41,7 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
 * **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz aún no está integrada; la minimización de datos del autor ya está en el código, #16). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar). Límite actual: el FAQ devuelve tema, origen y estado, pero la pregunta y la respuesta generadas aún no llegan en la respuesta.
-* **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar (planificado: los endpoints de curaduría aún no existen).
+* **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar. Hoy el sistema genera los borradores y la revisión humana se hace fuera de la aplicación; los endpoints para aprobar, editar o rechazar desde la interfaz siguen planificados.
 
 ## 🏗️ Arquitectura
 
@@ -55,7 +55,7 @@ CommunityLab está dividido en tres servicios:
 | Análisis | Google Gemini Flash-Lite (GenAI SDK) · Pydantic | Análisis estructurado y validado de cada interacción |
 | Enrutamiento | LangGraph | Decide qué activo generar según el análisis |
 | Base de datos | Oracle Autonomous Database (mTLS con wallet) | Persistencia de interacciones y lotes |
-| Almacenamiento | OCI Object Storage | Guarda los activos generados (simulado por ahora; la subida real está en progreso) |
+| Almacenamiento | OCI Object Storage | Guarda los activos generados (en local simula la subida con `mock://` por defecto; la subida real con `OCI_OS_MODE=real` está implementada y verificada en #22) |
 
 ### Pipeline
 
@@ -126,6 +126,11 @@ Requiere JDK 21. Copia `.env.example` de la raíz a `.env` y completa:
 
 > El archivo `.env` contiene credenciales y no se sube al repositorio.
 
+El backend tiene dos perfiles de Spring:
+
+* **Perfil local (por defecto):** usa PostgreSQL en `localhost:5432` y la simulación de OCI (`mock://`). No necesita las variables `ORACLE_*`.
+* **Perfil `oracle`:** se activa con `SPRING_PROFILES_ACTIVE=oracle` y usa Oracle Autonomous Database con las variables `ORACLE_*` de arriba. Hibernate solo valida las tablas, así que antes del primer arranque hay que crear el esquema ejecutando a mano `backend/src/main/resources/db/oracle/V1__initial_schema.sql`. Para subir los activos al bucket de verdad se agrega `OCI_OS_MODE=real`. Detalle en `docs/OCI_DEPLOYMENT.md`.
+
 ## ▶️ Uso
 
 Levanta cada servicio en su propia terminal:
@@ -182,7 +187,7 @@ G10-LATAM-EQUIPO-16/
 
 ## ✅ Cumplimiento del reto
 
-Estado frente al checklist de requisitos mínimos del reto, al 12 de octubre de 2026.
+Estado frente al checklist de requisitos mínimos del reto, al 16 de octubre de 2026.
 
 | Requisito del reto | Estado | Dónde verlo |
 | --- | --- | --- |
@@ -192,13 +197,14 @@ Estado frente al checklist de requisitos mínimos del reto, al 12 de octubre de 
 | Orquestación del flujo | ✅ Cumplido | LangGraph enruta cada interacción al activo que corresponde |
 | Integración con OCI Object Storage (obligatorio) | ✅ Cumplido | Subida real con Instance Principals, fusionada en `main` (#22) y verificada en una instancia de OCI. Por defecto el backend simula la subida (`mock://`); para guardar en el bucket se ejecuta con `OCI_OS_MODE=real`. Ver `docs/OCI_DEPLOYMENT.md` |
 | Demostración de 3 o más ejemplos de transformación | 🟡 En preparación | Hay un lote ficticio y balanceado de 6 mensajes que cubre las rutas de enrutamiento; falta ejecutarlo con Gemini real y publicar los resultados |
-| Repositorio con documentación y diagrama del pipeline | 🟡 En progreso | Diagrama incluido y logo del proyecto en `docs/assets/logo/`; la guía de despliegue en OCI está en revisión (ver #17) |
+| Repositorio con documentación y diagrama del pipeline | 🟡 En progreso | Diagrama incluido, logo del proyecto en `docs/assets/logo/` y guía de despliegue en OCI integrada (#17, `docs/OCI_DEPLOYMENT.md`) |
 
 Recursos opcionales:
 
 | Recurso opcional | Estado |
 | --- | --- |
-| AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura; redesplegado desde `main` con el manejo de errores del #28 (servicio activo, `/openapi.json` responde 200). Guía de despliegue en #17 |
+| AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura; con el manejo de errores del #28 fusionado en `main` y redesplegado (servicio activo, `/openapi.json` responde 200). Guía de despliegue en #17 |
+| Backend con reintentos y lote de distribución (#26) | 🟡 Fusionado en `main`; el redespliegue y la validación integral con el AI Engine siguen pendientes |
 | Panel de curaduría en Streamlit | ⏳ Planificado; los endpoints de curaduría aún no existen |
 
 ## 🧭 Decisiones y límites conocidos
@@ -207,7 +213,7 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 
 ### Decisiones de diseño
 
-* **Curaduría humana antes de publicar.** El sistema genera borradores; una persona aprueba, edita o rechaza. Preferimos eso a publicar automáticamente contenido de una comunidad real.
+* **Curaduría humana antes de publicar.** El sistema genera borradores; una persona aprueba, edita o rechaza (hoy esa revisión se hace fuera de la aplicación). Preferimos eso a publicar automáticamente contenido de una comunidad real.
 * **Un activo por tipo y por lote.** De cada tipo (LinkedIn, FAQ, newsletter) se genera el de mayor relevancia; ante empate, el primero en llegar. Mantiene el costo y la revisión acotados.
 * **Hasta 10 interacciones por lote.** Si se superan, se rechaza el lote completo (`400`) en vez de procesarlo a medias.
 * **Errores del servicio de IA.** El AI Engine distingue la saturación de Gemini (`503`) del límite de cuota (`429`) y de los fallos permanentes (`500`). El backend reintenta solo los temporales (hasta 3 intentos, con esperas de 2 y 4 segundos) y responde `503` si siguen fallando; el `429`, el `500` del motor y las respuestas inválidas se devuelven como `502` sin reintentar.
