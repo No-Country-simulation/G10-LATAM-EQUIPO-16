@@ -7,6 +7,7 @@ from analyzer import (
     analyze_text,
     client,
     TransientAIError,
+    QuotaExceededAIError,
     PermanentAIError,
 )
 
@@ -115,6 +116,13 @@ def analyze_batch(batch: BatchRequest):
        batch_analysis, batch_metrics = analyze_batch_texts(
            batch_input
        )
+    except QuotaExceededAIError as error:
+        # 429 (no 503): el backend no reintenta los 4xx, y reintentar con la cuota agotada no ayuda.
+        raise HTTPException(
+            status_code=429,
+            detail=str(error),
+        ) from error
+
     except TransientAIError as error:
         raise HTTPException(
             status_code=503,
@@ -247,7 +255,14 @@ def analyze_batch(batch: BatchRequest):
                 "429" in error_message
                 or "quota exceeded" in error_message
                 or "too_many_requests" in error_message
-                or "503" in error_message
+            ):
+                raise HTTPException(
+                    status_code=429,
+                    detail="Gemini alcanzó el límite de solicitudes.",
+                ) from error
+
+            if (
+                "503" in error_message
                 or "unavailable" in error_message
                 or "high demand" in error_message
             ):
