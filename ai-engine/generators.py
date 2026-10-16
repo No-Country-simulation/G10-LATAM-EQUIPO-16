@@ -33,8 +33,7 @@ INSTRUCCIONES:
 - No inventes información que no aparezca en la interacción.
 - El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
 - Si aparece [AUTOR] en el mensaje o análisis, reformula la oración de manera natural sin incluir ese marcador ni intentar recuperar el nombre.
-- No deduzcas el género de una persona únicamente por su profesión, cargo o términos como "desarrollador".
-- Cuando el género no sea explícito, utiliza expresiones neutrales como "una persona de la comunidad".
+- Género de la persona: si el mensaje usa formas femeninas para quien lo escribe (por ejemplo "seleccionada"), respétalas. Si usa formas masculinas o un cargo en masculino (por ejemplo "desarrollador", "contratado"), no copies esa palabra, porque puede ser un masculino genérico: nombra el puesto con un sustantivo neutro ("un puesto de desarrollo backend", "el equipo de desarrollo") y refiérete a la persona como "una persona de la comunidad". Ejemplo: "me contrataron como desarrollador backend" se escribe "una persona de la comunidad se incorporó a un puesto de desarrollo backend". Si el mensaje no marca el género, usa siempre expresiones neutras. Esto aplica a cualquier sustantivo, adjetivo, participio o artículo que describa a la persona, no solo a los ejemplos: no uses una forma masculina para quien escribe a menos que el mensaje lo marque; usa "una persona", "quien" o una construcción impersonal.
 - Máximo 100 palabras.
 - Devuelve únicamente el texto de la publicación.
 """
@@ -78,8 +77,7 @@ INSTRUCCIONES:
 - Si falta información para responder con precisión, indícalo.
 - El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
 - Si aparece [AUTOR] en el mensaje o análisis, reformula la oración de manera natural sin incluir ese marcador ni intentar recuperar el nombre.
-- No deduzcas el género de una persona únicamente por su profesión, cargo o términos como "desarrollador".
-- Cuando el género no sea explícito, utiliza expresiones neutrales como "una persona de la comunidad".
+- Género de la persona: si el mensaje usa formas femeninas para quien lo escribe (por ejemplo "seleccionada"), respétalas. Si usa formas masculinas o un cargo en masculino (por ejemplo "desarrollador", "contratado"), no copies esa palabra, porque puede ser un masculino genérico: nombra el puesto con un sustantivo neutro ("un puesto de desarrollo backend", "el equipo de desarrollo") y refiérete a la persona como "una persona de la comunidad". Ejemplo: "me contrataron como desarrollador backend" se escribe "una persona de la comunidad se incorporó a un puesto de desarrollo backend". Si el mensaje no marca el género, usa siempre expresiones neutras. Esto aplica a cualquier sustantivo, adjetivo, participio o artículo que describa a la persona, no solo a los ejemplos: no uses una forma masculina para quien escribe a menos que el mensaje lo marque; usa "una persona", "quien" o una construcción impersonal.
 - Máximo 150 palabras.
 - Usa exactamente este formato:
 
@@ -129,8 +127,7 @@ INSTRUCCIONES:
 - Puedes reformular el mensaje para hacerlo más claro, pero sin agregar hechos nuevos.
 - El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
 - Si aparece [AUTOR] en el mensaje o análisis, reformula la oración de manera natural sin incluir ese marcador ni intentar recuperar el nombre.
-- No deduzcas el género de una persona únicamente por su profesión, cargo o términos como "desarrollador".
-- Cuando el género no sea explícito, utiliza expresiones neutrales como "una persona de la comunidad".
+- Género de la persona: si el mensaje usa formas femeninas para quien lo escribe (por ejemplo "seleccionada"), respétalas. Si usa formas masculinas o un cargo en masculino (por ejemplo "desarrollador", "contratado"), no copies esa palabra, porque puede ser un masculino genérico: nombra el puesto con un sustantivo neutro ("un puesto de desarrollo backend", "el equipo de desarrollo") y refiérete a la persona como "una persona de la comunidad". Ejemplo: "me contrataron como desarrollador backend" se escribe "una persona de la comunidad se incorporó a un puesto de desarrollo backend". Si el mensaje no marca el género, usa siempre expresiones neutras. Esto aplica a cualquier sustantivo, adjetivo, participio o artículo que describa a la persona, no solo a los ejemplos: no uses una forma masculina para quien escribe a menos que el mensaje lo marque; usa "una persona", "quien" o una construcción impersonal.
 - Máximo 80 palabras.
 - Devuelve únicamente el texto del destaque.
 """
