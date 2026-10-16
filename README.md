@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="docs/assets/logo/logo-b-matraz.svg" alt="Logo de CommunityLab" width="120">
+  <img src="docs/assets/logo/logo-b-matraz.svg" alt="CommunityLab: del chat de la comunidad al contenido publicable" width="560">
 </p>
-
-# CommunityLab
 
 ## Motor inteligente de transformación y distribución de contenido para comunidades digitales
 
