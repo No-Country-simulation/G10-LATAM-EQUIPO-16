@@ -1,5 +1,21 @@
 # CABEZAS_V2
 
+## Inferencia en Python para OCI
+
+El encoder y las tres cabezas **FP32** listos para ejecutar están en
+[`inferencia_fp32/`](inferencia_fp32/). Incluye dependencias, un script que
+procesa un mensaje y una medición de memoria y latencia para la prueba aislada.
+
+```bash
+cd inferencia_fp32
+python -m pip install -r requirements.txt
+python inferencia.py --texto "Hoy terminé mi diplomado."
+python medir_recursos.py
+```
+
+Consultar su README para crear el entorno Python y usar `Clasificador` desde
+el AI Engine. No modifica el servicio actual ni el flujo de Gemini.
+
 Tres MLP independientes con MiniLM multilingüe congelado: **384→64→32→16→8→4→1**,
 ReLU ocultas, Sigmoid final, BCE ponderada y entrenamiento local en RTX 4070 Ti SUPER.
 
@@ -28,7 +44,8 @@ LOGROS tiene etiquetas provisionales Qwen. Sentimiento representa polaridad;
 Las cabezas reciben `embedding` float32 `[batch,384]` y devuelven `score`
 float32 `[batch,1]`. La diferencia máxima medida frente a PyTorch es menor que
 0.000001, usando los embeddings de test. Configuración y validación en `cabezas/`.
-Esta carpeta entrega las cabezas; no incluye el encoder ONNX ni certifica RAM OCI.
+La subcarpeta `cabezas/` entrega las cabezas; `inferencia_fp32/` incluye además
+el encoder ONNX. El consumo de RAM en OCI debe medirse en la VM de destino.
 
 MiniLM se carga de pesos locales/caché. La carpeta de pesos y la caché de embeddings
 no se publican. Las acciones de descarga/entrenamiento están desactivadas al abrir.

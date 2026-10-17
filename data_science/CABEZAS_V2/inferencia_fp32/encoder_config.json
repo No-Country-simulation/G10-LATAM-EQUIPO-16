@@ -1,0 +1,12 @@
+{
+  "model_id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "revision_source": "README de la entrega 2026-10-04, procedencia del base_encoder reutilizado",
+  "dimension": 384,
+  "max_seq_length": 128,
+  "pooling": "mean con attention_mask",
+  "normalize_embeddings": false,
+  "encoder_frozen": true,
+  "training_embeddings_precision": "float32",
+  "note": "Las tres cabezas de este PR fueron entrenadas sobre el encoder base FP32; el servicio INT8 se probó después por separado."
+}

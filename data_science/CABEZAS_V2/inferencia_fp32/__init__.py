@@ -1,0 +1,1 @@
+from .inferencia import Clasificador
