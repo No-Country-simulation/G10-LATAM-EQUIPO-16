@@ -1,4 +1,6 @@
-﻿from fastapi import FastAPI, HTTPException
+﻿import re
+
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from analyzer import (
@@ -219,6 +221,7 @@ def analyze_batch(batch: BatchRequest):
 
             if route == "linkedin" and content:
                 assets["post_linkedin"] = {
+                    "interaccion_id": interaction.id,
                     "titulo": sanitize_generated_content(analysis.tema),
                     "copy": content,
                     "canal_recomendado": "LinkedIn Oficial",
@@ -231,15 +234,29 @@ def analyze_batch(batch: BatchRequest):
 
             elif route == "newsletter" and content:
                 assets["destaque_newsletter_semanal"] = {
+                    "interaccion_id": interaction.id,
                     "seccion": sanitize_generated_content(analysis.tema),
                     "titular": sanitize_generated_content(analysis.insight),
                     "resumen": content,
                 }
 
             elif route == "faq" and content:
+
+                faq_match = re.fullmatch(
+                    r"\s*Pregunta:\s*(.*?)\s*Respuesta:\s*(.*?)\s*",
+                    content,
+                    flags=re.IGNORECASE | re.DOTALL,
+                )
+
+                if not faq_match or not all(faq_match.groups()):
+                    raise ValueError("Formato FAQ inválido: faltan pregunta o respuesta")
+
                 assets["sugerencia_contenido_faq"] = {
+                    "interaccion_id": interaction.id,
                     "tema": sanitize_generated_content(analysis.tema),
                     "origen": interaction.canal,
+                    "pregunta": faq_match.group(1).strip(),
+                    "respuesta": faq_match.group(2).strip(),
                     "status": "BORRADOR",
                 }
 
@@ -326,6 +343,14 @@ def analyze_batch(batch: BatchRequest):
             "temas_principales": main_topics,
         },
         "activos_distribucion_generados": assets,
+        "interacciones_fallidas": [
+            {
+                "id": result["id"],
+                "motivo": "No se pudo procesar la interacción",
+            }
+            for result in results
+            if result["status"] == "error"
+        ],
         "interacciones_analizadas": [
             {
                 "id": result["id"],
