@@ -1,0 +1,4 @@
+minilm/
+embeddings/
+.ipynb_checkpoints/
+__pycache__/

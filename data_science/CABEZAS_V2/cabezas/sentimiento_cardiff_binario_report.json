@@ -1,0 +1,31 @@
+{
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "task": "sentimiento_cardiff_binario",
+  "architecture": [
+    384,
+    64,
+    32,
+    16,
+    8,
+    4,
+    1
+  ],
+  "weighting": {
+    "pos_weight": 1.0
+  },
+  "best_epoch": 20,
+  "threshold": 0.4,
+  "f1": 0.8426763110307414,
+  "precision": 0.8859315589353612,
+  "recall": 0.803448275862069,
+  "confusion_matrix": [
+    [
+      520,
+      60
+    ],
+    [
+      114,
+      466
+    ]
+  ]
+}
