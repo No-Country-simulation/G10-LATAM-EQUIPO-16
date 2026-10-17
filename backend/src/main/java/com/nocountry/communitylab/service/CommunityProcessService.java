@@ -166,9 +166,14 @@ public class CommunityProcessService {
         }
     }
 
-    // Marca interacciones como PROCESADO y el lote como PROCESSED con su ruta OCI.
+    // Marca como PROCESADO solo las que no quedaron en ERROR, y guarda todas.
+    // Las que reconcileInteractions ya marcó como ERROR se mantienen en ERROR.
     private void completeBatch(DistributionBatch batch, List<InteractionEntity> validInteractions, String ociRoute) {
-        validInteractions.forEach(i -> i.markAsProcessed(ociRoute));
+        validInteractions.forEach(i -> {
+            if (i.getStatus() != InteractionStatus.ERROR) {
+                i.markAsProcessed(ociRoute);
+            }
+        });
         interactionRepository.saveAll(validInteractions);
         // Regla PROCESSED => ociObjectRoute != null. El lote guarda solo el nombre del objeto.
         batch.setOciObjectRoute(toObjectName(ociRoute));
@@ -177,15 +182,20 @@ public class CommunityProcessService {
     }
 
     /**
-     * Cruza los IDs enviados con los analizados/fallidos devueltos por la IA.
-     * Los ausentes o fallidos se marcan como ERROR en BD.
+     * Cruza los IDs enviados con los analizados devueltos por la IA.
+     * Los que no aparecen en {@code interacciones_analizadas} se marcan como ERROR,
+     * cubriendo dos casos:
+     * <ul>
+     *   <li>El motor los reportó explícitamente en {@code interacciones_fallidas}.</li>
+     *   <li>El motor los omitió (no aparecen en ninguna de las dos listas).</li>
+     * </ul>
      * <p>
      * Si la IA no devuelve ni {@code analyzedInteractions} ni {@code failedInteractions},
      * no hay información para reconciliar y se asume que todo fue exitoso.
      */
     private void reconcileInteractions(List<InteractionEntity> validInteractions, FastAiAnalysisResult aiResult) {
         if (aiResult.getAnalyzedInteractions() == null && aiResult.getFailedInteractions() == null) {
-            return; // No hay info para reconciliar; se asume todo OK
+            return;
         }
 
         Set<String> successfulIds = new HashSet<>();
@@ -193,16 +203,15 @@ public class CommunityProcessService {
             aiResult.getAnalyzedInteractions().forEach(a -> successfulIds.add(a.getId()));
         }
 
-        Set<String> failedIds = new HashSet<>();
-        if (aiResult.getFailedInteractions() != null) {
-            aiResult.getFailedInteractions().forEach(f -> failedIds.add(f.getId()));
-        }
-
         validInteractions.forEach(i -> {
             String id = i.getId().toString();
-            if (failedIds.contains(id) || (!successfulIds.contains(id) && !failedIds.isEmpty())) {
+            // Condicion : si el ID no aparece como exitoso, se marca como ERROR.
+            // Cubre dos casos:
+            //   - El motor lo reportó explícitamente en interacciones_fallidas.
+            //   - El motor no lo reportó en interacciones_analizadas (ausente).
+            if (!successfulIds.contains(id)) {
                 i.markAsError();
-                log.warn("Interaction {} marked as ERROR (not analyzed by AI)", id);
+                log.warn("Interaction {} marked as ERROR (failed or absent in AI response)", id);
             }
         });
     }
@@ -359,6 +368,7 @@ public class CommunityProcessService {
             case "negativo", "negative" -> "negativo";
             case "mixto", "mixed" -> "mixto";
             case "neutro", "neutral" -> "neutral";
+            case "sin_datos", "sin datos", "no_data" -> "sin_datos";
             default -> {
                 log.warn("Valor de sentimiento inesperado: '{}'. Se normaliza a 'neutral'", sentiment);
                 yield "neutral";
