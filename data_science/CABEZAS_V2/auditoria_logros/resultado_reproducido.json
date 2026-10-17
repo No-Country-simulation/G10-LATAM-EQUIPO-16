@@ -1,0 +1,62 @@
+{
+  "n": 3792,
+  "comparaciones": {
+    "mensaje": {
+      "grupos_entre_particiones": 0,
+      "filas": 0,
+      "validation_ya_en_train": 0,
+      "test_ya_en_train": 0
+    },
+    "normalizado": {
+      "grupos_entre_particiones": 0,
+      "filas": 0,
+      "validation_ya_en_train": 0,
+      "test_ya_en_train": 0
+    },
+    "tokens": {
+      "grupos_entre_particiones": 5,
+      "filas": 12,
+      "validation_ya_en_train": 2,
+      "test_ya_en_train": 3
+    }
+  },
+  "ids_evaluacion_entrada_ya_en_train": [
+    {
+      "id": 2739,
+      "split": "validation"
+    },
+    {
+      "id": 2857,
+      "split": "validation"
+    },
+    {
+      "id": 2995,
+      "split": "test"
+    },
+    {
+      "id": 3084,
+      "split": "test"
+    },
+    {
+      "id": 3234,
+      "split": "test"
+    }
+  ],
+  "umbral_decision": 0.63,
+  "f1_test_original": 0.9079754601226994,
+  "f1_test_sin_entradas_identicas_a_train": 0.9079754601226994,
+  "ejemplo_mismo_proyecto": [
+    {
+      "id": 94,
+      "split": "train",
+      "mensaje": "I’m happy to share this WhizChat: Advanced WhatsApp Query Handler project I worked on  .This AI-powered solution leverages cutting-edge Natural Language Processing (NLP) and seamless integration with Twilio API to enable real-time interaction and intelligent query resolution on WhatsApp. It autonomously interprets and responds to diverse user queries with precision and personalized engagement.\n\nThis project underscores my proficiency in Python, NLP, Machine Learning, and API integration, culminating in a scalable solution that enhances user experience and operational efficiency. Thrilled to be at the forefront of revolutionizing customer support and digital interaction through advanced AI technology!\n\nhashtag#AI hashtag#NLP hashtag#ChatBot hashtag#CustomerExperience hashtag#Innovation\n\nCheck it out here: \nlinkedin : https://lnkd.in/daUNBFGX \n\nGitHub : https://lnkd.in/dCR43VXg",
+      "es_logro": 0
+    },
+    {
+      "id": 1374,
+      "split": "validation",
+      "mensaje": "I'm excited to share my WhizChat project, an AI-powered WhatsApp Query Handler that harnesses the power of Natural Language Processing (NLP) and seamless Twilio API integration to deliver real-time interaction and intelligent query resolution.\n\nThis cutting-edge solution showcases my expertise in Python, NLP, Machine Learning, and API integration, resulting in a scalable solution that significantly enhances user experience and operational efficiency. By integrating advanced AI technology into customer support, I'm proud to be at the forefront of innovation, revolutionizing the way we interact with users and drive digital transformation.\n\nThe WhizChat project is now live on LinkedIn: https://lnkd.in/daUNBFGX \n\nFor more information and to explore the codebase, visit my GitHub repository: https://lnkd.in/dCR43VXg\n\n#AI #NLP #ChatBot #CustomerExperience #Innovation",
+      "es_logro": 1
+    }
+  ]
+}
