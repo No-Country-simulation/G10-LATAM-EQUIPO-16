@@ -3,6 +3,7 @@ package com.nocountry.communitylab.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -23,4 +24,7 @@ public class CommunityProcessResponseDto {
 
     @JsonProperty("activos_distribucion_generados")
     private DistributionAssetsDto distributionAssets;
+
+    @JsonProperty("interacciones_fallidas")
+    private List<InteraccionFallidaDto> failedInteractions;
 }
