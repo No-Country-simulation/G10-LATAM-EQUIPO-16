@@ -8,7 +8,6 @@ import lombok.*;
  * Representa una interacción que el motor de IA no pudo procesar.
  * Devuelta por el servicio Python en el campo {@code interacciones_fallidas}.
  */
-
 @Getter
 @Setter
 @Builder
