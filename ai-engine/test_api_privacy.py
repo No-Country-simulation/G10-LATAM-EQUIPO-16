@@ -1,3 +1,9 @@
+import os
+
+# analyzer.py exige la clave al importarse; este test mockea Gemini y no la usa.
+# Se define aquí para poder correrlo directo con `python` (conftest.py solo aplica con pytest).
+os.environ.setdefault("GEMINI_API_KEY", "test-key")
+
 from unittest.mock import patch
 from types import SimpleNamespace
 
