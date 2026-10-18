@@ -1,0 +1,107 @@
+{
+  "DEMO-001": {
+    "http_status": 200,
+    "salida": {
+      "status": "exito",
+      "resumen_comunidad": {
+        "total_interacciones_procesadas": 1,
+        "sentimiento_predominante": "positivo",
+        "temas_principales": [
+          "Empleabilidad / Logro profesional"
+        ]
+      },
+      "activos_distribucion_generados": {
+        "post_linkedin": {
+          "interaccion_id": "DEMO-001",
+          "titulo": "Empleabilidad / Logro profesional",
+          "copy": "Los proyectos prácticos abren puertas en el mundo tech.\n\nUna persona de nuestra comunidad consiguió una pasantía de desarrollo frontend después de presentar su proyecto de React. Este logro demuestra el impacto de construir proyectos reales para demostrar habilidades técnicas.\n\n¡Muchas felicidades por este gran paso profesional!\n\nÚnete a nuestra comunidad en Discord.\n\n#Frontend #DesarrolloWeb #ComunidadDev #LogrosTech",
+          "canal_recomendado": "LinkedIn Oficial",
+          "potencial_engagement": "Alto"
+        },
+        "destaque_newsletter_semanal": null,
+        "sugerencia_contenido_faq": null
+      },
+      "interacciones_fallidas": [],
+      "interacciones_analizadas": [
+        {
+          "id": "DEMO-001",
+          "sentimiento": "positivo",
+          "tema": "Empleabilidad / Logro profesional",
+          "tipo": "logro",
+          "relevancia": "alta",
+          "insight": "Demuestra la efectividad de los proyectos prácticos en React para conseguir empleo."
+        }
+      ]
+    }
+  },
+  "DEMO-002": {
+    "http_status": 200,
+    "salida": {
+      "status": "exito",
+      "resumen_comunidad": {
+        "total_interacciones_procesadas": 1,
+        "sentimiento_predominante": "positivo",
+        "temas_principales": [
+          "Análisis de datos con Python"
+        ]
+      },
+      "activos_distribucion_generados": {
+        "post_linkedin": {
+          "interaccion_id": "DEMO-002",
+          "titulo": "Análisis de datos con Python",
+          "copy": "De la práctica a la realidad.\n\nUna persona de nuestra comunidad finalizó su proyecto de análisis de datos utilizando Python y ya publicó el repositorio para que la comunidad pueda revisarlo. \n\nCompartir código y mostrar proyectos completos demuestra iniciativa y aplicación práctica de los conocimientos técnicos. ¡Felicitaciones por este gran paso!\n\nÚnete a nuestra comunidad en Discord.\n\n#AnalisisDeDatos #Python #ComunidadTech #DataScience",
+          "canal_recomendado": "LinkedIn Oficial",
+          "potencial_engagement": "Alto"
+        },
+        "destaque_newsletter_semanal": null,
+        "sugerencia_contenido_faq": null
+      },
+      "interacciones_fallidas": [],
+      "interacciones_analizadas": [
+        {
+          "id": "DEMO-002",
+          "sentimiento": "positivo",
+          "tema": "Análisis de datos con Python",
+          "tipo": "logro",
+          "relevancia": "alta",
+          "insight": "El usuario demuestra proactividad y aplicación práctica de sus conocimientos al compartir un proyecto completo de análisis de datos."
+        }
+      ]
+    }
+  },
+  "DEMO-003": {
+    "http_status": 200,
+    "salida": {
+      "status": "exito",
+      "resumen_comunidad": {
+        "total_interacciones_procesadas": 1,
+        "sentimiento_predominante": "positivo",
+        "temas_principales": [
+          "panel de proyectos"
+        ]
+      },
+      "activos_distribucion_generados": {
+        "post_linkedin": {
+          "interaccion_id": "DEMO-003",
+          "titulo": "panel de proyectos",
+          "copy": "La organización adecuada impulsa la práctica.\n\nQuien integra nuestra comunidad probó el nuevo panel de proyectos y destacó que ahora encuentra el repositorio y las instrucciones en el mismo lugar, lo que le resulta útil para empezar las pruebas.\n\nMejorar la experiencia y facilitar el flujo de trabajo es clave para seguir aprendiendo.\n\nÚnete a nuestra comunidad en Discord.\n\n#TechCommunity #DesarrolloDeSoftware #ProyectosTech",
+          "canal_recomendado": "LinkedIn Oficial",
+          "potencial_engagement": "Alto"
+        },
+        "destaque_newsletter_semanal": null,
+        "sugerencia_contenido_faq": null
+      },
+      "interacciones_fallidas": [],
+      "interacciones_analizadas": [
+        {
+          "id": "DEMO-003",
+          "sentimiento": "positivo",
+          "tema": "panel de proyectos",
+          "tipo": "testimonio",
+          "relevancia": "alta",
+          "insight": "La centralización de repositorios e instrucciones en el panel de proyectos mejora la experiencia y facilita el inicio de pruebas."
+        }
+      ]
+    }
+  }
+}

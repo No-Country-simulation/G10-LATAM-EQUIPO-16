@@ -1,0 +1,12 @@
+{
+  "origen_comunidad": "Comunidad ficticia de prueba",
+  "periodo_referencia": "Demo 2026-10-18",
+  "interacciones": [
+    {
+      "autor": "Cris Vega",
+      "canal": "Discord",
+      "tipo": "mensaje",
+      "texto": "Probé el nuevo panel de proyectos de la comunidad: ahora encuentro el repositorio y las instrucciones de cada proyecto en el mismo lugar. Esta organización me resulta útil para empezar las pruebas."
+    }
+  ]
+}

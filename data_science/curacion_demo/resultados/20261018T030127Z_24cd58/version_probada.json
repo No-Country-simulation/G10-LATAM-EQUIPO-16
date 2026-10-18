@@ -1,0 +1,18 @@
+{
+  "repositorio": "https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16",
+  "pr": "https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/pull/38",
+  "commit": "d62dd02ce1a358824b72336a6e4150be1ab81262",
+  "carpeta_original": "ai-engine",
+  "nota": "Copia sin modificaciones; probar este snapshot no demuestra integración en main ni despliegue OCI.",
+  "modelo": "gemini-3.5-flash-lite",
+  "python": "3.11.9",
+  "fecha_inicio_utc": "2026-10-18T03:01:27.829574+00:00",
+  "dependencias": {
+    "google-genai": "2.24.0",
+    "python-dotenv": "1.2.3",
+    "pydantic": "2.13.5",
+    "langgraph": "1.2.11",
+    "fastapi": "0.141.1",
+    "httpx": "0.28.1"
+  }
+}

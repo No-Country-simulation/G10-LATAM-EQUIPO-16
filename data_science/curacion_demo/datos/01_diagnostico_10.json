@@ -1,0 +1,76 @@
+{
+  "origen_comunidad": "Comunidad ficticia de prueba",
+  "periodo_referencia": "Demo 2026-10-18",
+  "interacciones": [
+    {
+      "id": "MSG-001",
+      "autor": "Juan Perez",
+      "canal": "Discord",
+      "tipo": "mensaje",
+      "texto": "¡Me encanta la nueva actualización! La interfaz está súper rápida y fluida."
+    },
+    {
+      "id": "MSG-002",
+      "autor": "María Gómez",
+      "canal": "Slack",
+      "tipo": "mensaje",
+      "texto": "El sistema no me deja exportar el PDF. Me tira un error 500 y tengo que presentarlo en 10 minutos."
+    },
+    {
+      "id": "MSG-003",
+      "autor": "Carlos Ruiz",
+      "canal": "Telegram",
+      "tipo": "mensaje",
+      "texto": "¿Alguien sabe cómo se cambia el idioma del dashboard? No encuentro la opción en settings."
+    },
+    {
+      "id": "MSG-004",
+      "autor": "Ana Martinez",
+      "canal": "Discord",
+      "tipo": "mensaje",
+      "texto": "Sería increíble si pudieran agregar modo oscuro en la próxima versión. ¡Gran trabajo chicos!"
+    },
+    {
+      "id": "MSG-005",
+      "autor": "Pedro Sánchez",
+      "canal": "Slack",
+      "tipo": "mensaje",
+      "texto": "Me han cobrado dos veces la suscripción este mes. Si no me lo solucionan hoy, cancelo el servicio."
+    },
+    {
+      "id": "MSG-006",
+      "autor": "Laura Torres",
+      "canal": "Comunidad Web",
+      "tipo": "mensaje",
+      "texto": "Gracias al equipo de soporte por ayudarme a migrar mis datos. Excelente atención."
+    },
+    {
+      "id": "MSG-007",
+      "autor": "Diego Lopez",
+      "canal": "Telegram",
+      "tipo": "mensaje",
+      "texto": "El link para restablecer la contraseña me llega roto."
+    },
+    {
+      "id": "MSG-008",
+      "autor": "Sofía Castro",
+      "canal": "Slack",
+      "tipo": "mensaje",
+      "texto": "La app móvil se queda congelada cada vez que intento subir una imagen. Pésima experiencia."
+    },
+    {
+      "id": "MSG-009",
+      "autor": "Roberto Fernández",
+      "canal": "Discord",
+      "tipo": "mensaje",
+      "texto": "¡Gana dinero rápido desde casa! Invierte en la nueva criptomoneda y multiplica tus ingresos x10 hoy mismo. Escríbeme al DM."
+    },
+    {
+      "id": "MSG-010",
+      "autor": "Elena Vega",
+      "canal": "Comunidad Web",
+      "tipo": "mensaje",
+      "texto": "¿Tienen documentación sobre cómo conectar esto con Zapier u otras herramientas?"
+    }
+  ]
+}
