@@ -4,7 +4,7 @@ Se revisaron 3792 entradas. No se encontraron textos completos idénticos entre 
 
 Con el tokenizer de inferencia y el límite de 128 tokens, hay 5 grupos compartidos entre particiones (12 filas). Dos entradas de validación y tres de test tienen la misma entrada tokenizada que una entrada de entrenamiento.
 
-Al excluir esas tres entradas de test, el F1 positivo con umbral 0.63 permanece en 0.9079754601226994. Esto cuantifica esas coincidencias exactas; no determina el impacto de todas las posibles reformulaciones.
+Al excluir esas tres entradas de test, el F1 positivo con el umbral de decisión existente permanece sin cambios. Los valores históricos se conservan en los archivos JSON de la auditoría como evidencia técnica; no se presentan aquí como una estimación validada de generalización. Este análisis cuantifica esas coincidencias exactas, pero no determina el impacto de todas las posibles reformulaciones.
 
 Los IDs 94 y 1374 describen WhizChat y comparten enlaces, estando en train y validation. Sus etiquetas difieren; esto requiere revisión contextual y no demuestra por sí solo un error de etiquetado.
 

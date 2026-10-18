@@ -1,5 +1,8 @@
 # CABEZAS_V2
 
+Componente independiente de clasificación. Se entrega para evaluación aislada;
+queda fuera del flujo integrado de la demo del hackathon.
+
 ## Inferencia en Python para OCI
 
 El encoder y las tres cabezas **FP32** listos para ejecutar están en
@@ -34,10 +37,14 @@ con split aleatorio estratificado 80/10/10. Sentimiento usa
 | Cabeza | Evaluación de su propio test |
 |---|---|
 | Pregunta | F1 positivo 0.944 |
-| LOGROS | F1 positivo 0.908 |
+| LOGROS | Pendiente de evaluación con particiones agrupadas por publicación de origen |
 | Sentimiento Cardiff binario | F1 positivo 0.843 |
 
 Estos tests y etiquetas son diferentes; los F1 no son una comparación directa entre tareas.
+La cifra de LOGROS se retira de este resumen porque el split aleatorio puede
+compartir publicaciones relacionadas entre entrenamiento y evaluación. La
+[auditoría](auditoria_logros/) documenta las coincidencias detectadas y los límites
+de la revisión; los resultados históricos se conservan como evidencia técnica.
 LOGROS tiene etiquetas provisionales Qwen. Sentimiento representa polaridad;
 0.5 no demuestra neutralidad. Ningún score se declara probabilidad calibrada.
 

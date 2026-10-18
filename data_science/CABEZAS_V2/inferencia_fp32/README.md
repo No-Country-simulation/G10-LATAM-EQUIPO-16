@@ -4,6 +4,9 @@ Esta carpeta contiene el encoder MiniLM, su tokenizer y las tres cabezas de
 CABEZAS_V2 (`es_pregunta`, `es_logro`, `sentimiento`), todos en FP32.
 Se ejecuta en CPU, fuera del notebook, sin PyTorch ni descargas de modelos.
 
+Se entrega como componente independiente para pruebas aisladas. Queda fuera
+del flujo integrado de la demo del hackathon.
+
 ## Obtener la entrega
 
 Mientras el PR #23 siga abierto, obtener su rama desde un clon del repositorio:
