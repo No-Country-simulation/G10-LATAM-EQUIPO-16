@@ -12,6 +12,12 @@ los prompts (género neutro y fidelidad al mensaje de origen):
   sin hablar de "apoyo colaborativo" ni de una revisión de recursos. En
   una prueba con Gemini real, ese párrafo hacía que el modelo inventara
   "apoyo" y "colaboración" en otros mensajes.
+* LinkedIn 1: "una posición" en lugar de "su primera posición", porque el
+  mensaje habla de la primera entrevista, no necesariamente del primer
+  empleo (revisión de Gaby, #38).
+* Newsletter: "Se lanzó" en lugar de "La comunidad publicó", porque el
+  mensaje no identifica a toda la comunidad como autora del lanzamiento
+  (revisión de Gaby, #38).
 * Newsletter: solo el resumen. El titular y la sección los completa la API
   a partir del análisis, por lo que el ejemplo no repite un titular.
 
@@ -29,7 +35,7 @@ LINKEDIN_EXAMPLES = [
         "salida": (
             "¡El esfuerzo enfocado da resultados!\n"
             "\n"
-            "Una persona de nuestra comunidad acaba de asegurar su primera "
+            "Una persona de nuestra comunidad acaba de asegurar una "
             "posición como Trainee Backend. El trabajo colaborativo y la "
             "práctica en proyectos de Spring Boot fueron decisivos para "
             "superar la entrevista técnica.\n"
@@ -73,8 +79,8 @@ NEWSLETTER_EXAMPLES = [
             "probarlo."
         ),
         "salida": (
-            "La comunidad publicó la versión inicial de la herramienta de "
-            "pruebas para la API. El repositorio ya se encuentra "
+            "Se lanzó la versión inicial de la herramienta de pruebas para "
+            "la API. El repositorio ya se encuentra "
             "disponible para revisión y pruebas colaborativas."
         ),
     },
