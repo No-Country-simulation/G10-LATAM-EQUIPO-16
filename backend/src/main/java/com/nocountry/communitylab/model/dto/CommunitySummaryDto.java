@@ -17,6 +17,9 @@ public class CommunitySummaryDto {
     @JsonProperty("total_interacciones_procesadas")
     private Integer totalProcessedInteractions;
 
+    @JsonProperty("total_descartadas")
+    private Integer totalDiscarded;
+
     @JsonProperty("sentimiento_predominante")
     private String dominantSentiment;
 
