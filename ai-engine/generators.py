@@ -1,5 +1,10 @@
 from google import genai
 
+from few_shot import (
+    LINKEDIN_EXAMPLES,
+    NEWSLETTER_EXAMPLES,
+    format_examples,
+)
 from models import AnalysisResult, Interaction
 
 
@@ -27,8 +32,12 @@ Tipo: {analysis.tipo}
 Relevancia: {analysis.relevancia}
 Insight: {analysis.insight}
 
+EJEMPLOS DE REFERENCIA (muestran la estructura y el tono esperados; no copies sus hechos ni su contenido):
+{format_examples(LINKEDIN_EXAMPLES, "Publicación esperada")}
+
 INSTRUCCIONES:
 - Escribe en español.
+- Usa únicamente los hechos del mensaje de la interacción, nunca los de los ejemplos.
 - Mantén un tono profesional, positivo y humano.
 - No inventes información que no aparezca en la interacción.
 - El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
@@ -116,8 +125,12 @@ Tipo: {analysis.tipo}
 Relevancia: {analysis.relevancia}
 Insight: {analysis.insight}
 
+EJEMPLOS DE REFERENCIA (muestran la estructura y el tono esperados; no copies sus hechos ni su contenido):
+{format_examples(NEWSLETTER_EXAMPLES, "Destaque esperado")}
+
 INSTRUCCIONES:
 - Escribe en español.
+- Usa únicamente los hechos del mensaje de la interacción, nunca los de los ejemplos.
 - Resume únicamente los hechos expresados en la interacción.
 - Mantén un tono profesional, neutral y humano.
 - No inventes información que no aparezca explícitamente en la interacción.
