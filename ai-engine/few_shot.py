@@ -7,8 +7,11 @@ los prompts (género neutro y fidelidad al mensaje de origen):
 
 * Se nombra a la persona como "una persona de la comunidad" en lugar de
   "un miembro" o "un integrante" (regla de género, PR #25).
-* LinkedIn, ejemplo 2: "un mes" en lugar de "cuatro semanas", y sin
-  mencionar una revisión de recursos que el mensaje no dice.
+* LinkedIn, ejemplo 2: "un mes" en lugar de "cuatro semanas", y el tercer
+  párrafo solo repite lo que dice el mensaje (los apuntes compartidos),
+  sin hablar de "apoyo colaborativo" ni de una revisión de recursos. En
+  una prueba con Gemini real, ese párrafo hacía que el modelo inventara
+  "apoyo" y "colaboración" en otros mensajes.
 * Newsletter: solo el resumen. El titular y la sección los completa la API
   a partir del análisis, por lo que el ejemplo no repite un titular.
 
@@ -52,8 +55,8 @@ LINKEDIN_EXAMPLES = [
             "conocimientos en Oracle Cloud tras un mes de estudio "
             "constante.\n"
             "\n"
-            "El apoyo colaborativo y los apuntes compartidos en el canal "
-            "facilitaron la preparación del examen.\n"
+            "Los apuntes compartidos en el canal fueron parte de su "
+            "preparación para el examen.\n"
             "\n"
             "Consulta más recursos en la documentación oficial.\n"
             "\n"

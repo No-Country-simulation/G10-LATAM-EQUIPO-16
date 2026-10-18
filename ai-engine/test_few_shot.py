@@ -85,3 +85,14 @@ def test_ejemplos_de_salida_respetan_el_maximo_de_palabras():
 
     for ejemplo in NEWSLETTER_EXAMPLES:
         assert len(ejemplo["salida"].split()) <= 80
+
+
+def test_linkedin_prohibe_agregar_apoyo_no_mencionado():
+    prompt = _prompt_enviado(generate_linkedin)
+
+    assert "No agregues apoyo, colaboración" in prompt
+
+
+def test_ejemplos_linkedin_no_hablan_de_apoyo_colaborativo():
+    for ejemplo in LINKEDIN_EXAMPLES:
+        assert "apoyo colaborativo" not in ejemplo["salida"]
