@@ -1,5 +1,10 @@
 from google import genai
 
+from few_shot import (
+    LINKEDIN_EXAMPLES,
+    NEWSLETTER_EXAMPLES,
+    format_examples,
+)
 from models import AnalysisResult, Interaction
 
 
@@ -27,10 +32,15 @@ Tipo: {analysis.tipo}
 Relevancia: {analysis.relevancia}
 Insight: {analysis.insight}
 
+EJEMPLOS DE REFERENCIA (muestran la estructura y el tono esperados; no copies sus hechos ni su contenido):
+{format_examples(LINKEDIN_EXAMPLES, "Publicación esperada")}
+
 INSTRUCCIONES:
 - Escribe en español.
+- Usa únicamente los hechos del mensaje de la interacción, nunca los de los ejemplos.
 - Mantén un tono profesional, positivo y humano.
 - No inventes información que no aparezca en la interacción.
+- No agregues apoyo, colaboración, recursos ni otros beneficios de la comunidad que el mensaje no mencione.
 - El marcador [AUTOR] representa un nombre anonimizado y nunca debe aparecer en el contenido generado.
 - Si aparece [AUTOR] en el mensaje o análisis, reformula la oración de manera natural sin incluir ese marcador ni intentar recuperar el nombre.
 - Género de la persona: si el mensaje usa formas femeninas para quien lo escribe (por ejemplo "seleccionada"), respétalas. Si usa formas masculinas o un cargo en masculino (por ejemplo "desarrollador", "contratado"), no copies esa palabra, porque puede ser un masculino genérico: nombra el puesto con un sustantivo neutro ("un puesto de desarrollo backend", "el equipo de desarrollo") y refiérete a la persona como "una persona de la comunidad". Ejemplo: "me contrataron como desarrollador backend" se escribe "una persona de la comunidad se incorporó a un puesto de desarrollo backend". Si el mensaje no marca el género, usa siempre expresiones neutras. Esto aplica a cualquier sustantivo, adjetivo, participio o artículo que describa a la persona, no solo a los ejemplos: no uses una forma masculina para quien escribe a menos que el mensaje lo marque; usa "una persona", "quien" o una construcción impersonal.
@@ -116,8 +126,12 @@ Tipo: {analysis.tipo}
 Relevancia: {analysis.relevancia}
 Insight: {analysis.insight}
 
+EJEMPLOS DE REFERENCIA (muestran la estructura y el tono esperados; no copies sus hechos ni su contenido):
+{format_examples(NEWSLETTER_EXAMPLES, "Destaque esperado")}
+
 INSTRUCCIONES:
 - Escribe en español.
+- Usa únicamente los hechos del mensaje de la interacción, nunca los de los ejemplos.
 - Resume únicamente los hechos expresados en la interacción.
 - Mantén un tono profesional, neutral y humano.
 - No inventes información que no aparezca explícitamente en la interacción.
