@@ -111,3 +111,7 @@ git worktree add --detach ../communitylab-pr38 FETCH_HEAD
 ```
 
 `ANDREA_ENGINE_DIR` admite la ruta absoluta a `../communitylab-pr38/ai-engine`. Cuando #38 esté integrado, puede utilizarse directamente `ai-engine/` del repositorio.
+
+## Transcripción completa de Gemini
+
+La sección correspondiente del notebook muestra cada solicitud y cada respuesta persistidas en `resultados/*/evidencia.jsonl`. Incluye los prompts completos de análisis y generación, parámetros y respuestas, identificados por caso, método y fecha UTC. La función `mostrar_intercambios()` imprime el contenido completo de todas las ejecuciones disponibles. La consulta de esta evidencia utiliza archivos locales y puede repetirse sin ejecutar nuevas llamadas al modelo.

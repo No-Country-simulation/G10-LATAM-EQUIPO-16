@@ -18,6 +18,54 @@ def ahora():
 def guardar_json(path, data):
     Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
 
+def mostrar_intercambios(directorio):
+    """Imprime todas las solicitudes y respuestas persistidas, sin consultar Gemini."""
+    archivos = sorted(Path(directorio).glob('*/evidencia.jsonl'))
+    if not archivos:
+        print('Sin registros de Gemini en', directorio)
+        return
+    total_solicitudes = total_respuestas = total_errores = 0
+    for archivo in archivos:
+        print('\n' + '=' * 100)
+        print('EJECUCIÓN:', archivo.parent.name)
+        version = archivo.parent / 'version_probada.json'
+        if version.exists():
+            print('VERSIÓN PROBADA:')
+            print(version.read_text(encoding='utf-8'))
+        solicitudes = respuestas = errores = 0
+        for linea in archivo.read_text(encoding='utf-8').splitlines():
+            evento = json.loads(linea)
+            tipo = evento.get('tipo_registro')
+            if tipo not in ('solicitud_gemini', 'respuesta_gemini', 'error_gemini'):
+                continue
+            print('\n' + '-' * 100)
+            print('CASO:', evento.get('caso', ''))
+            print('FECHA UTC:', evento.get('fecha_utc', ''))
+            print('MÉTODO:', evento.get('metodo', ''))
+            if tipo == 'solicitud_gemini':
+                solicitudes += 1
+                print('SOLICITUD GEMINI', solicitudes)
+                for campo, valor in evento['solicitud'].items():
+                    print('\n' + campo.upper() + ':')
+                    print(valor if isinstance(valor, str) else json.dumps(valor, ensure_ascii=False, indent=2))
+            elif tipo == 'respuesta_gemini':
+                respuestas += 1
+                print('RESPUESTA GEMINI', respuestas)
+                salida = evento.get('salida')
+                print(salida if isinstance(salida, str) else json.dumps(salida, ensure_ascii=False, indent=2))
+                print('\nUSO REGISTRADO:')
+                print(json.dumps(evento.get('uso'), ensure_ascii=False, indent=2))
+            else:
+                errores += 1
+                print('ERROR GEMINI:')
+                print(json.dumps(evento, ensure_ascii=False, indent=2))
+        print(f'\nTOTAL EJECUCIÓN: {solicitudes} solicitudes; {respuestas} respuestas; {errores} errores.')
+        total_solicitudes += solicitudes
+        total_respuestas += respuestas
+        total_errores += errores
+    print('\n' + '=' * 100)
+    print(f'TOTAL GENERAL: {total_solicitudes} solicitudes; {total_respuestas} respuestas; {total_errores} errores.')
+
 def validar_lote(payload):
     for campo in ('origen_comunidad', 'periodo_referencia'):
         if not isinstance(payload.get(campo), str) or not payload[campo].strip():
