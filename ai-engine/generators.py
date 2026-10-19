@@ -11,7 +11,10 @@ from models import AnalysisResult, Interaction
 
 MAX_HASHTAGS_LINKEDIN = 3
 
-_HASHTAG = re.compile(r"(?<!\S)#\w+")
+# Un hashtag es "#" seguido de palabra, sin letra o "/" pegada antes (excluye
+# "C#" y "url#ancla") y sin ser solo números (excluye referencias como "#26").
+# Sí cuenta cuando lo precede un signo de puntuación: "(#Uno)", ",#Dos".
+_HASHTAG = re.compile(r"(?<![\w/&])#(?!\d+\b)\w+")
 
 
 def limitar_hashtags(texto: str, maximo: int) -> str:
@@ -30,6 +33,12 @@ def limitar_hashtags(texto: str, maximo: int) -> str:
         return coincidencia.group(0) if conservados <= maximo else ""
 
     resultado = _HASHTAG.sub(_filtrar, texto)
+
+    if conservados > maximo:
+        # Limpia lo que queda al quitar un hashtag: paréntesis vacíos y
+        # espacios sobrantes.
+        resultado = re.sub(r"\s*\(\s*\)", "", resultado)
+        resultado = re.sub(r"[ \t]{2,}", " ", resultado)
 
     return re.sub(r"[ \t]+(\n|$)", r"\1", resultado).strip()
 

@@ -152,6 +152,29 @@ def test_limitar_hashtags_conserva_solo_los_primeros_3():
     )
 
 
+def test_limitar_hashtags_detecta_hashtags_tras_signos_de_puntuacion():
+    from generators import limitar_hashtags
+
+    assert limitar_hashtags("Texto (#Uno) (#Dos) (#Tres) (#Cuatro)", 3) == (
+        "Texto (#Uno) (#Dos) (#Tres)"
+    )
+    assert limitar_hashtags("Fin. #A, #B; #C. #D", 3) == "Fin. #A, #B; #C."
+
+
+def test_limitar_hashtags_ignora_referencias_numericas_y_no_hashtags():
+    from generators import limitar_hashtags
+
+    texto = "Ver el issue #26, C# y https://sitio.com/p#ancla. #A #B #C"
+
+    assert limitar_hashtags(texto, 3) == texto
+
+
+def test_limitar_hashtags_cuenta_hashtags_que_empiezan_con_numero_y_letras():
+    from generators import limitar_hashtags
+
+    assert limitar_hashtags("#A #B #2024Tech #D", 3) == "#A #B #2024Tech"
+
+
 def test_limitar_hashtags_no_toca_textos_con_3_o_menos():
     from generators import limitar_hashtags
 
