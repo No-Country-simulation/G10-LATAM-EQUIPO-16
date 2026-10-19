@@ -96,3 +96,88 @@ def test_linkedin_prohibe_agregar_apoyo_no_mencionado():
 def test_ejemplos_linkedin_no_hablan_de_apoyo_colaborativo():
     for ejemplo in LINKEDIN_EXAMPLES:
         assert "apoyo colaborativo" not in ejemplo["salida"]
+
+
+CTAS_PERMITIDOS = [
+    "Únete a nuestra comunidad en Discord.",
+    "Consulta más recursos en la documentación oficial.",
+    "Comparte tus avances en el canal de proyectos.",
+]
+
+
+def test_linkedin_exige_cta_de_la_lista_cerrada_y_maximo_3_hashtags():
+    prompt = _prompt_enviado(generate_linkedin)
+
+    for cta in CTAS_PERMITIDOS:
+        assert cta in prompt
+
+    assert "como máximo 3 hashtags" in prompt
+    assert "derivarse únicamente de lo que dice el mensaje" in prompt
+
+
+def test_newsletter_y_faq_no_reciben_las_reglas_de_cta_y_hashtags():
+    for generator in (generate_newsletter, generate_faq):
+        prompt = _prompt_enviado(generator)
+
+        assert "llamados a la acción" not in prompt
+        assert "hashtags" not in prompt
+
+
+def test_ejemplos_linkedin_usan_cta_permitido_y_maximo_3_hashtags():
+    for ejemplo in LINKEDIN_EXAMPLES:
+        salida = ejemplo["salida"]
+
+        assert any(cta in salida for cta in CTAS_PERMITIDOS)
+        assert len(re.findall(r"(?<!\S)#\w+", salida)) <= 3
+
+
+def test_ejemplos_no_afirman_lo_que_el_mensaje_no_dice():
+    ejemplo_1 = LINKEDIN_EXAMPLES[0]["salida"]
+    assert "primera posición" not in ejemplo_1
+
+    assert "La comunidad publicó" not in NEWSLETTER_EXAMPLES[0]["salida"]
+
+
+def test_limitar_hashtags_conserva_solo_los_primeros_3():
+    from generators import limitar_hashtags
+
+    texto = (
+        "Un logro.\n\nÚnete a nuestra comunidad en Discord.\n\n"
+        "#SQL #ComunidadTech #Datos #Pasantias"
+    )
+
+    assert limitar_hashtags(texto, 3) == (
+        "Un logro.\n\nÚnete a nuestra comunidad en Discord.\n\n"
+        "#SQL #ComunidadTech #Datos"
+    )
+
+
+def test_limitar_hashtags_detecta_hashtags_tras_signos_de_puntuacion():
+    from generators import limitar_hashtags
+
+    assert limitar_hashtags("Texto (#Uno) (#Dos) (#Tres) (#Cuatro)", 3) == (
+        "Texto (#Uno) (#Dos) (#Tres)"
+    )
+    assert limitar_hashtags("Fin. #A, #B; #C. #D", 3) == "Fin. #A, #B; #C."
+
+
+def test_limitar_hashtags_ignora_referencias_numericas_y_no_hashtags():
+    from generators import limitar_hashtags
+
+    texto = "Ver el issue #26, C# y https://sitio.com/p#ancla. #A #B #C"
+
+    assert limitar_hashtags(texto, 3) == texto
+
+
+def test_limitar_hashtags_cuenta_hashtags_que_empiezan_con_numero_y_letras():
+    from generators import limitar_hashtags
+
+    assert limitar_hashtags("#A #B #2024Tech #D", 3) == "#A #B #2024Tech"
+
+
+def test_limitar_hashtags_no_toca_textos_con_3_o_menos():
+    from generators import limitar_hashtags
+
+    texto = "Un logro. Lenguaje C# y el issue #26.\n\n#SQL #Datos"
+
+    assert limitar_hashtags(texto, 3) == texto
