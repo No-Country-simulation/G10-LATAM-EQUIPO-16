@@ -748,6 +748,6 @@ El cierre de esta tarjeta requiere revisión humana de la muestra y desacuerdos 
 
 ## 10. Sugerencias de ajuste del prompt
 
-[SUGERENCIAS_PROMPT_ANALISIS.md](SUGERENCIAS_PROMPT_ANALISIS.md) desarrolla indicaciones concretas y ejemplos consistentes para corregir generalizaciones y definir las categorías. La propuesta evalúa sentimiento como tono explícito y permite relevancia alta para feedback específico que identifica una función y un efecto observado; por ello el alcance individual de DEMO-003 no obliga a relevancia media. Es un refinamiento de los criterios provisionales de este informe, sujeto a acuerdo humano.
+[SUGERENCIAS_PROMPT_ANALISIS.md](SUGERENCIAS_PROMPT_ANALISIS.md) presenta una propuesta breve: fidelidad de la síntesis, prioridad feedback/testimonio, relevancia categórica y criterios comunes para ambos modos de análisis. Conserva el contrato y no introduce una nueva definición de sentimiento. Las observaciones de esta evaluación siguen siendo propuestas sujetas a acuerdo humano.
 
-[BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) contiene las instrucciones compartidas sugeridas para análisis individual y por lote. Su incorporación y validación no se han realizado.
+[BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) contiene las instrucciones adicionales sugeridas. Su incorporación y validación no se han realizado.
