@@ -27,4 +27,12 @@ public class CommunityProcessResponseDto {
 
     @JsonProperty("interacciones_fallidas")
     private List<InteraccionFallidaDto> failedInteractions;
+
+    /**
+     * Info del almacenamiento en OCI. Se expone TAMBIÉN en la raíz (DEC-11)
+     * además de anidada en {@link DistributionAssetsDto}, para que el Frontend
+     * pueda leerla de la raíz cuando esté lista para migrar.
+     */
+    @JsonProperty("almacenamiento_oci")
+    private OciStorageInfoDto ociStorage;
 }
