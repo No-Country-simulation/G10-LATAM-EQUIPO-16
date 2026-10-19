@@ -15,10 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +36,10 @@ import java.util.stream.Collectors;
  *
  * <p><b>Nota sobre {@code tipo} de entrada:</b> se envía y persiste, pero no condiciona el análisis.
  * La IA reclasifica por su cuenta (DEC-02).
+ *
+ * <p><b>NUEVO (DEC-11):</b> el paquete del bucket sigue la ruta
+ *  * {@code activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json} e incluye
+ *  * {@code interacciones_analizadas}, {@code interacciones_fallidas} y {@code total_descartadas}.
  */
 @Service
 public class CommunityProcessService {
@@ -135,7 +136,7 @@ public class CommunityProcessService {
         reconcileInteractions(validInteractions, aiResult);
 
         // 10. Guardar realmente el resultado de Gemini en OCI
-        String ociRoute = uploadToOci(aiResult, batchId);
+        String ociRoute = uploadToOci(aiResult, batch, discardedCount);
 
         // 11. Si OCI falla: ERROR en BD, pero 200 con los activos generados por la IA (DEC-14)
         if (ociRoute == null) {
@@ -218,12 +219,29 @@ public class CommunityProcessService {
 
     // ---------------------------------------------------------------- OCI
 
-    // Devuelve la ruta del objeto, o null si la subida falló (no interrumpe el flujo).
-    private String uploadToOci(FastAiAnalysisResult aiResult, UUID batchId) {
+    // NUEVO (DEC-11): arma el paquete con lote_id, total_descartadas, interacciones_analizadas
+    // y lo sube con la ruta activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json
+    private String uploadToOci(FastAiAnalysisResult aiResult,
+                               DistributionBatch batch,
+                               long discardedCount) {
         try {
-            return objectStorageService.uploadJson(objectMapper.writeValueAsString(aiResult));
+            Map<String, Object> paquete = new LinkedHashMap<>();
+            paquete.put("lote_id", batch.getId().toString());
+            paquete.put("generado_en", LocalDateTime.now().toString());
+            paquete.put("origen_comunidad", batch.getCommunitySource());
+            paquete.put("periodo_referencia", batch.getReferencePeriod());
+            paquete.put("resumen_comunidad", aiResult.getSummary());
+            paquete.put("activos_distribucion_generados", aiResult.getDistributionAssets());
+            paquete.put("interacciones_analizadas", aiResult.getAnalyzedInteractions());
+            paquete.put("interacciones_fallidas", aiResult.getFailedInteractions());
+            paquete.put("total_descartadas", discardedCount);
+
+            String json = objectMapper.writeValueAsString(paquete);
+            String route = objectStorageService.buildBatchRoute(
+                    batch.getReferencePeriod(), batch.getId());
+            return objectStorageService.uploadJson(json, route);
         } catch (Exception ex) {
-            log.error("OCI upload failed for batch {}", batchId, ex);
+            log.error("OCI upload failed for batch {}", batch.getId(), ex);
             return null;
         }
     }
@@ -265,6 +283,7 @@ public class CommunityProcessService {
                         .build())
                 .distributionAssets(null)
                 .failedInteractions(List.of())
+                .ociStorage(null)
                 .build();
     }
 
@@ -336,7 +355,7 @@ public class CommunityProcessService {
             storageStatus = "guardado_con_exito";
         }
 
-        // Sobrescribir la info de OCI con la ruta real generada
+        // Anidado (compatibilidad con Frontend actual)
         assets.setOciStorage(OciStorageInfoDto.builder()
                 .bucket(objectStorageService.getBucket())
                 .objectRoute(ociRoute)
@@ -351,6 +370,7 @@ public class CommunityProcessService {
                 .failedInteractions(aiResult.getFailedInteractions() != null
                         ? aiResult.getFailedInteractions()
                         : List.of())
+                .ociStorage(assets.getOciStorage())
                 .build();
     }
 

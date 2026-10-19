@@ -39,23 +39,19 @@ class CommunityProcessServiceTest {
 
     @InjectMocks private CommunityProcessService service;
 
-    /** captuta las entidades que se han guardado para validar su estado persistido. */
     private List<InteractionEntity> savedInteractions;
 
     @BeforeEach
     void setUp() throws Exception {
         savedInteractions = new ArrayList<>();
 
-        // Simula saveAll: asigna UUIDs y guarda las entidades
         when(interactionRepository.saveAll(anyList()))
                 .thenAnswer(inv -> {
                     List<InteractionEntity> input = inv.getArgument(0);
                     List<InteractionEntity> copy = new ArrayList<>(input);
                     for (InteractionEntity e : copy) {
                         if (e.getId() == null) e.setId(UUID.randomUUID());
-                        if (!savedInteractions.contains(e)) {
-                            savedInteractions.add(e);
-                        }
+                        if (!savedInteractions.contains(e)) savedInteractions.add(e);
                     }
                     return copy;
                 });
@@ -69,8 +65,12 @@ class CommunityProcessServiceTest {
 
         when(objectStorageService.getBucket()).thenReturn("communitylab-test");
         when(objectStorageService.isMockMode()).thenReturn(true);
-        when(objectStorageService.uploadJson(anyString()))
-                .thenReturn("mock://bucket/resultados/batch_x.json");
+
+        when(objectStorageService.buildBatchRoute(anyString(), any(UUID.class)))
+                .thenReturn("activos/2026-semana-42/paquete-distribucion-test.json");
+
+        when(objectStorageService.uploadJson(anyString(), anyString()))
+                .thenReturn("mock://bucket/activos/2026-semana-42/paquete-distribucion-test.json");
 
         when(objectMapper.writeValueAsString(any()))
                 .thenReturn("{\"status\":\"exito\"}");
@@ -81,14 +81,11 @@ class CommunityProcessServiceTest {
     // ==================================================
     @Test
     void process_shouldPersistFailedAsErrorAndSuccessAsProcessed() throws Exception {
-        // UUIDs predecibles: la primera interacción será la exitosa, la segunda la fallida
         UUID successUuid = UUID.fromString("11111111-1111-1111-1111-111111111111");
         UUID failUuid    = UUID.fromString("22222222-2222-2222-2222-222222222222");
 
-        // forzamos que las entidades creadas por el service reciban los UUIDs ANTES de guardarse
         doAnswer(inv -> {
             List<InteractionEntity> input = inv.getArgument(0);
-            // Solo aplicamos en el primer saveAll (staging); los demás conservan sus UUIDs
             if (input.size() == 2 && input.get(0).getId() == null) {
                 input.get(0).setId(successUuid);
                 input.get(1).setId(failUuid);
@@ -126,29 +123,95 @@ class CommunityProcessServiceTest {
 
         service.process(request);
 
-        // Verificar estado persistido
         InteractionEntity success = savedInteractions.stream()
                 .filter(i -> successUuid.equals(i.getId())).findFirst()
-                .orElseThrow(() -> new AssertionError("No se guardó la interacción exitosa con UUID " + successUuid));
+                .orElseThrow(() -> new AssertionError("No se guardó la exitosa con UUID " + successUuid));
         InteractionEntity failed = savedInteractions.stream()
                 .filter(i -> failUuid.equals(i.getId())).findFirst()
-                .orElseThrow(() -> new AssertionError("No se guardó la interacción fallida con UUID " + failUuid));
+                .orElseThrow(() -> new AssertionError("No se guardó la fallida con UUID " + failUuid));
 
-        assertEquals(InteractionStatus.PROCESSED, success.getStatus(),
-                "La interacción exitosa debe quedar en PROCESSED");
-        assertEquals(InteractionStatus.ERROR, failed.getStatus(),
-                "La interacción fallida debe quedar en ERROR (no PROCESSED)");
+        assertEquals(InteractionStatus.PROCESSED, success.getStatus());
+        assertEquals(InteractionStatus.ERROR, failed.getStatus());
     }
 
     // ==================================================
-    // Test 2 — Normalización de activos
+    // Valida status "parcial" + interacciones_fallidas en la respuesta
+    // ==================================================
+    @Test
+    void process_shouldReturnParcialStatus_whenAiReturnsFailedInteractions() throws Exception {
+        UUID successUuid = UUID.fromString("33333333-3333-3333-3333-333333333333");
+        UUID failUuid    = UUID.fromString("44444444-4444-4444-4444-444444444444");
+
+        doAnswer(inv -> {
+            List<InteractionEntity> input = inv.getArgument(0);
+            if (input.size() == 2 && input.get(0).getId() == null) {
+                input.get(0).setId(successUuid);
+                input.get(1).setId(failUuid);
+            }
+            List<InteractionEntity> copy = new ArrayList<>(input);
+            for (InteractionEntity e : copy) {
+                if (!savedInteractions.contains(e)) savedInteractions.add(e);
+            }
+            return copy;
+        }).when(interactionRepository).saveAll(anyList());
+
+        CommunityProcessRequestDto request = buildRequest(new InteractionRequestDto[]{
+                interaction("a@test.com", "mensaje exitoso"),
+                interaction("b@test.com", "mensaje fallido")
+        });
+
+        FastAiAnalysisResult aiResult = FastAiAnalysisResult.builder()
+                .status("exito")
+                .summary(CommunitySummaryDto.builder()
+                        .totalProcessedInteractions(1)
+                        .dominantSentiment("positivo")
+                        .mainTopics(List.of())
+                        .build())
+                .distributionAssets(DistributionAssetsDto.builder().build())
+                .analyzedInteractions(List.of(
+                        InteractionAnalysisDto.builder().id(successUuid.toString()).build()
+                ))
+                .failedInteractions(List.of(
+                        InteraccionFallidaDto.builder().id(failUuid.toString()).reason("No procesada").build()
+                ))
+                .build();
+
+        when(resilientAiClient.analyzeWithRetry(anyList(), anyString(), anyString()))
+                .thenReturn(aiResult);
+
+        CommunityProcessResponseDto response = service.process(request);
+
+        // validar status "parcial" + interacciones_fallidas
+        assertEquals("parcial", response.getStatus());
+        assertNotNull(response.getFailedInteractions());
+        assertEquals(1, response.getFailedInteractions().size());
+        assertEquals(failUuid.toString(), response.getFailedInteractions().get(0).getId());
+    }
+
+    // ==================================================
+    // Test 2 — Normalización de activos (FIX: usando UUID real + analyzedInteractions)
     // ==================================================
     @Test
     void process_shouldNormalizeAssets() throws Exception {
+        UUID validUuid = UUID.fromString("55555555-5555-5555-5555-555555555555");
+
+        doAnswer(inv -> {
+            List<InteractionEntity> input = inv.getArgument(0);
+            if (input.size() == 1 && input.get(0).getId() == null) {
+                input.get(0).setId(validUuid);
+            }
+            List<InteractionEntity> copy = new ArrayList<>(input);
+            for (InteractionEntity e : copy) {
+                if (!savedInteractions.contains(e)) savedInteractions.add(e);
+            }
+            return copy;
+        }).when(interactionRepository).saveAll(anyList());
+
         CommunityProcessRequestDto request = buildRequest(new InteractionRequestDto[]{
                 interaction("a@test.com", "logro conseguido")
         });
 
+        // analyzedInteractions incluye el ID real de la entidad, no vacío
         FastAiAnalysisResult aiResult = FastAiAnalysisResult.builder()
                 .status("exito")
                 .summary(CommunitySummaryDto.builder()
@@ -163,7 +226,9 @@ class CommunityProcessServiceTest {
                                 .engagementPotential("high")
                                 .build())
                         .build())
-                .analyzedInteractions(List.of())
+                .analyzedInteractions(List.of(
+                        InteractionAnalysisDto.builder().id(validUuid.toString()).build()
+                ))
                 .failedInteractions(null)
                 .build();
 
@@ -180,16 +245,34 @@ class CommunityProcessServiceTest {
     }
 
     // ==================================================
-    // Test 3 — total_descartadas
+    // Test 3 — total_descartadas (FIX: usa UUID real + analyzedInteractions)
     // ==================================================
     @Test
     void process_shouldCountDiscardedInteractions() throws Exception {
+        UUID validUuid = UUID.fromString("66666666-6666-6666-6666-666666666666");
+
+        doAnswer(inv -> {
+            List<InteractionEntity> input = inv.getArgument(0);
+            // El primero es el válido, los otros 2 son descartados
+            if (input.size() == 3 && input.get(0).getId() == null) {
+                input.get(0).setId(validUuid);
+                input.get(1).setId(UUID.randomUUID());
+                input.get(2).setId(UUID.randomUUID());
+            }
+            List<InteractionEntity> copy = new ArrayList<>(input);
+            for (InteractionEntity e : copy) {
+                if (!savedInteractions.contains(e)) savedInteractions.add(e);
+            }
+            return copy;
+        }).when(interactionRepository).saveAll(anyList());
+
         CommunityProcessRequestDto request = buildRequest(new InteractionRequestDto[]{
                 interaction("a@test.com", "válido"),
                 interaction("b@test.com", ""),
                 interaction("c@test.com", "   ")
         });
 
+        // FIX (Bryan): analyzedInteractions incluye el ID real de la válida
         FastAiAnalysisResult aiResult = FastAiAnalysisResult.builder()
                 .status("exito")
                 .summary(CommunitySummaryDto.builder()
@@ -198,7 +281,9 @@ class CommunityProcessServiceTest {
                         .mainTopics(List.of())
                         .build())
                 .distributionAssets(DistributionAssetsDto.builder().build())
-                .analyzedInteractions(List.of())
+                .analyzedInteractions(List.of(
+                        InteractionAnalysisDto.builder().id(validUuid.toString()).build()
+                ))
                 .failedInteractions(null)
                 .build();
 
