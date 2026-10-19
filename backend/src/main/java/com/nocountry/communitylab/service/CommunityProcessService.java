@@ -14,8 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -38,8 +44,8 @@ import java.util.stream.Collectors;
  * La IA reclasifica por su cuenta (DEC-02).
  *
  * <p><b>NUEVO (DEC-11):</b> el paquete del bucket sigue la ruta
- *  * {@code activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json} e incluye
- *  * {@code interacciones_analizadas}, {@code interacciones_fallidas} y {@code total_descartadas}.
+ * {@code activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json} e incluye
+ * {@code interacciones_analizadas}, {@code interacciones_fallidas} y {@code total_descartadas}.
  */
 @Service
 public class CommunityProcessService {
@@ -135,7 +141,7 @@ public class CommunityProcessService {
         // 9. Cruzar IDs: los fallidos o ausentes pasan a ERROR (GRUPO C)
         reconcileInteractions(validInteractions, aiResult);
 
-        // 10. Guardar realmente el resultado de Gemini en OCI
+        // 10. Armar el paquete del bucket y subir a OCI
         String ociRoute = uploadToOci(aiResult, batch, discardedCount);
 
         // 11. Si OCI falla: ERROR en BD, pero 200 con los activos generados por la IA (DEC-14)
@@ -227,7 +233,7 @@ public class CommunityProcessService {
         try {
             Map<String, Object> paquete = new LinkedHashMap<>();
             paquete.put("lote_id", batch.getId().toString());
-            paquete.put("generado_en", LocalDateTime.now().toString());
+            paquete.put("generado_en", Instant.now().toString()); // UTC ISO-8601
             paquete.put("origen_comunidad", batch.getCommunitySource());
             paquete.put("periodo_referencia", batch.getReferencePeriod());
             paquete.put("resumen_comunidad", aiResult.getSummary());
@@ -235,6 +241,8 @@ public class CommunityProcessService {
             paquete.put("interacciones_analizadas", aiResult.getAnalyzedInteractions());
             paquete.put("interacciones_fallidas", aiResult.getFailedInteractions());
             paquete.put("total_descartadas", discardedCount);
+            // total_descartadas aparece tambien dentro de resumen_comunidad.
+            // Es intencional: el Frontend puede leerlo desde cualquiera de los 2 lugares.
 
             String json = objectMapper.writeValueAsString(paquete);
             String route = objectStorageService.buildBatchRoute(
@@ -300,6 +308,7 @@ public class CommunityProcessService {
                         .build())
                 .distributionAssets(null)
                 .failedInteractions(List.of())
+                .ociStorage(null) //sin OCI en error
                 .build();
     }
 

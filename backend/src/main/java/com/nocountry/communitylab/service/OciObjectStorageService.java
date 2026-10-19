@@ -57,7 +57,10 @@ public class OciObjectStorageService {
         if (periodo == null || periodo.isBlank()) {
             return "sin_periodo";
         }
-        return periodo.replaceAll("[^A-Za-z0-9_-]", "_");
+        // limitamos a 100 caracteres para no exceder varchar(255) en ruta_oci.
+        // Ruta final: activos/<sanitized>/paquete-distribucion-<uuid>.json
+        String sanitized = periodo.replaceAll("[^A-Za-z0-9_-]", "_");
+        return sanitized.length() > 100 ? sanitized.substring(0, 100) : sanitized;
     }
 
     // ==========================================================
