@@ -1,0 +1,107 @@
+{
+  "DEMO-001": {
+    "http_status": 200,
+    "salida": {
+      "status": "exito",
+      "resumen_comunidad": {
+        "total_interacciones_procesadas": 1,
+        "sentimiento_predominante": "positivo",
+        "temas_principales": [
+          "Empleabilidad en desarrollo frontend"
+        ]
+      },
+      "activos_distribucion_generados": {
+        "post_linkedin": {
+          "interaccion_id": "DEMO-001",
+          "titulo": "Empleabilidad en desarrollo frontend",
+          "copy": "¡Los proyectos prácticos abren puertas!\n\nUna persona de nuestra comunidad consiguió una pasantía de desarrollo frontend después de presentar su proyecto de React. Este logro demuestra cómo la práctica directa en desarrollo frontend es efectiva para conseguir oportunidades en el sector.\n\nConstruir y presentar proyectos marca la diferencia en el camino profesional. ¡Muchas felicidades por este gran paso!\n\nÚnete a nuestra comunidad en Discord.\n\n#DesarrolloFrontend #React #EmpleabilidadTech #ComunidadDev",
+          "canal_recomendado": "LinkedIn Oficial",
+          "potencial_engagement": "Alto"
+        },
+        "destaque_newsletter_semanal": null,
+        "sugerencia_contenido_faq": null
+      },
+      "interacciones_fallidas": [],
+      "interacciones_analizadas": [
+        {
+          "id": "DEMO-001",
+          "sentimiento": "positivo",
+          "tema": "Empleabilidad en desarrollo frontend",
+          "tipo": "logro",
+          "relevancia": "alta",
+          "insight": "Los proyectos prácticos en React son efectivos para conseguir empleo en el sector."
+        }
+      ]
+    }
+  },
+  "DEMO-002": {
+    "http_status": 200,
+    "salida": {
+      "status": "exito",
+      "resumen_comunidad": {
+        "total_interacciones_procesadas": 1,
+        "sentimiento_predominante": "positivo",
+        "temas_principales": [
+          "Proyecto de análisis de datos"
+        ]
+      },
+      "activos_distribucion_generados": {
+        "post_linkedin": {
+          "interaccion_id": "DEMO-002",
+          "titulo": "Proyecto de análisis de datos",
+          "copy": "De la práctica constante a proyectos finalizados con éxito.\n\nUna persona de nuestra comunidad terminó su proyecto de análisis de datos con Python y ya publicó el repositorio para que pueda ser revisado. \n\nCompartir código y mostrar el progreso es una gran forma de consolidar el aprendizaje técnico. ¡Felicitaciones por este avance!\n\nÚnete a nuestra comunidad en Discord.\n\n#DataScience #Python #AnalisisDeDatos",
+          "canal_recomendado": "LinkedIn Oficial",
+          "potencial_engagement": "Alto"
+        },
+        "destaque_newsletter_semanal": null,
+        "sugerencia_contenido_faq": null
+      },
+      "interacciones_fallidas": [],
+      "interacciones_analizadas": [
+        {
+          "id": "DEMO-002",
+          "sentimiento": "positivo",
+          "tema": "Proyecto de análisis de datos",
+          "tipo": "logro",
+          "relevancia": "alta",
+          "insight": "El usuario comparte con éxito un proyecto finalizado en Python, lo que demuestra un hito de aprendizaje y fomenta la colaboración en la comunidad."
+        }
+      ]
+    }
+  },
+  "DEMO-003": {
+    "http_status": 200,
+    "salida": {
+      "status": "exito",
+      "resumen_comunidad": {
+        "total_interacciones_procesadas": 1,
+        "sentimiento_predominante": "positivo",
+        "temas_principales": [
+          "Panel de proyectos y organización de recursos"
+        ]
+      },
+      "activos_distribucion_generados": {
+        "post_linkedin": {
+          "interaccion_id": "DEMO-003",
+          "titulo": "Panel de proyectos y organización de recursos",
+          "copy": "Mejorar la experiencia al programar.\n\nUna persona de la comunidad probó el nuevo panel de proyectos y destacó que ahora es posible encontrar el repositorio y las instrucciones en el mismo lugar, una organización que resulta útil para empezar las pruebas.\n\nFacilitar el acceso a los recursos impulsa la práctica constante.\n\nÚnete a nuestra comunidad en Discord.\n\n#TechCommunity #DesarrolloWeb #ComunidadDev",
+          "canal_recomendado": "LinkedIn Oficial",
+          "potencial_engagement": "Alto"
+        },
+        "destaque_newsletter_semanal": null,
+        "sugerencia_contenido_faq": null
+      },
+      "interacciones_fallidas": [],
+      "interacciones_analizadas": [
+        {
+          "id": "DEMO-003",
+          "sentimiento": "positivo",
+          "tema": "Panel de proyectos y organización de recursos",
+          "tipo": "testimonio",
+          "relevancia": "alta",
+          "insight": "La unificación de repositorios e instrucciones en el panel de proyectos mejora la experiencia de usuario y facilita el inicio de pruebas."
+        }
+      ]
+    }
+  }
+}

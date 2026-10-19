@@ -1,0 +1,26 @@
+[
+  {
+    "archivo": "02_demo_empleo.json",
+    "id": "DEMO-001",
+    "formato_esperado": "linkedin",
+    "proposito": "Mostrar contratación sin inventar empresa, salario o ayuda comunitaria.",
+    "aprobacion_marketing": "pendiente",
+    "ejecutado": false
+  },
+  {
+    "archivo": "03_demo_proyecto.json",
+    "id": "DEMO-002",
+    "formato_esperado": "linkedin",
+    "proposito": "Mostrar un logro técnico sin convertirlo en empleo ni añadir métricas.",
+    "aprobacion_marketing": "pendiente",
+    "ejecutado": false
+  },
+  {
+    "archivo": "04_demo_feedback.json",
+    "id": "DEMO-003",
+    "formato_esperado": "newsletter",
+    "proposito": "Resumir feedback concreto sin prometer mejoras adicionales. Depende de que el análisis asigne feedback y relevancia alta.",
+    "aprobacion_marketing": "pendiente",
+    "ejecutado": false
+  }
+]

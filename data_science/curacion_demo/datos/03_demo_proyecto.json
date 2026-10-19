@@ -1,0 +1,13 @@
+{
+  "origen_comunidad": "Comunidad ficticia de prueba",
+  "periodo_referencia": "Demo 2026-10-18",
+  "interacciones": [
+    {
+      "id": "DEMO-002",
+      "autor": "Sam López",
+      "canal": "Discord",
+      "tipo": "mensaje",
+      "texto": "Terminé mi proyecto de análisis de datos con Python y publiqué el repositorio para que puedan revisarlo."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "origen_comunidad": "Comunidad ficticia de prueba",
+  "periodo_referencia": "Demo 2026-10-18",
+  "interacciones": [
+    {
+      "id": "DEMO-001",
+      "autor": "Alex Rivera",
+      "canal": "Discord",
+      "tipo": "mensaje",
+      "texto": "Conseguí una pasantía de desarrollo frontend después de presentar mi proyecto de React."
+    }
+  ]
+}
