@@ -115,3 +115,11 @@ git worktree add --detach ../communitylab-pr38 FETCH_HEAD
 ## Transcripción completa de Gemini
 
 La sección correspondiente del notebook muestra cada solicitud y cada respuesta persistidas en `resultados/*/evidencia.jsonl`. Incluye los prompts completos de análisis y generación, parámetros y respuestas, identificados por caso, método y fecha UTC. La función `mostrar_intercambios()` imprime el contenido completo de todas las ejecuciones disponibles. La consulta de esta evidencia utiliza archivos locales y puede repetirse sin ejecutar nuevas llamadas al modelo.
+
+## Evaluación del análisis
+
+- [Evaluación campo por campo](EVALUACION_ANALISIS.md): entradas, análisis, textos generados y dictámenes humanos por completar.
+- [Transcripción completa de Gemini](TRANSCRIPCION_COMPLETA_GEMINI.md): solicitudes y respuestas de las dos ejecuciones, desplegadas en Markdown.
+- [Guía de curación](GUIA_CURACION.md): criterios y registro de decisiones.
+
+Las observaciones propuestas requieren revisión humana. La publicación de esta documentación no cierra por sí sola la tarjeta de evaluación.
