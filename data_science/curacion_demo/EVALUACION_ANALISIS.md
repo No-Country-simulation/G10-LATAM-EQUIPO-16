@@ -213,7 +213,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 | Tema | experiencia de usuario y organización de recursos | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
 | Tipo | feedback | Feedback propuesto. Testimonio también es posible; acordar prioridad entre categorías antes de declarar error. | Pendiente |
 | Relevancia | alta | Media propuesta: valoración individual. Alta es defendible si el cambio es prioritario para el producto; falta acuerdo. | Pendiente |
-| Insight | La centralización de repositorios e instrucciones en el nuevo panel mejora significativamente la usabilidad y facilita el inicio de pruebas para los usuarios. | Atribuir el beneficio a quien escribe; no demuestra mejora para todos los usuarios ni una magnitud medida. | Pendiente |
+| Insight | La centralización de repositorios e instrucciones en el nuevo panel mejora significativamente la usabilidad y facilita el inicio de pruebas para los usuarios. | «Significativamente» puede confundirse con significación estadística, no evaluada aquí. Incluso en sentido cotidiano atribuye una magnitud sin respaldo; además generaliza una valoración individual. Conservar «a la persona le resulta útil», sin magnitud ni alcance colectivo añadidos. El término no es exclusivo de la estadística. | Pendiente |
 
 **Insight alternativo propuesto — no es respuesta original de Gemini**
 

@@ -4,6 +4,7 @@ por el esquema de salida existente.
 1. Resume los hechos del mensaje en el insight. Conserva quién hizo qué y el
    alcance del relato. No conviertas una experiencia individual en una regla
    general ni una secuencia temporal en una causa demostrada.
+   Evita calificadores como «significativamente» sin respaldo de magnitud.
 
 2. Clasifica por el propósito principal: logro si comunica un resultado
    alcanzado; feedback si evalúa una función o experiencia de uso; testimonio

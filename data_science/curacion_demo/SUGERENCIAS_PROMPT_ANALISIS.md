@@ -10,6 +10,7 @@
 | Una valoración del panel alterna entre feedback y testimonio. | Clasificar por propósito y dar prioridad a feedback para evaluación de uso. |
 | Relevancia alta sin criterios explícitos en el prompt. | Describir alta, media y baja de forma breve, separadas del sentimiento. |
 | Diferencias entre instrucciones individuales y batch. | Compartir el mismo bloque de criterios. |
+| Una valoración individual aparece como mejora «significativa» de usabilidad. | Evitar magnitud no respaldada y posible confusión con significación estadística. |
 
 Fuentes: [evaluación de respuestas](EVALUACION_ANALISIS.md) y [transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md). La evidencia muestra imprecisiones con los prompts anteriores, no demuestra que su longitud sea la causa.
 
@@ -22,6 +23,7 @@ por el esquema de salida existente.
 1. Resume los hechos del mensaje en el insight. Conserva quién hizo qué y el
    alcance del relato. No conviertas una experiencia individual en una regla
    general ni una secuencia temporal en una causa demostrada.
+   Evita calificadores como «significativamente» sin respaldo de magnitud.
 
 2. Clasifica por el propósito principal: logro si comunica un resultado
    alcanzado; feedback si evalúa una función o experiencia de uso; testimonio
@@ -54,6 +56,10 @@ Texto disponible también en [BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERI
 - Insight sugerido: «Una persona terminó un proyecto de análisis de datos con Python y publicó el repositorio para revisión».
 
 Las alternativas son propuestas de síntesis, no nuevas respuestas del modelo. Estos ejemplos pueden servir para discutir el criterio o como few-shot; si se incorporan al prompt, no deben contarse después como evaluación independiente.
+
+## Observación sobre «significativamente»
+
+En DEMO-003, Gemini afirmó que el panel «mejora significativamente la usabilidad». En un contexto técnico puede confundirse con significación estadística, que no se evaluó. Incluso en su sentido cotidiano de «considerablemente», atribuye una magnitud no respaldada: la entrada solo expresa utilidad percibida por una persona. Se sugiere conservar esa atribución individual, sin calificativos de magnitud. El término no es exclusivo de la estadística.
 
 ## Decisión de producto que requiere acuerdo
 
