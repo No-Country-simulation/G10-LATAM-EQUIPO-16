@@ -123,3 +123,7 @@ La sección correspondiente del notebook muestra cada solicitud y cada respuesta
 - [Guía de curación](GUIA_CURACION.md): criterios y registro de decisiones.
 
 Las observaciones propuestas requieren revisión humana. La publicación de esta documentación no cierra por sí sola la tarjeta de evaluación.
+
+## Propuesta documental de ajuste del prompt
+
+[Sugerencias de ajuste](SUGERENCIAS_PROMPT_ANALISIS.md) vincula imprecisiones observadas con reglas y ejemplos de análisis propuestos. El [bloque de instrucciones compartidas](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) está preparado como sugerencia para ambos prompts, no cargado por el motor. Su adopción, implementación y medición posterior requieren revisión separada.

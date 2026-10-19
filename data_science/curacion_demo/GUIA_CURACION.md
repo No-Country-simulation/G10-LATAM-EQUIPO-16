@@ -18,3 +18,7 @@
 8. Actualizar la sección 7 y enlazar la evaluación mediante un nuevo PR hacia main. El PR #39 ya fue fusionado.
 
 Las observaciones propuestas se prepararon con asistencia de IA. La revisión se atribuye a Saúl/Andrea únicamente después de que registren sus decisiones. No se necesitan nuevas llamadas a Gemini.
+
+## Revisión de la propuesta de prompt
+
+SUGERENCIAS_PROMPT_ANALISIS.md identifica los cambios sugeridos y sus ejemplos. BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt contiene el texto común propuesto para ambos prompts. Las reglas son sugerencias revisables y no se han aplicado al motor. La evaluación anterior y la propuesta de corrección son entregables distintos; una mejora solo se declara después de implementarla y probarla.
