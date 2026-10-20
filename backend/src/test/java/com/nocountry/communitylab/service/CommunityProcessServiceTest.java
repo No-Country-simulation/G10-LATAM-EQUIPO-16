@@ -299,6 +299,7 @@ class CommunityProcessServiceTest {
 
     // ==================================================
     // valida el JSON enviado a uploadJson - deuda tecnica Oscar
+    // FIX Se usa ObjectMapper real en lugar de StringBuilder
     // ==================================================
     @Test
     void process_shouldSendPackageWithRequiredFieldsToOci() throws Exception {
@@ -338,28 +339,10 @@ class CommunityProcessServiceTest {
         when(resilientAiClient.analyzeWithRetry(anyList(), anyString(), anyString()))
                 .thenReturn(aiResult);
 
-        // el mock de writeValueAsString debe serializar el paquete real
-        // para que el test valide el JSON real que se envía a OCI.
+        // Instanciamos un ObjectMapper real para el test
+        ObjectMapper realMapper = new ObjectMapper();
         when(objectMapper.writeValueAsString(any())).thenAnswer(inv -> {
-            Object arg = inv.getArgument(0);
-            if (arg instanceof Map<?, ?> map) {
-                StringBuilder sb = new StringBuilder("{");
-                boolean first = true;
-                for (Map.Entry<?, ?> e : map.entrySet()) {
-                    if (!first) sb.append(",");
-                    first = false;
-                    sb.append("\"").append(e.getKey()).append("\":");
-                    Object v = e.getValue();
-                    if (v instanceof Number || v instanceof Boolean) {
-                        sb.append(v);
-                    } else {
-                        sb.append("\"").append(v).append("\"");
-                    }
-                }
-                sb.append("}");
-                return sb.toString();
-            }
-            return "{\"status\":\"exito\"}";
+            return realMapper.writeValueAsString(inv.getArgument(0));
         });
 
         // Capturamos el JSON que se envía a uploadJson
@@ -386,6 +369,37 @@ class CommunityProcessServiceTest {
         // Validar la ruta: debe contener el lote_id
         assertTrue(route.contains(batchUuid.toString()),
                 "La ruta OCI debe incluir el lote_id");
+    }
+
+    // ==================================================
+    // Verifica el límite de 10 interacciones
+    // ==================================================
+    @Test
+    void process_shouldRejectMoreThanTenInteractions() {
+        // Creamos 11 interacciones (excede el límite)
+        InteractionRequestDto[] elevenInteractions = new InteractionRequestDto[11];
+        for (int i = 0; i < 11; i++) {
+            elevenInteractions[i] = interaction("user" + i + "@test.com", "texto " + i);
+        }
+
+        CommunityProcessRequestDto request = CommunityProcessRequestDto.builder()
+                .communitySource("Discord")
+                .referencePeriod("2026-semana-42")
+                .interactions(List.of(elevenInteractions))
+                .build();
+
+        // Usamos el Validator de Jakarta para probar las anotaciones del DTO directamente
+        try (var factory = jakarta.validation.Validation.buildDefaultValidatorFactory()) {
+            var validator = factory.getValidator();
+            var violations = validator.validate(request);
+
+            assertFalse(violations.isEmpty(), "Debería haber violaciones de validación para más de 10 interacciones");
+
+            boolean hasSizeViolation = violations.stream()
+                    .anyMatch(v -> v.getPropertyPath().toString().equals("interactions"));
+
+            assertTrue(hasSizeViolation, "El error debe ser por el tamaño de la lista de interacciones");
+        }
     }
 
     // ==================================================

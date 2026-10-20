@@ -26,6 +26,5 @@ public class CommunityProcessRequestDto {
     @JsonProperty("interacciones")
     @NotEmpty(message = "El lote debe tener al menos una interacción")
     @Size(min = 1, max = 10, message = "El lote debe tener entre 1 y 10 interacciones")
-    @Valid
-    private List<InteractionRequestDto> interactions;
+    private List<@Valid InteractionRequestDto> interactions;
 }
