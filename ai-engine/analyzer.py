@@ -4,11 +4,18 @@ import time
 
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 from pydantic import ValidationError
 
 from models import AnalysisResult, BatchAnalysisResult
 from loaders import load_csv
 from graph import graph
+from gemini_resilience import (
+    GeminiPermanentError,
+    GeminiQuotaError,
+    GeminiTransientError,
+    classify_gemini_error,
+)
 
 
 class TransientAIError(RuntimeError):
@@ -39,7 +46,16 @@ if not api_key:
         "No se encontró GEMINI_API_KEY en el archivo .env"
     )
 
-client = genai.Client(api_key=api_key)
+client = genai.Client(
+    api_key=api_key,
+    http_options=types.HttpOptions(
+        timeout=10000,
+        retry_options=types.HttpRetryOptions(
+            attempts=1,
+            http_status_codes=[408, 500, 502, 503, 504],
+        ),
+    ),
+)
 
 MODEL_NAME = "gemini-3.5-flash-lite"
 
@@ -81,32 +97,19 @@ def call_gemini(prompt: str):
         )
 
     except Exception as error:
-        elapsed_time = time.perf_counter() - start_time
-        error_message = str(error).lower()
+        classified = classify_gemini_error(error)
 
-        if (
-            "429" in error_message
-            or "quota exceeded" in error_message
-            or "too_many_requests" in error_message
-        ):
-            raise QuotaExceededAIError(
-                "Gemini alcanzó el límite de solicitudes. "
-                "No se realizarán reintentos automáticos."
-            ) from error
+        if isinstance(classified, GeminiQuotaError):
+            raise QuotaExceededAIError(str(classified)) from error
 
-        if (
-            "503" in error_message
-            or "unavailable" in error_message
-            or "high demand" in error_message
-        ):
-            raise TransientAIError(
-                "Gemini está temporalmente saturado. "
-                "Inténtalo nuevamente más tarde."
-            ) from error
+        if isinstance(classified, GeminiTransientError):
+            raise TransientAIError(str(classified)) from error
+
+        if isinstance(classified, GeminiPermanentError):
+            raise PermanentAIError(str(classified)) from error
 
         raise PermanentAIError(
-            f"Error al consultar Gemini después de "
-            f"{elapsed_time:.2f} segundos."
+            "Error inesperado al consultar Gemini."
         ) from error
 
     elapsed_time = time.perf_counter() - start_time
