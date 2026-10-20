@@ -715,3 +715,8 @@ La revisión de la evidencia existente no necesita nuevas llamadas. El bloque de
 ## 10. Bloque complementario propuesto
 
 [SUGERENCIAS_PROMPT_ANALISIS.md](SUGERENCIAS_PROMPT_ANALISIS.md) contrasta las instrucciones originales, los pasajes registrados y las imprecisiones de respaldo. El [bloque sugerido](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) conserva el tono de marketing y añade límites para afirmaciones de eficacia, magnitud, causalidad y alcance. No modifica categorías ni contratos y aún no se ha implementado o validado.
+
+
+## Comparación adicional de generación
+
+La [comparación del bloque complementario](RESULTADOS_COMPARACION_PROMPTS.md) añade 16 llamadas nuevas, separadas de la evidencia histórica aquí evaluada. Incluye todas las respuestas, una regresión inicial en newsletter y el ajuste posterior. Mantiene fijo el análisis y no valida cambios en clasificación, relevancia o enrutamiento. El [notebook ejecutado](comparacion_api_prompts.ipynb) presenta el procedimiento y las salidas completas.

@@ -1,6 +1,6 @@
 # Sugerencia de bloque complementario — marketing con afirmaciones respaldadas
 
-**Estado:** propuesta de instrucciones adicionales; no implementada ni ensayada con Gemini. Su finalidad es mejorar la precisión sin eliminar el tono de marketing, modificar las categorías ni reemplazar los prompts actuales.
+**Estado:** propuesta de instrucciones adicionales; no implementada en el motor; ensayada de forma exploratoria con Gemini. Su finalidad es mejorar la precisión sin eliminar el tono de marketing, modificar las categorías ni reemplazar los prompts actuales.
 
 ## 1. Contraste entre instrucciones y respuestas
 
@@ -17,8 +17,9 @@ Los pasajes anteriores son observaciones sustantivas de precisión y respaldo, n
 ## 2. Bloque breve sugerido para añadir
 
 ```text
-Mantén el tono profesional, positivo e inspirador de los ejemplos, sin
-presentar una reflexión editorial como evidencia de un resultado.
+Mantén el tono y el formato indicados para cada activo: LinkedIn puede
+ser positivo e inspirador; newsletter conserva su síntesis neutral y concisa.
+No presentes una reflexión editorial como evidencia de un resultado.
 
 Conserva quién hizo qué y el alcance del mensaje. Un caso individual no
 permite afirmar conducta habitual de toda la comunidad ni eficacia general.
@@ -29,8 +30,10 @@ cuando no exista respaldo explícito; comunica la valoración como percepción
 de quien escribe. Si hay una medición en la entrada, atribúyela a su fuente,
 sin presentarla como validación independiente ni inventar citas.
 
-Puedes celebrar el logro y cerrar con una reflexión motivacional vinculada
-al mensaje, sin añadir hechos, garantías o promesas. Conserva las instrucciones,
+En LinkedIn puedes celebrar el logro y cerrar con una reflexión motivacional
+vinculada al mensaje, sin añadir hechos, garantías o promesas. En newsletter
+no añadas reflexiones o beneficios generales que la entrada no exprese.
+Conserva las instrucciones,
 las categorías, los identificadores y el esquema de salida existentes.
 ```
 
@@ -57,4 +60,4 @@ Feedback frente a testimonio sigue siendo una decisión de clasificación, no un
 4. Verificar que el modelo no invente datos, fuentes, estudios o citas para justificar las afirmaciones.
 5. Añadir casos distintos de los ejemplos usados en el prompt y registrar regresiones. Conservar IDs y formatos; revisar la selección de newsletter por separado.
 
-No hay nuevas respuestas ni mejora medida en esta entrega. [La evaluación](EVALUACION_ANALISIS.md) y [la transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md) exhiben el contraste que fundamenta el bloque sugerido.
+Se incorporan 16 llamadas nuevas en dos etapas: V1 con tres mensajes y V2 con newsletter. El bloque anterior es V2; solo newsletter se probó con esta versión. Los resultados muestran un contraste causal favorable puntual, una regresión de V1 y el ajuste posterior; no una mejora general medida. Véase [la comparación completa](RESULTADOS_COMPARACION_PROMPTS.md). [La evaluación](EVALUACION_ANALISIS.md) y [la transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md) exhiben el contraste que fundamenta el bloque sugerido.
