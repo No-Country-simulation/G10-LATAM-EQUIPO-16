@@ -124,6 +124,6 @@ La sección correspondiente del notebook muestra cada solicitud y cada respuesta
 
 Las observaciones propuestas requieren revisión humana. La publicación de esta documentación no cierra por sí sola la tarjeta de evaluación.
 
-## Propuesta documental de ajuste del prompt
+## Revisión contextual de prompts y resultados
 
-[Sugerencias de ajuste](SUGERENCIAS_PROMPT_ANALISIS.md) vincula imprecisiones observadas con reglas y ejemplos de análisis propuestos. El [bloque de instrucciones compartidas](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) está preparado como sugerencia para ambos prompts, no cargado por el motor. Su adopción, implementación y medición posterior requieren revisión separada.
+Las [sugerencias](SUGERENCIAS_PROMPT_ANALISIS.md) se limitan a precisiones opcionales. La evaluación reconoce la utilidad y coherencia general de las respuestas con el contexto de marketing y sus ejemplos. El bloque adjunto no sustituye el prompt actual ni se propone como requisito para aceptar esta muestra.

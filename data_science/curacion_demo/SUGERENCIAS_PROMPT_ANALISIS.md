@@ -1,79 +1,41 @@
-# Sugerencia breve de ajuste del prompt de análisis
+# Sugerencias de precisión editorial — revisión contextual
 
-**Estado:** propuesta documental, no implementada ni probada con Gemini. Sustituye la propuesta extensa como versión recomendada para revisión. Se conservan el contrato y las categorías existentes, sin introducir una nueva definición de sentimiento.
+**Recomendación:** conservar los prompts actuales como punto de partida. La evidencia revisada no justifica una reescritura general ni imponer una síntesis literal a todo contenido de marketing.
 
-## Qué se propone corregir
+## Fundamento
 
-| Problema observado | Ajuste mínimo |
+- La plantilla de análisis pide un hallazgo útil para Marketing y ejemplifica contribución de proyectos a la empleabilidad.
+- El generador de LinkedIn recibe ese insight, solicita tono positivo y utiliza cierres inspiradores en sus few-shot.
+- Los resultados observados son compatibles en términos generales con esa orientación.
+- El código local de main revisado ya incorpora cierre fiel, CTA autorizado y límite de hashtags. Las ejecuciones del PR #39 corresponden a una versión anterior; no demuestran fallos del código posterior.
+
+[Evaluación y evidencia](EVALUACION_ANALISIS.md).
+
+## Precisiones opcionales
+
+| Aspecto | Sugerencia proporcionada |
 |---|---|
-| Un relato individual se transforma en una afirmación general o causal. | Resumir hechos conservando alcance y atribución. |
-| Una valoración del panel alterna entre feedback y testimonio. | Clasificar por propósito y dar prioridad a feedback para evaluación de uso. |
-| Relevancia alta sin criterios explícitos en el prompt. | Describir alta, media y baja de forma breve, separadas del sentimiento. |
-| Diferencias entre instrucciones individuales y batch. | Compartir el mismo bloque de criterios. |
-| Una valoración individual aparece como mejora «significativa» de usabilidad. | Evitar magnitud no respaldada y posible confusión con significación estadística. |
+| Generalizaciones de marketing | Aclarar si el insight admite interpretación comunicacional. No tratarlas automáticamente como hechos inventados. |
+| Una persona descrita en plural | Preferir singular cuando se quiera conservar el alcance del relato. |
+| Significativamente | Puede sugerir significación estadística, no evaluada, o magnitud importante. Utilidad percibida es una alternativa precisa. No se presupone uso estadístico ni fallo general. |
+| Feedback/testimonio | Mantener las dos categorías. Acordar prioridad solo si resulta necesaria para el producto; no forzar feedback para obtener newsletter. |
+| Relevancia | Documentar alta/media/baja como criterio de evaluación. Tres resultados altos no prueban un defecto. |
 
-Fuentes: [evaluación de respuestas](EVALUACION_ANALISIS.md) y [transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md). La evidencia muestra imprecisiones con los prompts anteriores, no demuestra que su longitud sea la causa.
-
-## Bloque sugerido
+## Aclaración breve candidata, solo si se acuerda incorporarla
 
 ```text
-Analiza cada mensaje de la comunidad usando los campos y valores admitidos
-por el esquema de salida existente.
-
-1. Resume los hechos del mensaje en el insight. Conserva quién hizo qué y el
-   alcance del relato. No conviertas una experiencia individual en una regla
-   general ni una secuencia temporal en una causa demostrada.
-   Evita calificadores como «significativamente» sin respaldo de magnitud.
-
-2. Clasifica por el propósito principal: logro si comunica un resultado
-   alcanzado; feedback si evalúa una función o experiencia de uso; testimonio
-   si relata una experiencia personal sin que predomine lo anterior. Ante una
-   valoración concreta del producto, prioriza feedback sobre testimonio.
-   Conserva pregunta_tecnica y otro para los casos correspondientes.
-
-3. Evalúa relevancia para la comunidad: alta si aporta un hito o información
-   concreta de utilidad clara; media si es pertinente pero general o limitada;
-   baja si aporta poca información útil o está fuera de los objetivos.
-   Relevancia y sentimiento son independientes.
-
-4. Aplica los mismos criterios en análisis individual y por lote. Conserva
-   los IDs recibidos cuando el contrato los incluya y devuelve únicamente
-   el JSON solicitado, sin campos adicionales.
+El insight puede aportar una interpretación comunicacional coherente con
+el mensaje y los ejemplos. Distingue esa interpretación de hechos concretos:
+no añadas personas, empresas, cifras, logros o compromisos no mencionados.
+Conserva el alcance individual cuando corresponda y evita presentar una
+valoración como resultado medido o estadísticamente validado.
+Mantén las categorías, el esquema de salida y los identificadores existentes.
 ```
 
-Texto disponible también en [BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt).
+[Texto opcional](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt). No es un reemplazo del prompt completo ni se carga automáticamente.
 
-## Dos referencias para explicar fidelidad
+## Validación proporcional
 
-**Entrada:** «Conseguí una pasantía de desarrollo frontend después de presentar mi proyecto de React».
+La revisión documental puede aceptar la muestra con observaciones y límites. Si se decide modificar el comportamiento, comprobar únicamente ese cambio y sus regresiones con la misma configuración y casos nuevos; las respuestas anteriores ya están disponibles como referencia. Sin cambios acordados de prompt, esta evaluación no exige repetir llamadas ni rehacer el desarrollo.
 
-- Resultado observado: «Los proyectos prácticos en React son efectivos para conseguir empleo en el sector».
-- Insight sugerido: «Una persona informa que consiguió una pasantía de desarrollo frontend después de presentar su proyecto de React».
-
-**Entrada:** «Terminé mi proyecto de análisis de datos con Python y publiqué el repositorio para que puedan revisarlo».
-
-- Resultado observado en una ejecución: «Los miembros comparten activamente sus proyectos completados, lo que demuestra un alto compromiso…».
-- Insight sugerido: «Una persona terminó un proyecto de análisis de datos con Python y publicó el repositorio para revisión».
-
-Las alternativas son propuestas de síntesis, no nuevas respuestas del modelo. Estos ejemplos pueden servir para discutir el criterio o como few-shot; si se incorporan al prompt, no deben contarse después como evaluación independiente.
-
-## Observación sobre «significativamente»
-
-En DEMO-003, Gemini afirmó que el panel «mejora significativamente la usabilidad». En un contexto técnico puede confundirse con significación estadística, que no se evaluó. Incluso en su sentido cotidiano de «considerablemente», atribuye una magnitud no respaldada: la entrada solo expresa utilidad percibida por una persona. Se sugiere conservar esa atribución individual, sin calificativos de magnitud. El término no es exclusivo de la estadística.
-
-## Decisión de producto que requiere acuerdo
-
-La prioridad feedback sobre testimonio es una sugerencia, no una verdad lingüística. El mensaje del panel admite ambas lecturas; la propuesta privilegia su valoración de una función. La categoría y la relevancia se eligen por el mensaje, no para forzar newsletter.
-
-Un feedback negativo puede ser relevante y requerir gestión interna. Esta propuesta de análisis no sustituye las reglas de enrutamiento o revisión de quejas.
-
-## Incorporación y comprobación
-
-- Incorporar el bloque común en `ai-engine/prompts/analysis_prompt.txt` y en el prompt de `analyze_batch_texts()` de `ai-engine/analyzer.py`, manteniendo sus envolturas y esquemas actuales. El .txt adjunto no se carga automáticamente.
-- Revisar que ambos prompts admitan los valores del contrato, incluido mixto; el bloque breve no redefine esas categorías.
-- Mantener modelo y configuración al comparar el prompt anterior y el propuesto. Reutilizar las respuestas anteriores como referencia y guardar las nuevas por separado.
-- Revisar fidelidad del insight, tipo, relevancia y IDs, incluyendo casos nuevos y posibles regresiones. Las decisiones humanas quedan registradas en la evaluación.
-
-**No se afirma eficacia equivalente ni superior:** la versión breve es una candidata más simple. Su efecto debe medirse después de implementarla. No se modificó el motor ni se ejecutaron nuevas llamadas a Gemini como parte de esta propuesta.
-
-Referencia de diseño: [Google — estrategias de prompting](https://ai.google.dev/gemini-api/docs/prompting-strategies): claridad, ejemplos y refinamiento iterativo.
+No se modifica el motor, no se declara mejora medida y no se revoca la aprobación editorial existente. La selección automática newsletter y la corrida integrada siguen su seguimiento específico.

@@ -1,24 +1,13 @@
-# Guía de curación del análisis
+# Procedimiento de evaluación contextual
 
-## Archivos
+La revisión compara mensajes, análisis e instrucciones efectivamente enviadas. Su objetivo es documentar utilidad, coherencia y límites de la muestra, sin confundir preferencias editoriales con errores demostrados.
 
-- EVALUACION_ANALISIS.md: entradas, doce análisis, doce textos generados, criterios y decisiones propuestas.
-- TRANSCRIPCION_COMPLETA_GEMINI.md: veinticuatro solicitudes y veinticuatro respuestas completas.
-- generar_evaluacion.py: reconstrucción desde los registros locales; archivo de preparación, innecesario para leer la evaluación. Reejecutarlo reemplaza los Markdown y reinicia los campos de dictamen; las decisiones humanas se conservan editando los documentos sin regenerarlos.
+- [Evaluación completa](EVALUACION_ANALISIS.md): observaciones por caso, doce análisis y textos generados.
+- [Transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md): veinticuatro solicitudes y respuestas.
+- [Precisiones opcionales](SUGERENCIAS_PROMPT_ANALISIS.md): alcance editorial, atribución y criterios.
 
-## Revisión
+La sección delimitada por INICIO_OBSERVACIONES y FIN_OBSERVACIONES concentra las conclusiones editables. El detalle posterior conserva la evidencia. La revisión registra criterios aceptados, precisiones opcionales y cobertura aún no demostrada; no obliga a cambiar el motor ni a repetir pruebas si el comportamiento actual resulta aceptable.
 
-1. Revisar los criterios de la sección 3 del informe. Acordar sentimiento favorable frente a emoción explícita y prioridad de feedback/testimonio.
-2. Leer la entrada completa de cada ficha de la sección 6.
-3. Comparar ID, sentimiento, tema, tipo, relevancia e insight. Completar cada Dictamen humano: Correcto, Ajustar, Discutible o No evaluable.
-4. Señalar palabras concretas del insight que añaden causalidad, generalizan a otros usuarios o atribuyen beneficios no demostrados. Las alternativas sugeridas pueden editarse.
-5. En DEMO-003 decidir qué categoría debe prevalecer y por qué. Alta no equivale automáticamente a newsletter; también se requiere feedback.
-6. Completar revisor, fecha y justificación. Conservar la respuesta original; registrar cambios en el dictamen, no en la evidencia.
-7. Revisar con Andrea D-01 a D-05 y registrar resolución, responsable y fecha acordados o limitación aceptada.
-8. Actualizar la sección 7 y enlazar la evaluación mediante un nuevo PR hacia main. El PR #39 ya fue fusionado.
+Los IDs, los temas y las clasificaciones de logro son coherentes en la muestra. Los insights y los cierres deben juzgarse con el contexto de marketing y los ejemplos. Feedback y testimonio se solapan en el caso del panel; su prioridad depende del producto. Significativamente admite una precisión editorial sin invalidar todo el contenido.
 
-Las observaciones propuestas se prepararon con asistencia de IA. La revisión se atribuye a Saúl/Andrea únicamente después de que registren sus decisiones. No se necesitan nuevas llamadas a Gemini.
-
-## Revisión de la propuesta de prompt
-
-SUGERENCIAS_PROMPT_ANALISIS.md identifica los cambios sugeridos y sus ejemplos. BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt contiene el texto común propuesto para ambos prompts. Las reglas son sugerencias revisables y no se han aplicado al motor. La evaluación anterior y la propuesta de corrección son entregables distintos; una mejora solo se declara después de implementarla y probarla.
+El cierre corresponde a la aceptación documentada de la muestra y sus límites. La ruta automática newsletter y el backend integrado tienen seguimiento separado. No se concluye precisión general del modelo.

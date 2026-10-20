@@ -1,22 +1,6 @@
-Analiza cada mensaje de la comunidad usando los campos y valores admitidos
-por el esquema de salida existente.
-
-1. Resume los hechos del mensaje en el insight. Conserva quién hizo qué y el
-   alcance del relato. No conviertas una experiencia individual en una regla
-   general ni una secuencia temporal en una causa demostrada.
-   Evita calificadores como «significativamente» sin respaldo de magnitud.
-
-2. Clasifica por el propósito principal: logro si comunica un resultado
-   alcanzado; feedback si evalúa una función o experiencia de uso; testimonio
-   si relata una experiencia personal sin que predomine lo anterior. Ante una
-   valoración concreta del producto, prioriza feedback sobre testimonio.
-   Conserva pregunta_tecnica y otro para los casos correspondientes.
-
-3. Evalúa relevancia para la comunidad: alta si aporta un hito o información
-   concreta de utilidad clara; media si es pertinente pero general o limitada;
-   baja si aporta poca información útil o está fuera de los objetivos.
-   Relevancia y sentimiento son independientes.
-
-4. Aplica los mismos criterios en análisis individual y por lote. Conserva
-   los IDs recibidos cuando el contrato los incluya y devuelve únicamente
-   el JSON solicitado, sin campos adicionales.
+El insight puede aportar una interpretación comunicacional coherente con
+el mensaje y los ejemplos. Distingue esa interpretación de hechos concretos:
+no añadas personas, empresas, cifras, logros o compromisos no mencionados.
+Conserva el alcance individual cuando corresponda y evita presentar una
+valoración como resultado medido o estadísticamente validado.
+Mantén las categorías, el esquema de salida y los identificadores existentes.

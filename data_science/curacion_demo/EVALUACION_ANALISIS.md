@@ -2,7 +2,39 @@
 
 La presentación Markdown normaliza espacios al final de línea; los registros originales conservan la salida literal.
 
-**Estado:** evidencia organizada y observaciones propuestas con asistencia de IA. El dictamen humano de Saúl y la revisión de desacuerdos con Andrea están pendientes. No constituye una aprobación editorial nueva ni el cierre automático de Trello.
+**Estado:** evaluación contextual de las ejecuciones del PR #39 frente a las instrucciones y ejemplos efectivamente enviados. Las respuestas resultan útiles para el objetivo de marketing de la muestra; se distinguen observaciones de precisión, decisiones de producto y cobertura aún no demostrada.
+
+<!-- INICIO_OBSERVACIONES -->
+
+## Observaciones de evaluación
+
+### DEMO-001 — Pasantía frontend
+
+> "El tema, el sentimiento favorable y la clasificación como logro son coherentes con el mensaje. El insight y el cierre se ajustan al enfoque de empleabilidad que muestran la plantilla de análisis y el ejemplo few-shot. La publicación conserva el hecho central y aporta un cierre motivacional compatible con esa referencia. No se identifica un error que justifique rechazar este resultado. Si se requiere una síntesis estrictamente factual, debe explicitarse ese criterio como ajuste editorial."
+
+### DEMO-002 — Proyecto Python
+
+> "El análisis identifica adecuadamente un proyecto terminado y un repositorio compartido. Las referencias a aprendizaje, iniciativa y participación son interpretaciones de marketing razonables para la tarea solicitada. El uso de plural al describir una conducta de la comunidad amplía un caso individual; puede ajustarse a singular para mayor precisión, sin invalidar el resultado ni exigir rehacer el flujo."
+
+### DEMO-003 — Panel de proyectos
+
+> "El tema y la valoración positiva corresponden al mensaje. Feedback en análisis directo y testimonio en batch son lecturas posibles de una experiencia de uso relatada en primera persona. El enrutador actúa conforme al tipo recibido; la expectativa newsletter del archivo no demuestra que LinkedIn sea incorrecto. Significativamente puede confundirse con significación estadística, que no se evaluó; aun en uso cotidiano intensifica la valoración. Se sugiere utilidad percibida para mayor precisión, como ajuste de redacción, no como prueba de fallo general."
+
+### Correspondencia de identificadores
+
+> "Las seis solicitudes locales conservan correspondencia entre ID enviado, respuesta de Gemini y activo generado. Las pruebas directas mantienen la asociación mediante el registro externo porque analyze_text no devuelve ID."
+
+### Criterios y cobertura
+
+> "La relevancia alta es defendible para estos tres casos pertinentes y concretos. Que todos reciban alta no demuestra un fallo. La rúbrica alta/media/baja se documenta para hacer explícita la evaluación, sin imponer una distribución artificial de etiquetas. La ruta automática newsletter sigue sin demostrarse en esta muestra; corresponde revisar el candidato o acordar la prioridad de categorías si el producto lo necesita."
+
+### Conclusión de la revisión
+
+> "La muestra aporta análisis y contenido útiles, coherentes en términos generales con las instrucciones. Los hallazgos no justifican rechazar el trabajo ni rediseñar el prompt por defecto. Se propone conservar el comportamiento útil, registrar las precisiones opcionales y atender únicamente las decisiones o pruebas necesarias para el alcance del MVP. La validación completa del backend y la precisión general del motor quedan fuera de esta muestra."
+
+<!-- FIN_OBSERVACIONES -->
+
+---
 
 ## 1. Alcance
 
@@ -15,70 +47,76 @@ La presentación Markdown normaliza espacios al final de línea; los registros o
 - Los diez mensajes de diagnóstico no se ejecutaron en estos registros; quedan fuera de esta evaluación.
 - La preparación de este documento reutiliza respuestas existentes, sin modificar sus valores ni realizar nuevas llamadas.
 
-## 2. Instrucciones de curación
+## 2. Método de evaluación y contexto del prompt
 
-1. Leer el mensaje de cada ficha de la sección 6 antes de aceptar la interpretación del motor.
-2. Comparar los seis campos usando la rúbrica de la sección 3.
-3. Completar cada celda «Dictamen humano» con **Correcto**, **Ajustar**, **Discutible** o **No evaluable**. Registrar la razón de los desacuerdos.
-4. Separar hechos explícitos, inferencias admisibles y afirmaciones añadidas. Las observaciones propuestas pueden aceptarse, modificarse o rechazarse con justificación.
-5. Completar revisor, fecha, campos ajustados y justificación en cada ficha. La respuesta original se conserva; las decisiones se registran aparte.
-6. Revisar con Andrea los desacuerdos que puedan requerir cambios de criterios, prompt o enrutamiento. La etiqueta humana no se cambia solamente para obtener un formato deseado.
-7. Registrar en la sección 5 la resolución: corrección, seguimiento pendiente o limitación aceptada explícitamente.
+La evaluación contrasta entrada, respuesta y propósito de las instrucciones, diferenciando el análisis comunicacional de una extracción estrictamente literal. Una interpretación editorial razonable no equivale por sí sola a un hecho inventado.
 
-**Correcto:** respaldado por el mensaje y la regla acordada. **Ajustar:** contradice el mensaje o añade hechos. **Discutible:** existen interpretaciones razonables en competencia. **No evaluable:** falta criterio o información. Discutible no significa error demostrado.
+| Fuente inspeccionada | Instrucción o ejemplo relevante | Implicación para evaluar las respuestas |
+|---|---|---|
+| `prompts/analysis_prompt.txt`, snapshot PR #38 | Pide un hallazgo útil para Community Management o Marketing y ejemplifica: «Los proyectos prácticos están contribuyendo a la empleabilidad de los participantes». | La plantilla ya orienta a interpretaciones generales de empleabilidad; una salida semejante no acredita por sí sola desobediencia del modelo. |
+| `analyzer.py`, analyze_batch_texts | Pide «conclusión breve y útil» y enumera categorías, sin reglas de desempate feedback/testimonio. | La variación de categoría necesita un criterio de producto, no una corrección automática de etiquetas. |
+| `generators.py`, generate_linkedin | Pide publicación breve, tono profesional, positivo y humano; recibe el insight como parte del análisis. | El cierre combina instrucciones editoriales con información e interpretación recibidas. |
+| `few_shot.py`, primer ejemplo LinkedIn | Incluye «Las oportunidades surgen al combinar constancia con aprendizaje aplicado». | Los cierres motivacionales generales forman parte del estilo mostrado. |
+| `generators.py`, generate_newsletter | Pide una síntesis neutral y prohíbe compromisos o acciones de la organización no expresados. | La evaluación de newsletter debe distinguirla del estilo inspirador de LinkedIn. |
 
-## 3. Criterios propuestos para revisión humana
+La regla de usar hechos de la entrada y los ejemplos de reflexión general presentan una tensión de alcance editorial. Conviene aclararla si afecta al producto, sin convertir todo recurso retórico en un error factual. Los textos alternativos incluidos en las fichas son opciones más literales, no respuestas obligatorias.
+
+**Versión:** la evidencia corresponde al PR #38 (`d62dd02`). En el checkout posterior de main revisado (`8cef3b6`) LinkedIn ya incluye cierre fiel, CTA autorizado y limitación de hashtags. La evidencia histórica no debe utilizarse para afirmar que esos ajustes faltan en el código posterior. No se ejecutó de nuevo esa versión ni se comprobó su despliegue.
+
+**Compatible:** interpretación respaldada por mensaje y tarea. **Precisión opcional:** cambio de redacción que puede mejorar atribución o alcance. **Decisión de producto:** categoría o criterio que admite varias opciones. **Error confirmado:** contradicción, invención concreta o incumplimiento demostrable bajo una instrucción inequívoca. Estas categorías no se confunden con aprobación formal del equipo.
+
+## 3. Criterios de evaluación propuestos
 
 | Campo | Criterio |
 |---|---|
-| ID | Coincidencia exacta entre entrada y respuesta, sin omisiones, cambios ni duplicados. analyze_text no recibe ni devuelve ID; en prueba directa solo se conserva su asociación externa al caso. |
-| Sentimiento | Valoración o tono expresados. Acordar si un hito favorable sin emoción explícita se considera positivo o neutro. |
-| Tema | Asunto central; se aceptan redacciones distintas con significado equivalente. |
-| Tipo | Logro: resultado alcanzado por quien escribe o su equipo. Feedback: valoración de un producto, servicio o experiencia. Testimonio: relato personal de experiencia o resultado. Pregunta técnica: consulta explícita. Otro: casos restantes. Falta acordar prioridad cuando feedback y testimonio se solapan. |
-| Insight | Síntesis respaldada por el mensaje. Conservar su alcance individual; evitar causalidad no demostrada, generalizaciones y beneficios añadidos. |
+| ID | Correspondencia exacta con las entradas del endpoint; analyze_text mantiene asociación externa. |
+| Sentimiento | Lectura razonable de la valoración y el contenido. La interpretación favorable de estos tres mensajes es admisible; la muestra no exige redefinir el sentimiento. |
+| Tema | Correspondencia semántica con el asunto central, admitiendo distintas denominaciones. |
+| Tipo | Logro para resultados alcanzados, feedback para valoración de uso y testimonio para experiencia personal. Puede haber solapamiento; la prioridad requiere acuerdo si cambia una selección necesaria para el producto. |
+| Insight | Hallazgo útil para la tarea de marketing. Distinguir interpretación razonable de hechos específicos añadidos; examinar alcance y atribución sin exigir una transcripción literal por defecto. |
 
 ### Relevancia categórica
 
-| Nivel | Propuesta |
+| Nivel | Criterio orientativo |
 |---|---|
-| Alta | Hecho, hito o aprendizaje concreto con valor claro para los objetivos de la comunidad y datos suficientes para considerar su selección editorial. |
-| Media | Contenido pertinente, pero de alcance individual, detalle limitado o prioridad editorial por confirmar. |
-| Baja | Poca información aprovechable para esos objetivos, sin un hecho o aprendizaje identificable. |
+| Alta | Contenido concreto y claramente útil para los objetivos de la comunidad. |
+| Media | Pertinente, pero general, limitado o de prioridad incierta. |
+| Baja | Poca información aprovechable o contenido fuera de esos objetivos. |
 
-La prioridad del producto puede cambiar la decisión alta/media. Sentimiento, relevancia y publicabilidad son decisiones distintas: una queja puede ser negativa y altamente relevante, pero requerir atención interna. Relevancia no es una puntuación ni una medición de engagement.
+Los tres casos pueden considerarse de relevancia alta. La rúbrica documenta el criterio; no demuestra cobertura de media o baja ni exige que estas categorías aparezcan en una muestra de tres mensajes. Sentimiento, relevancia y autorización de publicación se evalúan por separado.
 
 ## 4. Resumen de resultados registrados
 
-| Ejecución | Caso | Nivel | Sentimiento | Tipo | Relevancia | Formato | Dictamen humano |
+| Ejecución | Caso | Nivel | Sentimiento | Tipo | Relevancia | Formato | Evaluación |
 |---|---|---|---|---|---|---|---|
-| 20261018T025211Z_c26a11 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | Pendiente |
-| 20261018T025211Z_c26a11 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | Pendiente |
-| 20261018T025211Z_c26a11 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | Pendiente |
-| 20261018T025211Z_c26a11 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | Pendiente |
-| 20261018T025211Z_c26a11 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | Pendiente |
-| 20261018T025211Z_c26a11 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | Pendiente |
-| 20261018T030127Z_24cd58 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | Pendiente |
-| 20261018T030127Z_24cd58 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | Pendiente |
-| 20261018T030127Z_24cd58 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | Pendiente |
-| 20261018T030127Z_24cd58 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | Pendiente |
-| 20261018T030127Z_24cd58 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | Pendiente |
-| 20261018T030127Z_24cd58 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | Pendiente |
+| 20261018T025211Z_c26a11 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T025211Z_c26a11 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T025211Z_c26a11 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T025211Z_c26a11 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T025211Z_c26a11 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T025211Z_c26a11 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T030127Z_24cd58 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T030127Z_24cd58 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T030127Z_24cd58 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T030127Z_24cd58 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T030127Z_24cd58 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T030127Z_24cd58 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
 
-## 5. Desacuerdos y decisiones pendientes
+## 5. Hallazgos y seguimiento proporcionado
 
-| ID | Evidencia | Propuesta de actuación | Revisión propuesta | Estado |
-|---|---|---|---|---|
-| D-01 | Los insights de DEMO-001 generalizan efectividad laboral; DEMO-002 añade compromiso, colaboración o conducta colectiva; DEMO-003 generaliza una valoración individual. | Acordar inferencias permitidas y preferir síntesis atribuidas al autor. Después evaluar cambios de prompt. | Saúl y Andrea | Pendiente. |
-| D-02 | DEMO-003 es feedback en las dos pruebas directas y testimonio en las dos pruebas por lote. Los prompts son distintos. | Acordar prioridad de categorías; revisar consistencia entre prompts. | Saúl y Andrea | Discrepancia reproducida en registros; no implica por sí sola una etiqueta humana errónea. |
-| D-03 | DEMO-003 toma LinkedIn porque testimonio se enruta a LinkedIn. Newsletter solo se generó por selección explícita del notebook. | Si testimonio es válido, cambiar el candidato de demo. Si se prioriza feedback, revisar clasificación. Con feedback y relevancia alta, verificar después newsletter automático. | Andrea; criterio revisado con Saúl | Ruta coherente con el tipo recibido; newsletter automático pendiente. |
-| D-04 | Los doce análisis reciben relevancia alta; no hay media/baja ejecutadas. | Acordar el caso del panel según prioridad del producto; ampliar cobertura en evaluación posterior si corresponde. | Saúl y Andrea | Alta no se declara automáticamente incorrecta. |
-| D-05 | El prompt individual desarrolla categorías e incluye mixto; el batch es más breve y no enumera mixto. Ambos omiten rúbrica alta/media/baja. | Evaluar criterios comunes y su validación en un cambio separado. | Andrea, sujeto a acuerdo | Observación de las instrucciones realmente enviadas. |
+| Referencia | Evaluación contextual | Actuación recomendada |
+|---|---|---|
+| P-01 — Generalizaciones editoriales | La plantilla de análisis y el few-shot ya muestran conclusiones amplias e inspiradoras. Los resultados de empleabilidad son compatibles con esa orientación. | Conservar el comportamiento útil. Aclarar el alcance del insight solo si la aplicación necesita mayor literalidad; no exigir una reescritura por defecto. |
+| P-02 — Alcance individual y magnitud | El plural de DEMO-002 y significativamente en DEMO-003 pueden refinarse. No se demuestra fabricación de empresas, salarios o cifras en esos pasajes. | Precisiones opcionales: singular y utilidad percibida. Significativamente no está reservado a estadística; aquí no hay evidencia inferencial ni magnitud medida. |
+| P-03 — Feedback/testimonio | El panel admite ambas lecturas y el enrutador sigue las reglas existentes. | No imponer feedback para conseguir newsletter. Acordar la prioridad solo si el producto lo necesita o seleccionar un caso menos ambiguo. |
+| P-04 — Relevancia | Alta es plausible para los tres mensajes; la falta de media/baja es una limitación de cobertura. | Documentar la rúbrica. Ampliar pruebas únicamente si es necesario para cerrar el alcance de evaluación. |
+| P-05 — Contrato y rutas | IDs coincidentes y seis respuestas HTTP 200. Newsletter funciona por llamada directa, no se observó en selección automática. | Reconocer la evidencia existente; conservar newsletter automático y backend integrado como cobertura por completar en sus tarjetas. |
 
-El mensaje del panel relata una experiencia propia y valora una función: feedback y testimonio pueden ser defendibles. La expectativa newsletter del archivo no es una etiqueta humana definitiva. Antes de modificar Python se debe resolver esa prioridad.
+No se propone retrabajo general ni modificaciones obligatorias de prompt a partir de estos hallazgos. La aceptación de criterios o limitaciones corresponde al equipo.
 
 ## 6. Fichas completas de evaluación
 
-Las respuestas originales y las propuestas están separadas. Las tablas de evaluación no sustituyen ni corrigen silenciosamente los valores de Gemini.
+Los valores del motor se conservan sin modificación. Las observaciones técnicas se presentan en columnas separadas.
 
 ### 20261018T025211Z_c26a11 — DEMO-001-directa
 
@@ -98,18 +136,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Conseguí una pasantía de desarrollo frontend después de presentar mi proyecto de React.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-001 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Compatible con un resultado profesional favorable. | Pendiente |
-| Tema | empleabilidad | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: contratación conseguida. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito profesional alineado con casos de éxito. | Pendiente |
-| Insight | Los proyectos prácticos basados en tecnologías como React generan resultados tangibles de inserción laboral. | Revisar generalización y causalidad: una experiencia individual no demuestra efectividad general para conseguir empleo. | Pendiente |
+| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-001 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "No aplica al análisis directo; asociación externa conservada." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | empleabilidad | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | Los proyectos prácticos basados en tecnologías como React generan resultados tangibles de inserción laboral. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que consiguió una pasantía de desarrollo frontend después de presentar su proyecto de React.
 
@@ -125,13 +163,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #Frontend #EmpleabilidadTech #DesarrolloWeb
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T025211Z_c26a11 — DEMO-002-directa
 
@@ -151,18 +183,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Terminé mi proyecto de análisis de datos con Python y publiqué el repositorio para que puedan revisarlo.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-002 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Aceptable para un hito favorable; neutro también es defendible si se evalúa únicamente emoción explícita. | Pendiente |
-| Tema | proyectos prácticos | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: proyecto terminado y repositorio publicado. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito técnico y artefacto compartido; validar prioridad editorial. | Pendiente |
-| Insight | Los miembros comparten activamente sus proyectos finales, lo que genera oportunidades para destacar casos de éxito y fomentar la participación. | Revisar inferencias sobre compromiso, proactividad, colaboración o conducta de varios miembros; la entrada solo relata un proyecto individual. | Pendiente |
+| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-002 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "No aplica al análisis directo; asociación externa conservada." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | proyectos prácticos | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | Los miembros comparten activamente sus proyectos finales, lo que genera oportunidades para destacar casos de éxito y fomentar la participación. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que terminó un proyecto de análisis de datos con Python y publicó el repositorio para revisión.
 
@@ -178,13 +210,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #DataScience #Python #ProyectosTech
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T025211Z_c26a11 — DEMO-003-directa
 
@@ -204,18 +230,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Probé el nuevo panel de proyectos de la comunidad: ahora encuentro el repositorio y las instrucciones de cada proyecto en el mismo lugar. Esta organización me resulta útil para empezar las pruebas.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-003 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Respaldado por la valoración explícita «me resulta útil». | Pendiente |
-| Tema | experiencia de usuario y organización de recursos | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | feedback | Feedback propuesto. Testimonio también es posible; acordar prioridad entre categorías antes de declarar error. | Pendiente |
-| Relevancia | alta | Media propuesta: valoración individual. Alta es defendible si el cambio es prioritario para el producto; falta acuerdo. | Pendiente |
-| Insight | La centralización de repositorios e instrucciones en el nuevo panel mejora significativamente la usabilidad y facilita el inicio de pruebas para los usuarios. | «Significativamente» puede confundirse con significación estadística, no evaluada aquí. Incluso en sentido cotidiano atribuye una magnitud sin respaldo; además generaliza una valoración individual. Conservar «a la persona le resulta útil», sin magnitud ni alcance colectivo añadidos. El término no es exclusivo de la estadística. | Pendiente |
+| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-003 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "No aplica al análisis directo; asociación externa conservada." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | experiencia de usuario y organización de recursos | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | feedback | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | La centralización de repositorios e instrucciones en el nuevo panel mejora significativamente la usabilidad y facilita el inicio de pruebas para los usuarios. | Significativamente es admisible en lenguaje cotidiano, pero puede sugerir significación estadística o una magnitud no evaluada. Utilidad percibida resulta más preciso. | "Ajuste de redacción sugerido; no prueba un fallo general del motor." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona valora que el panel reúne el repositorio y las instrucciones y señala que le resulta útil para iniciar pruebas.
 
@@ -223,13 +249,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Una persona de la comunidad probó el nuevo panel de proyectos y destacó que ahora encuentra el repositorio y las instrucciones en el mismo lugar, lo cual le resulta útil para empezar las pruebas.
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T025211Z_c26a11 — DEMO-001
 
@@ -249,18 +269,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Conseguí una pasantía de desarrollo frontend después de presentar mi proyecto de React.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | Entrada: DEMO-001; Gemini: DEMO-001; activo: DEMO-001. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Compatible con un resultado profesional favorable. | Pendiente |
-| Tema | Empleabilidad / Logro profesional | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: contratación conseguida. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito profesional alineado con casos de éxito. | Pendiente |
-| Insight | Demuestra la efectividad de los proyectos prácticos en React para conseguir empleo. | Revisar generalización y causalidad: una experiencia individual no demuestra efectividad general para conseguir empleo. | Pendiente |
+| ID | Entrada: DEMO-001; Gemini: DEMO-001; activo: DEMO-001. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "Correcto: coinciden ID enviado, devuelto por Gemini y activo generado." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | Empleabilidad / Logro profesional | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | Demuestra la efectividad de los proyectos prácticos en React para conseguir empleo. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que consiguió una pasantía de desarrollo frontend después de presentar su proyecto de React.
 
@@ -276,13 +296,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #Frontend #DesarrolloWeb #ComunidadDev #LogrosTech
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T025211Z_c26a11 — DEMO-002
 
@@ -302,18 +316,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Terminé mi proyecto de análisis de datos con Python y publiqué el repositorio para que puedan revisarlo.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | Entrada: DEMO-002; Gemini: DEMO-002; activo: DEMO-002. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Aceptable para un hito favorable; neutro también es defendible si se evalúa únicamente emoción explícita. | Pendiente |
-| Tema | Análisis de datos con Python | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: proyecto terminado y repositorio publicado. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito técnico y artefacto compartido; validar prioridad editorial. | Pendiente |
-| Insight | El usuario demuestra proactividad y aplicación práctica de sus conocimientos al compartir un proyecto completo de análisis de datos. | Revisar inferencias sobre compromiso, proactividad, colaboración o conducta de varios miembros; la entrada solo relata un proyecto individual. | Pendiente |
+| ID | Entrada: DEMO-002; Gemini: DEMO-002; activo: DEMO-002. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "Correcto: coinciden ID enviado, devuelto por Gemini y activo generado." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | Análisis de datos con Python | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | El usuario demuestra proactividad y aplicación práctica de sus conocimientos al compartir un proyecto completo de análisis de datos. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que terminó un proyecto de análisis de datos con Python y publicó el repositorio para revisión.
 
@@ -329,13 +343,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #AnalisisDeDatos #Python #ComunidadTech #DataScience
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T025211Z_c26a11 — DEMO-003
 
@@ -355,18 +363,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Probé el nuevo panel de proyectos de la comunidad: ahora encuentro el repositorio y las instrucciones de cada proyecto en el mismo lugar. Esta organización me resulta útil para empezar las pruebas.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | Entrada: DEMO-003; Gemini: DEMO-003; activo: DEMO-003. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Respaldado por la valoración explícita «me resulta útil». | Pendiente |
-| Tema | panel de proyectos | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | testimonio | Feedback propuesto. Testimonio también es posible; acordar prioridad entre categorías antes de declarar error. | Pendiente |
-| Relevancia | alta | Media propuesta: valoración individual. Alta es defendible si el cambio es prioritario para el producto; falta acuerdo. | Pendiente |
-| Insight | La centralización de repositorios e instrucciones en el panel de proyectos mejora la experiencia y facilita el inicio de pruebas. | Atribuir el beneficio a quien escribe; no demuestra mejora para todos los usuarios ni una magnitud medida. | Pendiente |
+| ID | Entrada: DEMO-003; Gemini: DEMO-003; activo: DEMO-003. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "Correcto: coinciden ID enviado, devuelto por Gemini y activo generado." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | panel de proyectos | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | testimonio | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | La centralización de repositorios e instrucciones en el panel de proyectos mejora la experiencia y facilita el inicio de pruebas. | La mejora descrita interpreta la utilidad relatada; atribuirla a quien escribe aporta precisión. | "Compatible como lectura comunicacional; atribución individual opcional." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona valora que el panel reúne el repositorio y las instrucciones y señala que le resulta útil para iniciar pruebas.
 
@@ -382,13 +390,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #TechCommunity #DesarrolloDeSoftware #ProyectosTech
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T030127Z_24cd58 — DEMO-001-directa
 
@@ -408,18 +410,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Conseguí una pasantía de desarrollo frontend después de presentar mi proyecto de React.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-001 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Compatible con un resultado profesional favorable. | Pendiente |
-| Tema | empleabilidad | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: contratación conseguida. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito profesional alineado con casos de éxito. | Pendiente |
-| Insight | Los proyectos prácticos impulsan directamente la inserción laboral de los miembros, lo cual puede usarse como caso de éxito en marketing. | Revisar generalización y causalidad: una experiencia individual no demuestra efectividad general para conseguir empleo. | Pendiente |
+| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-001 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "No aplica al análisis directo; asociación externa conservada." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | empleabilidad | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | Los proyectos prácticos impulsan directamente la inserción laboral de los miembros, lo cual puede usarse como caso de éxito en marketing. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que consiguió una pasantía de desarrollo frontend después de presentar su proyecto de React.
 
@@ -435,13 +437,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #Frontend #DesarrolloWeb #EmpleabilidadTech
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T030127Z_24cd58 — DEMO-002-directa
 
@@ -461,18 +457,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Terminé mi proyecto de análisis de datos con Python y publiqué el repositorio para que puedan revisarlo.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-002 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Aceptable para un hito favorable; neutro también es defendible si se evalúa únicamente emoción explícita. | Pendiente |
-| Tema | proyectos prácticos | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: proyecto terminado y repositorio publicado. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito técnico y artefacto compartido; validar prioridad editorial. | Pendiente |
-| Insight | Los miembros comparten activamente sus proyectos completados, lo que demuestra un alto compromiso y puede ser utilizado para destacar casos de éxito en la comunidad. | Revisar inferencias sobre compromiso, proactividad, colaboración o conducta de varios miembros; la entrada solo relata un proyecto individual. | Pendiente |
+| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-002 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "No aplica al análisis directo; asociación externa conservada." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | proyectos prácticos | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | Los miembros comparten activamente sus proyectos completados, lo que demuestra un alto compromiso y puede ser utilizado para destacar casos de éxito en la comunidad. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que terminó un proyecto de análisis de datos con Python y publicó el repositorio para revisión.
 
@@ -488,13 +484,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #DataScience #Python #ComunidadTech
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T030127Z_24cd58 — DEMO-003-directa
 
@@ -514,18 +504,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Probé el nuevo panel de proyectos de la comunidad: ahora encuentro el repositorio y las instrucciones de cada proyecto en el mismo lugar. Esta organización me resulta útil para empezar las pruebas.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-003 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Respaldado por la valoración explícita «me resulta útil». | Pendiente |
-| Tema | experiencia de usuario | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | feedback | Feedback propuesto. Testimonio también es posible; acordar prioridad entre categorías antes de declarar error. | Pendiente |
-| Relevancia | alta | Media propuesta: valoración individual. Alta es defendible si el cambio es prioritario para el producto; falta acuerdo. | Pendiente |
-| Insight | La reorganización del panel de proyectos mejora la usabilidad y facilita el inicio de pruebas para los usuarios. | Atribuir el beneficio a quien escribe; no demuestra mejora para todos los usuarios ni una magnitud medida. | Pendiente |
+| ID | No aplica a la respuesta del modelo: analyze_text devuelve análisis sin ID. Asociación externa: DEMO-003 | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "No aplica al análisis directo; asociación externa conservada." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | experiencia de usuario | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | feedback | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | La reorganización del panel de proyectos mejora la usabilidad y facilita el inicio de pruebas para los usuarios. | La mejora descrita interpreta la utilidad relatada; atribuirla a quien escribe aporta precisión. | "Compatible como lectura comunicacional; atribución individual opcional." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona valora que el panel reúne el repositorio y las instrucciones y señala que le resulta útil para iniciar pruebas.
 
@@ -533,13 +523,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Una persona de la comunidad probó el nuevo panel de proyectos y destacó que ahora encuentra el repositorio y las instrucciones en el mismo lugar, una organización que le resulta útil para empezar las pruebas.
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T030127Z_24cd58 — DEMO-001
 
@@ -559,18 +543,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Conseguí una pasantía de desarrollo frontend después de presentar mi proyecto de React.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | Entrada: DEMO-001; Gemini: DEMO-001; activo: DEMO-001. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Compatible con un resultado profesional favorable. | Pendiente |
-| Tema | Empleabilidad en desarrollo frontend | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: contratación conseguida. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito profesional alineado con casos de éxito. | Pendiente |
-| Insight | Los proyectos prácticos en React son efectivos para conseguir empleo en el sector. | Revisar generalización y causalidad: una experiencia individual no demuestra efectividad general para conseguir empleo. | Pendiente |
+| ID | Entrada: DEMO-001; Gemini: DEMO-001; activo: DEMO-001. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "Correcto: coinciden ID enviado, devuelto por Gemini y activo generado." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | Empleabilidad en desarrollo frontend | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | Los proyectos prácticos en React son efectivos para conseguir empleo en el sector. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que consiguió una pasantía de desarrollo frontend después de presentar su proyecto de React.
 
@@ -586,13 +570,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #DesarrolloFrontend #React #EmpleabilidadTech #ComunidadDev
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T030127Z_24cd58 — DEMO-002
 
@@ -612,18 +590,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Terminé mi proyecto de análisis de datos con Python y publiqué el repositorio para que puedan revisarlo.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | Entrada: DEMO-002; Gemini: DEMO-002; activo: DEMO-002. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Aceptable para un hito favorable; neutro también es defendible si se evalúa únicamente emoción explícita. | Pendiente |
-| Tema | Proyecto de análisis de datos | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | logro | Logro: proyecto terminado y repositorio publicado. | Pendiente |
-| Relevancia | alta | Alta propuesta: hito técnico y artefacto compartido; validar prioridad editorial. | Pendiente |
-| Insight | El usuario comparte con éxito un proyecto finalizado en Python, lo que demuestra un hito de aprendizaje y fomenta la colaboración en la comunidad. | Revisar inferencias sobre compromiso, proactividad, colaboración o conducta de varios miembros; la entrada solo relata un proyecto individual. | Pendiente |
+| ID | Entrada: DEMO-002; Gemini: DEMO-002; activo: DEMO-002. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "Correcto: coinciden ID enviado, devuelto por Gemini y activo generado." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | Proyecto de análisis de datos | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | El usuario comparte con éxito un proyecto finalizado en Python, lo que demuestra un hito de aprendizaje y fomenta la colaboración en la comunidad. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona informa que terminó un proyecto de análisis de datos con Python y publicó el repositorio para revisión.
 
@@ -639,13 +617,7 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #DataScience #Python #AnalisisDeDatos
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
 ### 20261018T030127Z_24cd58 — DEMO-003
 
@@ -665,18 +637,18 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 
 > Probé el nuevo panel de proyectos de la comunidad: ahora encuentro el repositorio y las instrucciones de cada proyecto en el mismo lugar. Esta organización me resulta útil para empezar las pruebas.
 
-**Análisis completo y propuesta de evaluación**
+**Análisis registrado y observación técnica**
 
-| Campo | Resultado registrado | Observación propuesta para revisión | Dictamen humano |
+| Campo | Resultado registrado | Observación propuesta para revisión | Evaluación |
 |---|---|---|---|
-| ID | Entrada: DEMO-003; Gemini: DEMO-003; activo: DEMO-003. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | Pendiente |
-| Sentimiento | positivo | Respaldado por la valoración explícita «me resulta útil». | Pendiente |
-| Tema | Panel de proyectos y organización de recursos | Compatible con el asunto; aceptar denominaciones equivalentes. | Pendiente |
-| Tipo | testimonio | Feedback propuesto. Testimonio también es posible; acordar prioridad entre categorías antes de declarar error. | Pendiente |
-| Relevancia | alta | Media propuesta: valoración individual. Alta es defendible si el cambio es prioritario para el producto; falta acuerdo. | Pendiente |
-| Insight | La unificación de repositorios e instrucciones en el panel de proyectos mejora la experiencia de usuario y facilita el inicio de pruebas. | Atribuir el beneficio a quien escribe; no demuestra mejora para todos los usuarios ni una magnitud medida. | Pendiente |
+| ID | Entrada: DEMO-003; Gemini: DEMO-003; activo: DEMO-003. Coinciden. | Correspondencia verificada técnicamente en endpoint; asociación contextual en directa. | "Correcto: coinciden ID enviado, devuelto por Gemini y activo generado." |
+| Sentimiento | positivo | Interpretación favorable razonable en el contexto del mensaje. | "Compatible; no requiere un cambio de definición para esta muestra." |
+| Tema | Panel de proyectos y organización de recursos | El asunto identificado corresponde a la entrada. | "Compatible." |
+| Tipo | testimonio | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
+| Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
+| Insight | La unificación de repositorios e instrucciones en el panel de proyectos mejora la experiencia de usuario y facilita el inicio de pruebas. | La mejora descrita interpreta la utilidad relatada; atribuirla a quien escribe aporta precisión. | "Compatible como lectura comunicacional; atribución individual opcional." |
 
-**Insight alternativo propuesto — no es respuesta original de Gemini**
+**Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
 > Una persona valora que el panel reúne el repositorio y las instrucciones y señala que le resulta útil para iniciar pruebas.
 
@@ -692,33 +664,27 @@ Las respuestas originales y las propuestas están separadas. Las tablas de evalu
 >
 > #TechCommunity #DesarrolloWeb #ComunidadDev
 
-**Decisión humana**
 
-- Revisor: pendiente.
-- Fecha: pendiente.
-- Dictamen: pendiente.
-- Campos aceptados/ajustados y justificación: pendiente.
-- Limitación aceptada, si corresponde: pendiente.
 
-## 7. Limitaciones y cierre humano
+## 7. Alcance y seguimiento
 
-- Tres mensajes sintéticos, favorables o valorativos. Sin cobertura ejecutada de sentimiento negativo/mixto, relevancia media/baja, quejas o spam.
-- Los lotes locales contienen un mensaje: no cubren todas las omisiones, duplicados o competencias posibles de un lote de diez.
-- Las repeticiones y las pruebas directas no son ejemplos independientes adicionales.
-- Evidencia del commit indicado. Cambios posteriores del motor requieren su validación propia.
-- El contenido generado se incluye como contexto. Su aprobación editorial previa no sustituye la evaluación del análisis.
-- Responsables y decisiones de esta propuesta están sujetos a confirmación; no se atribuyen aprobaciones humanas.
+- Tres mensajes sintéticos, favorables o valorativos. Sin evaluación de negativos, mixtos, relevancia media/baja, quejas o spam en estas ejecuciones.
+- Seis lotes de un mensaje: evidencia de correspondencia de IDs individual, no de todos los escenarios de lote.
+- Las repeticiones no son ejemplos independientes adicionales.
+- La muestra pertenece a una versión histórica; el código posterior debe juzgarse por sus propias instrucciones y pruebas.
+- La revisión editorial previa se conserva. Esta evaluación añade lectura del análisis y límites de evidencia, sin revocar aquella aprobación.
 
-| Punto | Estado |
+| Aspecto | Resultado de la revisión |
 |---|---|
-| Criterios de relevancia revisados y aceptados | Pendiente |
-| Doce análisis con dictamen y justificación humana | Pendiente |
-| IDs de seis respuestas batch contrastados con la entrada, respuesta Gemini y activo | Verificación técnica realizada; revisión humana pendiente |
-| D-01 a D-05 resueltos o aceptados explícitamente como limitación | Pendiente |
-| Responsables y fechas acordados para correcciones | Pendiente |
-| Evaluación publicada y enlazada en Trello | Pendiente |
+| IDs, sentimiento, tema y logros | Compatibles con los mensajes de esta muestra. |
+| Insights y cierres de LinkedIn | Útiles y coherentes en términos generales con la orientación comunicacional y sus ejemplos. |
+| Relevancia | Alta defendible para estos casos; criterios explícitos documentados. |
+| Magnitud y alcance | Precisiones editoriales opcionales identificadas. |
+| Feedback/testimonio | Solapamiento admisible; prioridad por acordar solo si el producto lo requiere. |
+| Newsletter automático | No demostrado; la prueba directa sí ejercita su generador. |
+| Backend integrado | Fuera del recorrido ejecutado en esta evidencia. |
 
-El cierre de esta tarjeta requiere revisión humana de la muestra y desacuerdos resueltos o aceptados explícitamente. No demuestra precisión general del motor. La revisión editorial de activos y la prueba del backend integrado pertenecen a sus tarjetas respectivas.
+La documentación permite revisar la muestra sin repetir llamadas. El cierre de la tarjeta requiere aceptar los criterios y límites o acordar el seguimiento necesario; no obliga por sí mismo a modificar Python. No se declara precisión general ni se suple la prueba integrada del backend.
 
 ## 8. Todas las solicitudes y respuestas
 
@@ -746,8 +712,6 @@ El cierre de esta tarjeta requiere revisión humana de la muestra y desacuerdos 
 
 [Registro original](https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/blob/75eb9ea666bf91c50ff153a1bf5d6fe00557b0d7/data_science/curacion_demo/resultados/20261018T030127Z_24cd58/evidencia.jsonl) · [Versión registrada](https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/blob/75eb9ea666bf91c50ff153a1bf5d6fe00557b0d7/data_science/curacion_demo/resultados/20261018T030127Z_24cd58/version_probada.json)
 
-## 10. Sugerencias de ajuste del prompt
+## 10. Sugerencias mínimas
 
-[SUGERENCIAS_PROMPT_ANALISIS.md](SUGERENCIAS_PROMPT_ANALISIS.md) presenta una propuesta breve: fidelidad de la síntesis, prioridad feedback/testimonio, relevancia categórica y criterios comunes para ambos modos de análisis. Conserva el contrato y no introduce una nueva definición de sentimiento. Las observaciones de esta evaluación siguen siendo propuestas sujetas a acuerdo humano.
-
-[BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) contiene las instrucciones adicionales sugeridas. Su incorporación y validación no se han realizado.
+[SUGERENCIAS_PROMPT_ANALISIS.md](SUGERENCIAS_PROMPT_ANALISIS.md) recoge precisiones opcionales, sin proponer una sustitución general de prompts ni prioridad obligatoria de feedback. El [bloque opcional](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) solo tendría sentido si se acuerda aclarar el alcance editorial. No está aplicado ni validado.
