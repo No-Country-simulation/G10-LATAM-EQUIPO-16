@@ -2,7 +2,7 @@
 
 La presentación Markdown normaliza espacios al final de línea; los registros originales conservan la salida literal.
 
-**Estado:** evaluación contextual de las ejecuciones del PR #39 frente a las instrucciones y ejemplos efectivamente enviados. Las respuestas resultan útiles para el objetivo de marketing de la muestra; se distinguen observaciones de precisión, decisiones de producto y cobertura aún no demostrada.
+**Estado:** contraste entre entradas, instrucciones y respuestas de las ejecuciones del PR #39. Se reconoce el propósito de marketing y se identifican ampliaciones de eficacia, alcance y magnitud sin respaldo suficiente. Se propone un bloque complementario; su efecto aún no está validado.
 
 <!-- INICIO_OBSERVACIONES -->
 
@@ -10,27 +10,27 @@ La presentación Markdown normaliza espacios al final de línea; los registros o
 
 ### DEMO-001 — Pasantía frontend
 
-> "El tema, el sentimiento favorable y la clasificación como logro son coherentes con el mensaje. El insight y el cierre se ajustan al enfoque de empleabilidad que muestran la plantilla de análisis y el ejemplo few-shot. La publicación conserva el hecho central y aporta un cierre motivacional compatible con esa referencia. No se identifica un error que justifique rechazar este resultado. Si se requiere una síntesis estrictamente factual, debe explicitarse ese criterio como ajuste editorial."
+> "Tema y clasificación como logro son coherentes. El tono inspirador se ajusta al prompt y sus ejemplos. Sin embargo, afirmar eficacia general de React para conseguir empleo excede el relato de una pasantía tras presentar un proyecto. Se propone conservar el hito y la reflexión editorial sin presentarlos como prueba de eficacia, causalidad o garantía."
 
 ### DEMO-002 — Proyecto Python
 
-> "El análisis identifica adecuadamente un proyecto terminado y un repositorio compartido. Las referencias a aprendizaje, iniciativa y participación son interpretaciones de marketing razonables para la tarea solicitada. El uso de plural al describir una conducta de la comunidad amplía un caso individual; puede ajustarse a singular para mayor precisión, sin invalidar el resultado ni exigir rehacer el flujo."
+> "El análisis identifica el proyecto terminado y su repositorio. El valor de compartir avances puede comunicarse en tono de marketing. La afirmación de que los miembros comparten activamente proyectos amplía sujeto y frecuencia más allá del caso individual; alto compromiso es una interpretación no medida. El bloque sugerido debe mantener el alcance real sin eliminar el cierre inspirador."
 
 ### DEMO-003 — Panel de proyectos
 
-> "El tema y la valoración positiva corresponden al mensaje. Feedback en análisis directo y testimonio en batch son lecturas posibles de una experiencia de uso relatada en primera persona. El enrutador actúa conforme al tipo recibido; la expectativa newsletter del archivo no demuestra que LinkedIn sea incorrecto. Significativamente puede confundirse con significación estadística, que no se evaluó; aun en uso cotidiano intensifica la valoración. Se sugiere utilidad percibida para mayor precisión, como ajuste de redacción, no como prueba de fallo general."
+> "Tema y valoración positiva corresponden al mensaje. Feedback y testimonio siguen siendo lecturas posibles. En cambio, mejora significativamente la usabilidad añade una magnitud y generaliza la percepción de una persona. El término puede confundirse con significación estadística, sin datos o prueba; incluso en su uso cotidiano intensifica sin respaldo. Se propone atribuir la utilidad a quien escribe y evitar presentarla como mejora medida."
 
 ### Correspondencia de identificadores
 
-> "Las seis solicitudes locales conservan correspondencia entre ID enviado, respuesta de Gemini y activo generado. Las pruebas directas mantienen la asociación mediante el registro externo porque analyze_text no devuelve ID."
+> "Las seis solicitudes locales conservan correspondencia entre ID enviado, respuesta de Gemini y activo. Las pruebas directas mantienen asociación externa porque analyze_text no devuelve ID."
 
 ### Criterios y cobertura
 
-> "La relevancia alta es defendible para estos tres casos pertinentes y concretos. Que todos reciban alta no demuestra un fallo. La rúbrica alta/media/baja se documenta para hacer explícita la evaluación, sin imponer una distribución artificial de etiquetas. La ruta automática newsletter sigue sin demostrarse en esta muestra; corresponde revisar el candidato o acordar la prioridad de categorías si el producto lo necesita."
+> "Relevancia alta es defendible para los tres casos; no se impone una distribución de etiquetas. El solapamiento feedback/testimonio requiere criterio de producto si afecta a una selección necesaria. Newsletter automático y backend integrado no quedan demostrados por esta muestra."
 
-### Conclusión de la revisión
+### Contraste y mejora propuesta
 
-> "La muestra aporta análisis y contenido útiles, coherentes en términos generales con las instrucciones. Los hallazgos no justifican rechazar el trabajo ni rediseñar el prompt por defecto. Se propone conservar el comportamiento útil, registrar las precisiones opcionales y atender únicamente las decisiones o pruebas necesarias para el alcance del MVP. La validación completa del backend y la precisión general del motor quedan fuera de esta muestra."
+> "El contexto de marketing admite celebración y reflexión editorial, pero no valida por sí mismo eficacia, causalidad, magnitud o conducta colectiva. El ajuste propuesto añade una regla de respaldo a los prompts actuales, conservando tono, ejemplos, contratos y categorías. No se concluye que todo sea correcto ni que deba rehacerse todo el desarrollo; se señalan afirmaciones concretas y una corrección acotada que deberá probarse."
 
 <!-- FIN_OBSERVACIONES -->
 
@@ -53,17 +53,17 @@ La evaluación contrasta entrada, respuesta y propósito de las instrucciones, d
 
 | Fuente inspeccionada | Instrucción o ejemplo relevante | Implicación para evaluar las respuestas |
 |---|---|---|
-| `prompts/analysis_prompt.txt`, snapshot PR #38 | Pide un hallazgo útil para Community Management o Marketing y ejemplifica: «Los proyectos prácticos están contribuyendo a la empleabilidad de los participantes». | La plantilla ya orienta a interpretaciones generales de empleabilidad; una salida semejante no acredita por sí sola desobediencia del modelo. |
+| `prompts/analysis_prompt.txt`, snapshot PR #38 | Pide un hallazgo útil para Community Management o Marketing y ejemplifica: «Los proyectos prácticos están contribuyendo a la empleabilidad de los participantes». | La plantilla puede incentivar esa generalización; explica la salida, pero no aporta evidencia para presentarla como eficacia demostrada. |
 | `analyzer.py`, analyze_batch_texts | Pide «conclusión breve y útil» y enumera categorías, sin reglas de desempate feedback/testimonio. | La variación de categoría necesita un criterio de producto, no una corrección automática de etiquetas. |
 | `generators.py`, generate_linkedin | Pide publicación breve, tono profesional, positivo y humano; recibe el insight como parte del análisis. | El cierre combina instrucciones editoriales con información e interpretación recibidas. |
 | `few_shot.py`, primer ejemplo LinkedIn | Incluye «Las oportunidades surgen al combinar constancia con aprendizaje aplicado». | Los cierres motivacionales generales forman parte del estilo mostrado. |
 | `generators.py`, generate_newsletter | Pide una síntesis neutral y prohíbe compromisos o acciones de la organización no expresados. | La evaluación de newsletter debe distinguirla del estilo inspirador de LinkedIn. |
 
-La regla de usar hechos de la entrada y los ejemplos de reflexión general presentan una tensión de alcance editorial. Conviene aclararla si afecta al producto, sin convertir todo recurso retórico en un error factual. Los textos alternativos incluidos en las fichas son opciones más literales, no respuestas obligatorias.
+Las reflexiones motivacionales pueden conservarse. La regla de fidelidad debe distinguirlas de afirmaciones de eficacia, magnitud, causalidad o alcance colectivo. Que los ejemplos incentiven una generalización no la valida como evidencia. Las alternativas literales son opciones de redacción, no una obligación de eliminar el tono editorial.
 
 **Versión:** la evidencia corresponde al PR #38 (`d62dd02`). En el checkout posterior de main revisado (`8cef3b6`) LinkedIn ya incluye cierre fiel, CTA autorizado y limitación de hashtags. La evidencia histórica no debe utilizarse para afirmar que esos ajustes faltan en el código posterior. No se ejecutó de nuevo esa versión ni se comprobó su despliegue.
 
-**Compatible:** interpretación respaldada por mensaje y tarea. **Precisión opcional:** cambio de redacción que puede mejorar atribución o alcance. **Decisión de producto:** categoría o criterio que admite varias opciones. **Error confirmado:** contradicción, invención concreta o incumplimiento demostrable bajo una instrucción inequívoca. Estas categorías no se confunden con aprobación formal del equipo.
+**Compatible:** interpretación respaldada por mensaje y tarea. **Imprecisión de respaldo:** afirmación de hechos, magnitud o alcance mayor que la evidencia. **Preferencia editorial:** alternativa de estilo que no altera los hechos. **Decisión de producto:** categoría o criterio que admite varias opciones. **Error confirmado:** contradicción, invención concreta o incumplimiento demostrable bajo una instrucción inequívoca. Estas categorías no se confunden con aprobación formal del equipo.
 
 ## 3. Criterios de evaluación propuestos
 
@@ -89,30 +89,30 @@ Los tres casos pueden considerarse de relevancia alta. La rúbrica documenta el 
 
 | Ejecución | Caso | Nivel | Sentimiento | Tipo | Relevancia | Formato | Evaluación |
 |---|---|---|---|---|---|---|---|
-| 20261018T025211Z_c26a11 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T025211Z_c26a11 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T025211Z_c26a11 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T025211Z_c26a11 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T025211Z_c26a11 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T025211Z_c26a11 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T030127Z_24cd58 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T030127Z_24cd58 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T030127Z_24cd58 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T030127Z_24cd58 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T030127Z_24cd58 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
-| 20261018T030127Z_24cd58 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | "Compatible con la tarea; precisiones y cobertura descritas por caso." |
+| 20261018T025211Z_c26a11 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T025211Z_c26a11 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T025211Z_c26a11 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T025211Z_c26a11 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T025211Z_c26a11 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T025211Z_c26a11 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T030127Z_24cd58 | DEMO-001-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T030127Z_24cd58 | DEMO-002-directa | Directa | positivo | logro | alta | LinkedIn solicitado por el notebook | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T030127Z_24cd58 | DEMO-003-directa | Directa | positivo | feedback | alta | Newsletter solicitado por el notebook | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T030127Z_24cd58 | DEMO-001 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T030127Z_24cd58 | DEMO-002 | Endpoint local | positivo | logro | alta | LinkedIn automático; newsletter ausente | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
+| 20261018T030127Z_24cd58 | DEMO-003 | Endpoint local | positivo | testimonio | alta | LinkedIn automático; newsletter ausente | "Revisión de respaldo del insight; contrato y contexto editorial considerados." |
 
-## 5. Hallazgos y seguimiento proporcionado
+## 5. Hallazgos contrastados y mejora acotada
 
-| Referencia | Evaluación contextual | Actuación recomendada |
+| Referencia | Contraste | Acción propuesta |
 |---|---|---|
-| P-01 — Generalizaciones editoriales | La plantilla de análisis y el few-shot ya muestran conclusiones amplias e inspiradoras. Los resultados de empleabilidad son compatibles con esa orientación. | Conservar el comportamiento útil. Aclarar el alcance del insight solo si la aplicación necesita mayor literalidad; no exigir una reescritura por defecto. |
-| P-02 — Alcance individual y magnitud | El plural de DEMO-002 y significativamente en DEMO-003 pueden refinarse. No se demuestra fabricación de empresas, salarios o cifras en esos pasajes. | Precisiones opcionales: singular y utilidad percibida. Significativamente no está reservado a estadística; aquí no hay evidencia inferencial ni magnitud medida. |
-| P-03 — Feedback/testimonio | El panel admite ambas lecturas y el enrutador sigue las reglas existentes. | No imponer feedback para conseguir newsletter. Acordar la prioridad solo si el producto lo necesita o seleccionar un caso menos ambiguo. |
-| P-04 — Relevancia | Alta es plausible para los tres mensajes; la falta de media/baja es una limitación de cobertura. | Documentar la rúbrica. Ampliar pruebas únicamente si es necesario para cerrar el alcance de evaluación. |
-| P-05 — Contrato y rutas | IDs coincidentes y seis respuestas HTTP 200. Newsletter funciona por llamada directa, no se observó en selección automática. | Reconocer la evidencia existente; conservar newsletter automático y backend integrado como cobertura por completar en sus tarjetas. |
+| P-01 — Eficacia | El prompt pide un hallazgo de marketing y ejemplifica empleabilidad. La respuesta afirma que React es efectivo para conseguir empleo en el sector sin evidencia general. | Conservar el tema y el tono; añadir la distinción entre interpretación comunicacional y eficacia demostrada. |
+| P-02 — Sujeto y frecuencia | Un proyecto individual se describe como conducta activa de varios miembros. | Mantener sujeto y alcance del mensaje; no inventar recurrencia ni un atributo medido de compromiso. |
+| P-03 — Magnitud | Utilidad percibida se transforma en mejora significativa para los usuarios. | Evitar magnitud no respaldada y ambigüedad estadística; atribuir la valoración a quien escribe. |
+| P-04 — Categoría y relevancia | El panel admite feedback/testimonio; alta es defendible. | Decisión de producto separada de la corrección factual, sin imponer etiquetas para forzar newsletter. |
+| P-05 — Contrato y cobertura | IDs coincidentes y seis respuestas HTTP 200; newsletter solo probado directamente. | Conservar evidencia válida y límites. La ampliación de cobertura se sigue por separado. |
 
-No se propone retrabajo general ni modificaciones obligatorias de prompt a partir de estos hallazgos. La aceptación de criterios o limitaciones corresponde al equipo.
+Se propone un bloque adicional para análisis y generación, no una reescritura general del motor. No se declara la corrección implementada ni validada.
 
 ## 6. Fichas completas de evaluación
 
@@ -145,7 +145,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | empleabilidad | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | Los proyectos prácticos basados en tecnologías como React generan resultados tangibles de inserción laboral. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
+| Insight | Los proyectos prácticos basados en tecnologías como React generan resultados tangibles de inserción laboral. | El ejemplo de análisis orienta a empleabilidad, pero no respalda eficacia general ni causalidad a partir de un caso. | "Ajustar el alcance de la afirmación sin eliminar el enfoque de marketing." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -192,7 +192,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | proyectos prácticos | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | Los miembros comparten activamente sus proyectos finales, lo que genera oportunidades para destacar casos de éxito y fomentar la participación. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
+| Insight | Los miembros comparten activamente sus proyectos finales, lo que genera oportunidades para destacar casos de éxito y fomentar la participación. | Compartir un proyecto admite una lectura editorial; plural, frecuencia, alto compromiso o beneficios colectivos requieren respaldo o atribución explícita. | "Separar hechos individuales de interpretación; corregir las ampliaciones no sustentadas." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -239,7 +239,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | experiencia de usuario y organización de recursos | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | feedback | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | La centralización de repositorios e instrucciones en el nuevo panel mejora significativamente la usabilidad y facilita el inicio de pruebas para los usuarios. | Significativamente es admisible en lenguaje cotidiano, pero puede sugerir significación estadística o una magnitud no evaluada. Utilidad percibida resulta más preciso. | "Ajuste de redacción sugerido; no prueba un fallo general del motor." |
+| Insight | La centralización de repositorios e instrucciones en el nuevo panel mejora significativamente la usabilidad y facilita el inicio de pruebas para los usuarios. | El calificativo añade magnitud y posible lectura de significación estadística sin evidencia; el mensaje solo expresa utilidad individual. | "Corregir magnitud y alcance: atribuir la percepción y evitar apariencia de resultado medido." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -278,7 +278,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | Empleabilidad / Logro profesional | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | Demuestra la efectividad de los proyectos prácticos en React para conseguir empleo. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
+| Insight | Demuestra la efectividad de los proyectos prácticos en React para conseguir empleo. | El ejemplo de análisis orienta a empleabilidad, pero no respalda eficacia general ni causalidad a partir de un caso. | "Ajustar el alcance de la afirmación sin eliminar el enfoque de marketing." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -325,7 +325,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | Análisis de datos con Python | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | El usuario demuestra proactividad y aplicación práctica de sus conocimientos al compartir un proyecto completo de análisis de datos. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
+| Insight | El usuario demuestra proactividad y aplicación práctica de sus conocimientos al compartir un proyecto completo de análisis de datos. | Compartir un proyecto admite una lectura editorial; plural, frecuencia, alto compromiso o beneficios colectivos requieren respaldo o atribución explícita. | "Separar hechos individuales de interpretación; corregir las ampliaciones no sustentadas." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -372,7 +372,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | panel de proyectos | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | testimonio | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | La centralización de repositorios e instrucciones en el panel de proyectos mejora la experiencia y facilita el inicio de pruebas. | La mejora descrita interpreta la utilidad relatada; atribuirla a quien escribe aporta precisión. | "Compatible como lectura comunicacional; atribución individual opcional." |
+| Insight | La centralización de repositorios e instrucciones en el panel de proyectos mejora la experiencia y facilita el inicio de pruebas. | El insight identifica el beneficio relatado; extenderlo a usuarios en general supera el alcance de una valoración individual. | "Atribuir el beneficio a quien escribe, conservando utilidad comunicacional." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -419,7 +419,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | empleabilidad | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | Los proyectos prácticos impulsan directamente la inserción laboral de los miembros, lo cual puede usarse como caso de éxito en marketing. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
+| Insight | Los proyectos prácticos impulsan directamente la inserción laboral de los miembros, lo cual puede usarse como caso de éxito en marketing. | El ejemplo de análisis orienta a empleabilidad, pero no respalda eficacia general ni causalidad a partir de un caso. | "Ajustar el alcance de la afirmación sin eliminar el enfoque de marketing." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -466,7 +466,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | proyectos prácticos | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | Los miembros comparten activamente sus proyectos completados, lo que demuestra un alto compromiso y puede ser utilizado para destacar casos de éxito en la comunidad. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
+| Insight | Los miembros comparten activamente sus proyectos completados, lo que demuestra un alto compromiso y puede ser utilizado para destacar casos de éxito en la comunidad. | Compartir un proyecto admite una lectura editorial; plural, frecuencia, alto compromiso o beneficios colectivos requieren respaldo o atribución explícita. | "Separar hechos individuales de interpretación; corregir las ampliaciones no sustentadas." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -513,7 +513,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | experiencia de usuario | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | feedback | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | La reorganización del panel de proyectos mejora la usabilidad y facilita el inicio de pruebas para los usuarios. | La mejora descrita interpreta la utilidad relatada; atribuirla a quien escribe aporta precisión. | "Compatible como lectura comunicacional; atribución individual opcional." |
+| Insight | La reorganización del panel de proyectos mejora la usabilidad y facilita el inicio de pruebas para los usuarios. | El insight identifica el beneficio relatado; extenderlo a usuarios en general supera el alcance de una valoración individual. | "Atribuir el beneficio a quien escribe, conservando utilidad comunicacional." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -552,7 +552,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | Empleabilidad en desarrollo frontend | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | Los proyectos prácticos en React son efectivos para conseguir empleo en el sector. | La interpretación de empleabilidad sigue el ejemplo de la plantilla de análisis. No es una demostración científica de causalidad o eficacia. | "Compatible con la orientación de marketing; mayor literalidad es una opción editorial." |
+| Insight | Los proyectos prácticos en React son efectivos para conseguir empleo en el sector. | El ejemplo de análisis orienta a empleabilidad, pero no respalda eficacia general ni causalidad a partir de un caso. | "Ajustar el alcance de la afirmación sin eliminar el enfoque de marketing." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -599,7 +599,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | Proyecto de análisis de datos | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | logro | Resultado alcanzado, coherente con logro. | "Compatible." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | El usuario comparte con éxito un proyecto finalizado en Python, lo que demuestra un hito de aprendizaje y fomenta la colaboración en la comunidad. | Lectura de marketing razonable. Si habla de varios miembros a partir de uno, el singular aporta mayor precisión. | "Precisión opcional de alcance; no invalida la utilidad del resultado." |
+| Insight | El usuario comparte con éxito un proyecto finalizado en Python, lo que demuestra un hito de aprendizaje y fomenta la colaboración en la comunidad. | Compartir un proyecto admite una lectura editorial; plural, frecuencia, alto compromiso o beneficios colectivos requieren respaldo o atribución explícita. | "Separar hechos individuales de interpretación; corregir las ampliaciones no sustentadas." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -646,7 +646,7 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Tema | Panel de proyectos y organización de recursos | El asunto identificado corresponde a la entrada. | "Compatible." |
 | Tipo | testimonio | Feedback y testimonio son lecturas posibles; el enrutador sigue el tipo recibido. | "Decisión de producto si se necesita distinguir estas lecturas." |
 | Relevancia | alta | Alta es defendible por la pertinencia y concreción; no demuestra cobertura de otros niveles. | "Compatible con la rúbrica propuesta; alcance limitado a la muestra." |
-| Insight | La unificación de repositorios e instrucciones en el panel de proyectos mejora la experiencia de usuario y facilita el inicio de pruebas. | La mejora descrita interpreta la utilidad relatada; atribuirla a quien escribe aporta precisión. | "Compatible como lectura comunicacional; atribución individual opcional." |
+| Insight | La unificación de repositorios e instrucciones en el panel de proyectos mejora la experiencia de usuario y facilita el inicio de pruebas. | El insight identifica el beneficio relatado; extenderlo a usuarios en general supera el alcance de una valoración individual. | "Atribuir el beneficio a quien escribe, conservando utilidad comunicacional." |
 
 **Opción de síntesis literal — no es una respuesta obligatoria ni una corrección demostrada**
 
@@ -677,14 +677,14 @@ Los valores del motor se conservan sin modificación. Las observaciones técnica
 | Aspecto | Resultado de la revisión |
 |---|---|
 | IDs, sentimiento, tema y logros | Compatibles con los mensajes de esta muestra. |
-| Insights y cierres de LinkedIn | Útiles y coherentes en términos generales con la orientación comunicacional y sus ejemplos. |
+| Insights y cierres de LinkedIn | El tono editorial es pertinente; las afirmaciones de eficacia y alcance requieren ajuste de respaldo, sin invalidar todo el contenido. |
 | Relevancia | Alta defendible para estos casos; criterios explícitos documentados. |
-| Magnitud y alcance | Precisiones editoriales opcionales identificadas. |
+| Magnitud y alcance | Imprecisiones identificadas: significativamente, alcance colectivo y eficacia general sin evidencia suficiente. |
 | Feedback/testimonio | Solapamiento admisible; prioridad por acordar solo si el producto lo requiere. |
 | Newsletter automático | No demostrado; la prueba directa sí ejercita su generador. |
 | Backend integrado | Fuera del recorrido ejecutado en esta evidencia. |
 
-La documentación permite revisar la muestra sin repetir llamadas. El cierre de la tarjeta requiere aceptar los criterios y límites o acordar el seguimiento necesario; no obliga por sí mismo a modificar Python. No se declara precisión general ni se suple la prueba integrada del backend.
+La revisión de la evidencia existente no necesita nuevas llamadas. El bloque de mejora sí requerirá implementación y comprobación antes de afirmar que corrige las salidas. El cierre de la tarjeta depende de acuerdos o limitaciones aceptadas; no se declara precisión general ni se suple la prueba integrada del backend.
 
 ## 8. Todas las solicitudes y respuestas
 
@@ -712,6 +712,6 @@ La documentación permite revisar la muestra sin repetir llamadas. El cierre de 
 
 [Registro original](https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/blob/75eb9ea666bf91c50ff153a1bf5d6fe00557b0d7/data_science/curacion_demo/resultados/20261018T030127Z_24cd58/evidencia.jsonl) · [Versión registrada](https://github.com/No-Country-simulation/G10-LATAM-EQUIPO-16/blob/75eb9ea666bf91c50ff153a1bf5d6fe00557b0d7/data_science/curacion_demo/resultados/20261018T030127Z_24cd58/version_probada.json)
 
-## 10. Sugerencias mínimas
+## 10. Bloque complementario propuesto
 
-[SUGERENCIAS_PROMPT_ANALISIS.md](SUGERENCIAS_PROMPT_ANALISIS.md) recoge precisiones opcionales, sin proponer una sustitución general de prompts ni prioridad obligatoria de feedback. El [bloque opcional](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) solo tendría sentido si se acuerda aclarar el alcance editorial. No está aplicado ni validado.
+[SUGERENCIAS_PROMPT_ANALISIS.md](SUGERENCIAS_PROMPT_ANALISIS.md) contrasta las instrucciones originales, los pasajes registrados y las imprecisiones de respaldo. El [bloque sugerido](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) conserva el tono de marketing y añade límites para afirmaciones de eficacia, magnitud, causalidad y alcance. No modifica categorías ni contratos y aún no se ha implementado o validado.

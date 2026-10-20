@@ -124,6 +124,6 @@ La sección correspondiente del notebook muestra cada solicitud y cada respuesta
 
 Las observaciones propuestas requieren revisión humana. La publicación de esta documentación no cierra por sí sola la tarjeta de evaluación.
 
-## Revisión contextual de prompts y resultados
+## Contraste y bloque complementario de prompt
 
-Las [sugerencias](SUGERENCIAS_PROMPT_ANALISIS.md) se limitan a precisiones opcionales. La evaluación reconoce la utilidad y coherencia general de las respuestas con el contexto de marketing y sus ejemplos. El bloque adjunto no sustituye el prompt actual ni se propone como requisito para aceptar esta muestra.
+Las [sugerencias](SUGERENCIAS_PROMPT_ANALISIS.md) contrastan instrucciones, respuestas e imprecisiones de respaldo. El [bloque complementario](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) conserva el estilo de marketing y acota afirmaciones de eficacia, magnitud, causalidad y alcance; requiere implementación y validación. Las respuestas originales permanecen íntegras.

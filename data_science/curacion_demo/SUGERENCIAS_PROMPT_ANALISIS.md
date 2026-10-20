@@ -1,41 +1,60 @@
-# Sugerencias de precisión editorial — revisión contextual
+# Sugerencia de bloque complementario — marketing con afirmaciones respaldadas
 
-**Recomendación:** conservar los prompts actuales como punto de partida. La evidencia revisada no justifica una reescritura general ni imponer una síntesis literal a todo contenido de marketing.
+**Estado:** propuesta de instrucciones adicionales; no implementada ni ensayada con Gemini. Su finalidad es mejorar la precisión sin eliminar el tono de marketing, modificar las categorías ni reemplazar los prompts actuales.
 
-## Fundamento
+## 1. Contraste entre instrucciones y respuestas
 
-- La plantilla de análisis pide un hallazgo útil para Marketing y ejemplifica contribución de proyectos a la empleabilidad.
-- El generador de LinkedIn recibe ese insight, solicita tono positivo y utiliza cierres inspiradores en sus few-shot.
-- Los resultados observados son compatibles en términos generales con esa orientación.
-- El código local de main revisado ya incorpora cierre fiel, CTA autorizado y límite de hashtags. Las ejecuciones del PR #39 corresponden a una versión anterior; no demuestran fallos del código posterior.
+El contexto editorial explica las respuestas, pero no convierte toda afirmación en aceptable. La regla de no inventar información se mantiene aunque un ejemplo use lenguaje inspirador.
 
-[Evaluación y evidencia](EVALUACION_ANALISIS.md).
+| Instrucción o referencia enviada | Respuesta registrada | Qué conserva valor | Imprecisión concreta | Mejora buscada |
+|---|---|---|---|---|
+| `analysis_prompt.txt` pide un hallazgo útil para Marketing y ejemplifica contribución de proyectos a la empleabilidad. `generate_linkedin()` pide tono positivo; el few-shot incluye constancia y aprendizaje aplicado. | «Los proyectos prácticos en React son efectivos para conseguir empleo en el sector.» | El hito profesional y la reflexión sobre aprendizaje aplicado son pertinentes. | Presenta eficacia general a partir de un caso que solo relata una pasantía después de presentar un proyecto. Los ejemplos no aportan evidencia para esa eficacia. | Conservar el hito y el cierre inspirador sin afirmarlo como eficacia demostrada o garantía. |
+| El análisis busca una conclusión comunicacional, pero la entrada de DEMO-002 habla de una persona que terminó un proyecto y compartió su repositorio. | «Los miembros comparten activamente sus proyectos completados, lo que demuestra un alto compromiso…» | Reconoce un proyecto terminado y la posibilidad de compartir avances. | Amplía sujeto y frecuencia: un caso no demuestra conducta habitual de varios miembros. Alto compromiso es una interpretación, no un atributo medido. | Mantener el sujeto individual; expresar el valor editorial sin inventar frecuencia o alcance colectivo. |
+| La entrada del panel expresa «me resulta útil» y el análisis pide un hallazgo. | «La centralización […] mejora significativamente la usabilidad […] para los usuarios.» | Identifica la organización de recursos y su utilidad relatada. | Añade magnitud y alcance. Significativamente puede sugerir significación estadística, sin prueba, datos ni fuente; incluso en sentido cotidiano intensifica una valoración individual sin respaldo. | Atribuir la utilidad a quien escribe; no afirmar mejora medida, importante o estadísticamente validada. |
 
-## Precisiones opcionales
+Los pasajes anteriores son observaciones sustantivas de precisión y respaldo, no un rechazo global del contenido. El problema no es emplear lenguaje comercial, sino convertir una interpretación editorial en afirmación factual más fuerte que la evidencia disponible.
 
-| Aspecto | Sugerencia proporcionada |
-|---|---|
-| Generalizaciones de marketing | Aclarar si el insight admite interpretación comunicacional. No tratarlas automáticamente como hechos inventados. |
-| Una persona descrita en plural | Preferir singular cuando se quiera conservar el alcance del relato. |
-| Significativamente | Puede sugerir significación estadística, no evaluada, o magnitud importante. Utilidad percibida es una alternativa precisa. No se presupone uso estadístico ni fallo general. |
-| Feedback/testimonio | Mantener las dos categorías. Acordar prioridad solo si resulta necesaria para el producto; no forzar feedback para obtener newsletter. |
-| Relevancia | Documentar alta/media/baja como criterio de evaluación. Tres resultados altos no prueban un defecto. |
-
-## Aclaración breve candidata, solo si se acuerda incorporarla
+## 2. Bloque breve sugerido para añadir
 
 ```text
-El insight puede aportar una interpretación comunicacional coherente con
-el mensaje y los ejemplos. Distingue esa interpretación de hechos concretos:
-no añadas personas, empresas, cifras, logros o compromisos no mencionados.
-Conserva el alcance individual cuando corresponda y evita presentar una
-valoración como resultado medido o estadísticamente validado.
-Mantén las categorías, el esquema de salida y los identificadores existentes.
+Mantén el tono profesional, positivo e inspirador de los ejemplos, sin
+presentar una reflexión editorial como evidencia de un resultado.
+
+Conserva quién hizo qué y el alcance del mensaje. Un caso individual no
+permite afirmar conducta habitual de toda la comunidad ni eficacia general.
+
+Sin datos o fuentes proporcionados, no atribuyas mejoras medidas, magnitudes,
+causalidad demostrada o significación estadística. Evita «significativamente»
+cuando no exista respaldo explícito; comunica la valoración como percepción
+de quien escribe. Si hay una medición en la entrada, atribúyela a su fuente,
+sin presentarla como validación independiente ni inventar citas.
+
+Puedes celebrar el logro y cerrar con una reflexión motivacional vinculada
+al mensaje, sin añadir hechos, garantías o promesas. Conserva las instrucciones,
+las categorías, los identificadores y el esquema de salida existentes.
 ```
 
-[Texto opcional](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt). No es un reemplazo del prompt completo ni se carga automáticamente.
+Disponible también en [BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt). El texto no prohíbe cierres motivacionales: distingue esos recursos de las afirmaciones de hechos, eficacia, causalidad o magnitud.
 
-## Validación proporcional
+## 3. Ubicación y compatibilidad
 
-La revisión documental puede aceptar la muestra con observaciones y límites. Si se decide modificar el comportamiento, comprobar únicamente ese cambio y sus regresiones con la misma configuración y casos nuevos; las respuestas anteriores ya están disponibles como referencia. Sin cambios acordados de prompt, esta evaluación no exige repetir llamadas ni rehacer el desarrollo.
+- **Análisis individual:** incorporar el criterio en `ai-engine/prompts/analysis_prompt.txt`. Mantener el esquema JSON y el marcador de entrada existentes.
+- **Análisis batch:** incorporar el mismo criterio en `analyze_batch_texts()` de `ai-engine/analyzer.py`. Mantener IDs, categorías y estructura results.
+- **Generación:** añadir el bloque junto a las instrucciones de `generate_linkedin()` y `generate_newsletter()` en `ai-engine/generators.py`. LinkedIn conserva su tono inspirador; newsletter conserva su estilo neutral y conciso.
+- **Ejemplos existentes:** su función es mostrar tono y estructura, no validar los hechos de una respuesta nueva. Revisar el ejemplo del insight sobre empleabilidad para que no incentive una afirmación general presentada como evidencia. El cierre motivacional puede conservarse sin añadir una garantía o eficacia demostrada.
 
-No se modifica el motor, no se declara mejora medida y no se revoca la aprobación editorial existente. La selección automática newsletter y la corrida integrada siguen su seguimiento específico.
+El generador posterior inspeccionado en main ya pide cierre fiel y limita hashtags. Este bloque concreta el criterio de respaldo para análisis y generación; no se afirma que falten todas las protecciones ni que la versión posterior produzca los mismos pasajes. La evidencia examinada pertenece al commit d62dd02.
+
+## 4. Qué queda fuera de esta corrección
+
+Feedback frente a testimonio sigue siendo una decisión de clasificación, no un orden de importancia. No se impone una categoría para producir newsletter. Tampoco se cambia sentimiento, relevancia, los contratos, el enrutador o los pesos del modelo como parte de esta propuesta.
+
+## 5. Comprobación antes de afirmar una mejora
+
+1. Comparar el prompt anterior y el complementado con el mismo modelo y configuración, reutilizando las respuestas anteriores como referencia.
+2. Comprobar que las nuevas salidas mantienen tono y utilidad, conservan hechos y sujetos, y evitan atribuir eficacia general, frecuencia, causalidad o magnitud sin respaldo.
+3. Aceptar reflexiones inspiradoras cuando no prometan resultados ni se presenten como demostración. No exigir copia literal del mensaje.
+4. Verificar que el modelo no invente datos, fuentes, estudios o citas para justificar las afirmaciones.
+5. Añadir casos distintos de los ejemplos usados en el prompt y registrar regresiones. Conservar IDs y formatos; revisar la selección de newsletter por separado.
+
+No hay nuevas respuestas ni mejora medida en esta entrega. [La evaluación](EVALUACION_ANALISIS.md) y [la transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md) exhiben el contraste que fundamenta el bloque sugerido.

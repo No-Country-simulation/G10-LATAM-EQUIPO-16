@@ -1,6 +1,15 @@
-El insight puede aportar una interpretación comunicacional coherente con
-el mensaje y los ejemplos. Distingue esa interpretación de hechos concretos:
-no añadas personas, empresas, cifras, logros o compromisos no mencionados.
-Conserva el alcance individual cuando corresponda y evita presentar una
-valoración como resultado medido o estadísticamente validado.
-Mantén las categorías, el esquema de salida y los identificadores existentes.
+Mantén el tono profesional, positivo e inspirador de los ejemplos, sin
+presentar una reflexión editorial como evidencia de un resultado.
+
+Conserva quién hizo qué y el alcance del mensaje. Un caso individual no
+permite afirmar conducta habitual de toda la comunidad ni eficacia general.
+
+Sin datos o fuentes proporcionados, no atribuyas mejoras medidas, magnitudes,
+causalidad demostrada o significación estadística. Evita «significativamente»
+cuando no exista respaldo explícito; comunica la valoración como percepción
+de quien escribe. Si hay una medición en la entrada, atribúyela a su fuente,
+sin presentarla como validación independiente ni inventar citas.
+
+Puedes celebrar el logro y cerrar con una reflexión motivacional vinculada
+al mensaje, sin añadir hechos, garantías o promesas. Conserva las instrucciones,
+las categorías, los identificadores y el esquema de salida existentes.
