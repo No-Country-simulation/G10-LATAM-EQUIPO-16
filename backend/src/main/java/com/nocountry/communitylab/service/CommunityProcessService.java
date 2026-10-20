@@ -47,9 +47,9 @@ import java.util.stream.Collectors;
  * {@code activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json} e incluye
  * {@code interacciones_analizadas}, {@code interacciones_fallidas} y {@code total_descartadas}.
  *
- * <p><b>GRUPO D:</b> los pasos 7 y 8 se ejecutan dentro del mismo try que la persistencia post-IA,
- * garantizando que si OCI falla, las interacciones se marcan como ERROR y se persiste ese estado
- * (no quedan colgadas en PROCESSING).
+ * <p><b>GRUPO D:</b> los pasos 10 y 11 (subida a OCI y persistencia) se ejecutan dentro de un try/catch,
+ * garantizando que si OCI falla, las interacciones se marcan como ERROR y se persiste ese estado.
+ * La construcción de la respuesta (paso 13) se realiza fuera del try para evitar alterar el estado del lote.
  */
 @Service
 public class CommunityProcessService {
@@ -142,36 +142,34 @@ public class CommunityProcessService {
             return buildErrorResponse(saved, batchId, discardedCount);
         }
 
-        // 9. Cruzar IDs: los fallidos o ausentes pasan a ERROR (GRUPO C)
+        // 9. Cruzar IDs: los fallidos o ausentes pasan a ERROR
         reconcileInteractions(validInteractions, aiResult);
 
-        // los pasos 10-12 van dentro de un try para garantizar
-        // que si falla OCI o el guardado, se persiste el ERROR en BD.
+        // FIX buildResponse sale del try/catch.
+        // El try solo cubre la persistencia (pasos 10-12).
+        String ociRoute = null;
         try {
             // 10. Armar el paquete del bucket y subir a OCI
-            String ociRoute = uploadToOci(aiResult, batch, discardedCount);
+            ociRoute = uploadToOci(aiResult, batch, discardedCount);
 
-            // 11. Si OCI falla: ERROR en BD, pero 200 con los activos generados por la IA (DEC-14)
             if (ociRoute == null) {
+                // 11. Si OCI falla: ERROR en BD, pero 200 con los activos generados por la IA (DEC-14)
                 log.error("OCI upload failed for batch {}, marking interactions as ERROR", batchId);
                 failBatch(batch, validInteractions);
-                return buildResponse(saved, aiResult, null, batchId, discardedCount);
+            } else {
+                // 12. Marcar como PROCESADO con la ruta OCI
+                completeBatch(batch, validInteractions, ociRoute);
+                log.info("Batch {} processed: {} interactions -> {}", batchId, validInteractions.size(), ociRoute);
             }
-
-            // 12. Marcar como PROCESADO con la ruta OCI
-            completeBatch(batch, validInteractions, ociRoute);
-            log.info("Batch {} processed: {} interactions -> {}", batchId, validInteractions.size(), ociRoute);
-
-            // 13. Construir respuesta
-            return buildResponse(saved, aiResult, ociRoute, batchId, discardedCount);
-
         } catch (RuntimeException ex) {
-            // si falla cualquier paso post-IA (no solo OCI), se marca ERROR.
-            // Antes las interacciones quedaban colgadas en PROCESSING si fallaba el guardado.
+            // FIX: Si falla cualquier paso post-IA (no solo OCI), se marca ERROR.
             log.error("Error on post-AI persistence for batch {}, marking interactions as ERROR", batchId, ex);
             failBatch(batch, validInteractions);
-            return buildResponse(saved, aiResult, null, batchId, discardedCount);
+            ociRoute = null; // Nos aseguramos de devolver null en caso de fallo de persistencia
         }
+
+        // 13. Construir respuesta (FUERA del try/catch de persistencia)
+        return buildResponse(saved, aiResult, ociRoute, batchId, discardedCount);
     }
 
     // ---------------------------------------------------------------- persistencia
