@@ -46,6 +46,10 @@ import java.util.stream.Collectors;
  * <p><b>NUEVO (DEC-11):</b> el paquete del bucket sigue la ruta
  * {@code activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json} e incluye
  * {@code interacciones_analizadas}, {@code interacciones_fallidas} y {@code total_descartadas}.
+ *
+ * <p><b>GRUPO D:</b> los pasos 7 y 8 se ejecutan dentro del mismo try que la persistencia post-IA,
+ * garantizando que si OCI falla, las interacciones se marcan como ERROR y se persiste ese estado
+ * (no quedan colgadas en PROCESSING).
  */
 @Service
 public class CommunityProcessService {
@@ -141,21 +145,33 @@ public class CommunityProcessService {
         // 9. Cruzar IDs: los fallidos o ausentes pasan a ERROR (GRUPO C)
         reconcileInteractions(validInteractions, aiResult);
 
-        // 10. Armar el paquete del bucket y subir a OCI
-        String ociRoute = uploadToOci(aiResult, batch, discardedCount);
+        // los pasos 10-12 van dentro de un try para garantizar
+        // que si falla OCI o el guardado, se persiste el ERROR en BD.
+        try {
+            // 10. Armar el paquete del bucket y subir a OCI
+            String ociRoute = uploadToOci(aiResult, batch, discardedCount);
 
-        // 11. Si OCI falla: ERROR en BD, pero 200 con los activos generados por la IA (DEC-14)
-        if (ociRoute == null) {
+            // 11. Si OCI falla: ERROR en BD, pero 200 con los activos generados por la IA (DEC-14)
+            if (ociRoute == null) {
+                log.error("OCI upload failed for batch {}, marking interactions as ERROR", batchId);
+                failBatch(batch, validInteractions);
+                return buildResponse(saved, aiResult, null, batchId, discardedCount);
+            }
+
+            // 12. Marcar como PROCESADO con la ruta OCI
+            completeBatch(batch, validInteractions, ociRoute);
+            log.info("Batch {} processed: {} interactions -> {}", batchId, validInteractions.size(), ociRoute);
+
+            // 13. Construir respuesta
+            return buildResponse(saved, aiResult, ociRoute, batchId, discardedCount);
+
+        } catch (RuntimeException ex) {
+            // si falla cualquier paso post-IA (no solo OCI), se marca ERROR.
+            // Antes las interacciones quedaban colgadas en PROCESSING si fallaba el guardado.
+            log.error("Error on post-AI persistence for batch {}, marking interactions as ERROR", batchId, ex);
             failBatch(batch, validInteractions);
             return buildResponse(saved, aiResult, null, batchId, discardedCount);
         }
-
-        // 12. Marcar como PROCESADO con la ruta OCI
-        completeBatch(batch, validInteractions, ociRoute);
-        log.info("Batch {} processed: {} interactions -> {}", batchId, validInteractions.size(), ociRoute);
-
-        // 13. Construir respuesta
-        return buildResponse(saved, aiResult, ociRoute, batchId, discardedCount);
     }
 
     // ---------------------------------------------------------------- persistencia
@@ -427,14 +443,22 @@ public class CommunityProcessService {
     }
 
     private String normalizeChannel(String channel) {
-        if (channel == null || channel.isBlank()) return "LinkedIn Oficial";
+        if (channel == null || channel.isBlank()) {
+            // log cuando se usa el default
+            log.info("canal_recomendado vacío, usando 'LinkedIn Oficial' por defecto");
+            return "LinkedIn Oficial";
+        }
         String c = channel.trim();
         if (c.toLowerCase().contains("linkedin")) return "LinkedIn Oficial";
         return c;
     }
 
     private String normalizeEngagement(String engagement) {
-        if (engagement == null || engagement.isBlank()) return "Medio";
+        if (engagement == null || engagement.isBlank()) {
+            // log cuando se usa el default
+            log.info("potencial_engagement vacío, usando 'Medio' por defecto");
+            return "Medio";
+        }
         String e = engagement.trim().toLowerCase();
         return switch (e) {
             case "alto", "high" -> "Alto";

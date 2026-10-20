@@ -10,6 +10,7 @@ import com.nocountry.communitylab.repository.InteractionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +20,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -293,6 +295,97 @@ class CommunityProcessServiceTest {
         CommunityProcessResponseDto response = service.process(request);
 
         assertEquals(2, response.getSummary().getTotalDiscarded());
+    }
+
+    // ==================================================
+    // valida el JSON enviado a uploadJson - deuda tecnica Oscar
+    // ==================================================
+    @Test
+    void process_shouldSendPackageWithRequiredFieldsToOci() throws Exception {
+        UUID batchUuid = UUID.fromString("77777777-7777-7777-7777-777777777777");
+
+        when(distributionBatchRepository.save(any(DistributionBatch.class)))
+                .thenAnswer(inv -> {
+                    DistributionBatch b = inv.getArgument(0);
+                    b.setId(batchUuid);
+                    return b;
+                });
+
+        // Forzamos que la ruta use el ID real que se le pasa
+        when(objectStorageService.buildBatchRoute(anyString(), any(UUID.class)))
+                .thenAnswer(invocation -> {
+                    UUID id = invocation.getArgument(1);
+                    return "activos/2026-semana-42/paquete-distribucion-" + id + ".json";
+                });
+
+        CommunityProcessRequestDto request = buildRequest(new InteractionRequestDto[]{
+                interaction("a@test.com", "mensaje válido"),
+                interaction("b@test.com", "")
+        });
+
+        FastAiAnalysisResult aiResult = FastAiAnalysisResult.builder()
+                .status("exito")
+                .summary(CommunitySummaryDto.builder()
+                        .totalProcessedInteractions(1)
+                        .dominantSentiment("positivo")
+                        .mainTopics(List.of())
+                        .build())
+                .distributionAssets(DistributionAssetsDto.builder().build())
+                .analyzedInteractions(List.of())
+                .failedInteractions(null)
+                .build();
+
+        when(resilientAiClient.analyzeWithRetry(anyList(), anyString(), anyString()))
+                .thenReturn(aiResult);
+
+        // el mock de writeValueAsString debe serializar el paquete real
+        // para que el test valide el JSON real que se envía a OCI.
+        when(objectMapper.writeValueAsString(any())).thenAnswer(inv -> {
+            Object arg = inv.getArgument(0);
+            if (arg instanceof Map<?, ?> map) {
+                StringBuilder sb = new StringBuilder("{");
+                boolean first = true;
+                for (Map.Entry<?, ?> e : map.entrySet()) {
+                    if (!first) sb.append(",");
+                    first = false;
+                    sb.append("\"").append(e.getKey()).append("\":");
+                    Object v = e.getValue();
+                    if (v instanceof Number || v instanceof Boolean) {
+                        sb.append(v);
+                    } else {
+                        sb.append("\"").append(v).append("\"");
+                    }
+                }
+                sb.append("}");
+                return sb.toString();
+            }
+            return "{\"status\":\"exito\"}";
+        });
+
+        // Capturamos el JSON que se envía a uploadJson
+        ArgumentCaptor<String> jsonCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> routeCaptor = ArgumentCaptor.forClass(String.class);
+
+        service.process(request);
+
+        verify(objectStorageService).uploadJson(jsonCaptor.capture(), routeCaptor.capture());
+
+        String json = jsonCaptor.getValue();
+        String route = routeCaptor.getValue();
+
+        // Validar campos obligatorios del paquete
+        assertTrue(json.contains("\"lote_id\":\"" + batchUuid + "\""),
+                "El paquete debe incluir lote_id");
+        assertTrue(json.contains("\"total_descartadas\":1"),
+                "El paquete debe incluir total_descartadas = 1");
+        assertTrue(json.contains("\"generado_en\":\""),
+                "El paquete debe incluir generado_en (UTC)");
+        assertTrue(json.contains("\"origen_comunidad\":\"Discord\""),
+                "El paquete debe incluir origen_comunidad");
+
+        // Validar la ruta: debe contener el lote_id
+        assertTrue(route.contains(batchUuid.toString()),
+                "La ruta OCI debe incluir el lote_id");
     }
 
     // ==================================================
