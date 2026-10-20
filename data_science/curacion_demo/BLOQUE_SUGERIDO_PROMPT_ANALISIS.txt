@@ -1,18 +1,1 @@
-Mantén el tono y el formato indicados para cada activo: LinkedIn puede
-ser positivo e inspirador; newsletter conserva su síntesis neutral y concisa.
-No presentes una reflexión editorial como evidencia de un resultado.
-
-Conserva quién hizo qué y el alcance del mensaje. Un caso individual no
-permite afirmar conducta habitual de toda la comunidad ni eficacia general.
-
-Sin datos o fuentes proporcionados, no atribuyas mejoras medidas, magnitudes,
-causalidad demostrada o significación estadística. Evita «significativamente»
-cuando no exista respaldo explícito; comunica la valoración como percepción
-de quien escribe. Si hay una medición en la entrada, atribúyela a su fuente,
-sin presentarla como validación independiente ni inventar citas.
-
-En LinkedIn puedes celebrar el logro y cerrar con una reflexión motivacional
-vinculada al mensaje, sin añadir hechos, garantías o promesas. En newsletter
-no añadas reflexiones o beneficios generales que la entrada no exprese.
-Conserva las instrucciones,
-las categorías, los identificadores y el esquema de salida existentes.
+Conserva el tono de marketing y las reflexiones generales pertinentes. Distingue esas reflexiones de resultados comprobados: no atribuyas cantidades, magnitudes o efectos causales que la entrada no respalde. Cuando el mensaje exprese una percepción personal, conserva esa atribución.

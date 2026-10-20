@@ -1,6 +1,6 @@
 # Sugerencia de bloque complementario — marketing con afirmaciones respaldadas
 
-**Estado:** propuesta de instrucciones adicionales; no implementada en el motor; ensayada de forma exploratoria con Gemini. Su finalidad es mejorar la precisión sin eliminar el tono de marketing, modificar las categorías ni reemplazar los prompts actuales.
+**Estado:** extensión breve propuesta, no implementada en el motor ni ensayada con esta redacción. Las pruebas exploratorias corresponden a los bloques V1 y V2 conservados en sus carpetas de evidencia. Su finalidad es mejorar la precisión sin eliminar el tono de marketing, modificar las categorías ni reemplazar los prompts actuales.
 
 ## 1. Contraste entre instrucciones y respuestas
 
@@ -14,30 +14,13 @@ El contexto editorial explica las respuestas, pero no convierte toda afirmación
 
 Los pasajes anteriores son observaciones sustantivas de precisión y respaldo, no un rechazo global del contenido. El problema no es emplear lenguaje comercial, sino convertir una interpretación editorial en afirmación factual más fuerte que la evidencia disponible.
 
-## 2. Bloque breve sugerido para añadir
+## 2. Extensión de prompt propuesta
 
 ```text
-Mantén el tono y el formato indicados para cada activo: LinkedIn puede
-ser positivo e inspirador; newsletter conserva su síntesis neutral y concisa.
-No presentes una reflexión editorial como evidencia de un resultado.
-
-Conserva quién hizo qué y el alcance del mensaje. Un caso individual no
-permite afirmar conducta habitual de toda la comunidad ni eficacia general.
-
-Sin datos o fuentes proporcionados, no atribuyas mejoras medidas, magnitudes,
-causalidad demostrada o significación estadística. Evita «significativamente»
-cuando no exista respaldo explícito; comunica la valoración como percepción
-de quien escribe. Si hay una medición en la entrada, atribúyela a su fuente,
-sin presentarla como validación independiente ni inventar citas.
-
-En LinkedIn puedes celebrar el logro y cerrar con una reflexión motivacional
-vinculada al mensaje, sin añadir hechos, garantías o promesas. En newsletter
-no añadas reflexiones o beneficios generales que la entrada no exprese.
-Conserva las instrucciones,
-las categorías, los identificadores y el esquema de salida existentes.
+Conserva el tono de marketing y las reflexiones generales pertinentes. Distingue esas reflexiones de resultados comprobados: no atribuyas cantidades, magnitudes o efectos causales que la entrada no respalde. Cuando el mensaje exprese una percepción personal, conserva esa atribución.
 ```
 
-Disponible también en [BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt). El texto no prohíbe cierres motivacionales: distingue esos recursos de las afirmaciones de hechos, eficacia, causalidad o magnitud.
+Disponible también en [BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt). La extensión permite reflexiones generales y motivacionales; precisa su alcance sin presentarlas como resultados comprobados. Se mantienen las instrucciones iniciales de tono y formato: LinkedIn inspirador y newsletter neutral y conciso. Las cantidades expresadas en la entrada pueden conservarse con su atribución. No se exige evitar una palabra concreta; se exige respaldo para la afirmación que comunica. Si un ejemplo sugiere eficacia general, debe distinguirse su función editorial de una demostración empírica.
 
 ## 3. Ubicación y compatibilidad
 
@@ -60,4 +43,4 @@ Feedback frente a testimonio sigue siendo una decisión de clasificación, no un
 4. Verificar que el modelo no invente datos, fuentes, estudios o citas para justificar las afirmaciones.
 5. Añadir casos distintos de los ejemplos usados en el prompt y registrar regresiones. Conservar IDs y formatos; revisar la selección de newsletter por separado.
 
-Se incorporan 16 llamadas nuevas en dos etapas: V1 con tres mensajes y V2 con newsletter. El bloque anterior es V2; solo newsletter se probó con esta versión. Los resultados muestran un contraste causal favorable puntual, una regresión de V1 y el ajuste posterior; no una mejora general medida. Véase [la comparación completa](RESULTADOS_COMPARACION_PROMPTS.md). [La evaluación](EVALUACION_ANALISIS.md) y [la transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md) exhiben el contraste que fundamenta el bloque sugerido.
+Se incorporan 16 llamadas nuevas en dos etapas: V1 con tres mensajes y V2 con newsletter. Esas llamadas probaron V1 y V2, no la extensión breve de esta sección. Solo newsletter se probó con V2. Esta revisión simplifica la redacción para reducir tensiones entre reflexión editorial y respaldo factual; su efecto aún no se ha ensayado. Los resultados muestran un contraste causal favorable puntual, una regresión de V1 y el ajuste posterior; no una mejora general medida. Véase [la comparación completa](RESULTADOS_COMPARACION_PROMPTS.md). [La evaluación](EVALUACION_ANALISIS.md) y [la transcripción completa](TRANSCRIPCION_COMPLETA_GEMINI.md) exhiben el contraste que fundamenta el bloque sugerido.

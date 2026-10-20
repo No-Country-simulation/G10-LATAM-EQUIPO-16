@@ -133,7 +133,7 @@ Las [sugerencias](SUGERENCIAS_PROMPT_ANALISIS.md) contrastan instrucciones, resp
 
 [Resultados y 16 respuestas nuevas completas](RESULTADOS_COMPARACION_PROMPTS.md), [notebook ejecutado](comparacion_api_prompts.ipynb) y módulo `comparar_prompts.py`. Se conserva la evidencia de V1 (12 llamadas) y del ajuste V2 de newsletter (4 llamadas), incluidos resultados desfavorables. Los informes por etapa muestran los prompts completos y la configuración. Leer las salidas guardadas no consume API; ejecutar de nuevo las celdas de llamadas genera otras 16 solicitudes. La configuración local utiliza las mismas variables indicadas arriba.
 
-Este ensayo mantiene fijo el análisis y prueba generación; no cambia el motor ni demuestra precisión general. El bloque vigente conserva el tono por formato y limita afirmaciones causales, magnitudes y cuantificación sin respaldo. V2 solo se ensayó en newsletter.
+Este ensayo mantiene fijo el análisis y prueba generación; no cambia el motor ni demuestra precisión general. La extensión vigente es una formulación breve que permite reflexiones generales y exige respaldo para cantidades, magnitudes y efectos causales; conserva las instrucciones originales de tono y formato. Su redacción no se ha ensayado. Las pruebas corresponden a V1 y V2; V2 solo se ensayó en newsletter.
 
 
 [Resumen de evaluación, observaciones y estado de cierre](CIERRE_EVALUACION.md).

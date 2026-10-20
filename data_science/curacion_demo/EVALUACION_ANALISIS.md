@@ -2,7 +2,7 @@
 
 La presentación Markdown normaliza espacios al final de línea; los registros originales conservan la salida literal.
 
-**Estado:** contraste entre entradas, instrucciones y respuestas de las ejecuciones del PR #39. Se reconoce el propósito de marketing y se identifican ampliaciones de eficacia, alcance y magnitud sin respaldo suficiente. Se propone un bloque complementario; su efecto se explora por separado en 16 llamadas de generación, sin validación general.
+**Estado:** contraste entre entradas, instrucciones y respuestas de las ejecuciones del PR #39. Se reconoce el propósito de marketing y se identifican ampliaciones de eficacia, alcance y magnitud sin respaldo suficiente. Se propone un bloque complementario; los bloques anteriores V1 y V2 se exploraron en 16 llamadas de generación; la extensión breve vigente no se ha ensayado.
 
 <!-- INICIO_OBSERVACIONES -->
 

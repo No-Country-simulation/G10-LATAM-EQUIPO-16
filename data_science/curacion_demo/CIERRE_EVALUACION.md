@@ -17,11 +17,13 @@ Criterio de relevancia: **alta**, contenido concreto y útil para los objetivos 
 
 El tratamiento es una propuesta de revisión, no un compromiso de implementación o aceptación ya otorgado por otras personas.
 
-## Instrucción complementaria
+## Extensión de prompt propuesta
 
 [Bloque sugerido](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) y [contraste con los prompts originales](SUGERENCIAS_PROMPT_ANALISIS.md).
 
 El bloque conserva el tono profesional y positivo de LinkedIn, la síntesis neutral de newsletter, los ejemplos, categorías y contratos. Admite reflexiones motivacionales. Precisa que esas reflexiones no deben convertirse en afirmaciones de eficacia, frecuencia, causalidad o magnitud sin respaldo. Cuando un ejemplo incentive una generalización, esta debe leerse como recurso editorial, no como evidencia de un resultado. No se prohíben cantidades proporcionadas: se conservan con su atribución y sin inventar validación independiente.
+
+La extensión vigente simplifica los bloques anteriores para reducir tensiones con las instrucciones originales. Esta redacción no se ha probado; las respuestas registradas corresponden exclusivamente a V1 y V2.
 
 ## Evidencia adicional
 
