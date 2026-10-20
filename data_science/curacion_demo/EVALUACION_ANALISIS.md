@@ -2,7 +2,7 @@
 
 La presentación Markdown normaliza espacios al final de línea; los registros originales conservan la salida literal.
 
-**Estado:** contraste entre entradas, instrucciones y respuestas de las ejecuciones del PR #39. Se reconoce el propósito de marketing y se identifican ampliaciones de eficacia, alcance y magnitud sin respaldo suficiente. Se propone un bloque complementario; su efecto aún no está validado.
+**Estado:** contraste entre entradas, instrucciones y respuestas de las ejecuciones del PR #39. Se reconoce el propósito de marketing y se identifican ampliaciones de eficacia, alcance y magnitud sin respaldo suficiente. Se propone un bloque complementario; su efecto se explora por separado en 16 llamadas de generación, sin validación general.
 
 <!-- INICIO_OBSERVACIONES -->
 
@@ -30,7 +30,7 @@ La presentación Markdown normaliza espacios al final de línea; los registros o
 
 ### Contraste y mejora propuesta
 
-> "El contexto de marketing admite celebración y reflexión editorial, pero no valida por sí mismo eficacia, causalidad, magnitud o conducta colectiva. El ajuste propuesto añade una regla de respaldo a los prompts actuales, conservando tono, ejemplos, contratos y categorías. No se concluye que todo sea correcto ni que deba rehacerse todo el desarrollo; se señalan afirmaciones concretas y una corrección acotada que deberá probarse."
+> "El contexto de marketing admite celebración y reflexión editorial, pero no valida por sí mismo eficacia, causalidad, magnitud o conducta colectiva. El ajuste propuesto añade una regla de respaldo a los prompts actuales, conservando tono, ejemplos, contratos y categorías. No se concluye que todo sea correcto ni que deba rehacerse todo el desarrollo; se señalan afirmaciones concretas y una corrección acotada con una comparación exploratoria de generación, documentada por separado."
 
 <!-- FIN_OBSERVACIONES -->
 
