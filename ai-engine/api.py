@@ -1,7 +1,7 @@
-﻿import re
+import re
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from analyzer import (
     MODEL_NAME,
@@ -34,9 +34,23 @@ class InteractionRequest(BaseModel):
     tipo: str
     texto: str
 
+    @field_validator("autor", "canal", "tipo", "texto")
+    @classmethod
+    def require_nonblank_field(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("El campo no puede estar vacío.")
+        return value
+
 
 class BatchInteractionRequest(InteractionRequest):
     id: str
+
+    @field_validator("id")
+    @classmethod
+    def require_nonblank_id(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("El ID no puede estar vacío.")
+        return value
 
 
 class BatchRequest(BaseModel):
@@ -46,6 +60,20 @@ class BatchRequest(BaseModel):
         min_length=1,
         max_length=10,
     )
+
+    @field_validator("origen_comunidad", "periodo_referencia")
+    @classmethod
+    def require_nonblank_metadata(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("El campo no puede estar vacío.")
+        return value
+
+    @model_validator(mode="after")
+    def require_unique_interaction_ids(self):
+        ids = [interaction.id for interaction in self.interacciones]
+        if len(ids) != len(set(ids)):
+            raise ValueError("El lote contiene IDs duplicados.")
+        return self
 
 
 @app.get("/health")
@@ -200,6 +228,8 @@ def analyze_batch(batch: BatchRequest):
                 }
             )
 
+    generation_error_count = 0
+
     for route, candidate in candidates.items():
         interaction = candidate["interaction"]
         safe_interaction = safe_interactions[interaction.id]
@@ -266,32 +296,15 @@ def analyze_batch(batch: BatchRequest):
                     break
 
         except Exception as error:
-            error_message = str(error).lower()
-
-            if (
-                "429" in error_message
-                or "quota exceeded" in error_message
-                or "too_many_requests" in error_message
-            ):
-                raise HTTPException(
-                    status_code=429,
-                    detail="Gemini alcanzó el límite de solicitudes.",
-                ) from error
-
-            if (
-                "503" in error_message
-                or "unavailable" in error_message
-                or "high demand" in error_message
-            ):
-                raise HTTPException(
-                    status_code=503,
-                    detail="Gemini está temporalmente no disponible.",
-                ) from error
-
+            generation_error_count += 1
+            # La generación de activos es posterior al análisis.
+            # Su fallo no debe cancelar los resultados ya obtenidos.
+            # La interacción ya fue analizada correctamente.
+            # Un fallo al generar su activo no debe invalidar el análisis.
+            # El activo correspondiente permanece en None (null en JSON).
             for result in results:
                 if result.get("id") == interaction.id:
-                    result["status"] = "error"
-                    result["error"] = str(error)
+                    result["generation_error"] = str(error)
                     break
 
     successful_results = [
@@ -334,7 +347,7 @@ def analyze_batch(batch: BatchRequest):
     return {
         "status": (
             "exito"
-            if error_count == 0
+            if error_count == 0 and generation_error_count == 0
             else "parcial"
         ),
         "resumen_comunidad": {

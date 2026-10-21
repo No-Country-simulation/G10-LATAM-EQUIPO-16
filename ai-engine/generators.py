@@ -1,6 +1,7 @@
 import re
 
 from google import genai
+from gemini_resilience import generate_content_safely
 
 from few_shot import (
     LINKEDIN_EXAMPLES,
@@ -86,9 +87,10 @@ INSTRUCCIONES:
 - Devuelve únicamente el texto de la publicación.
 """
 
-    response = client.models.generate_content(
+    response = generate_content_safely(
+        client=client,
         model=model,
-        contents=prompt,
+        prompt=prompt,
     )
 
     return limitar_hashtags(response.text.strip(), MAX_HASHTAGS_LINKEDIN)
@@ -133,9 +135,10 @@ Pregunta: ...
 Respuesta: ...
 """
 
-    response = client.models.generate_content(
+    response = generate_content_safely(
+        client=client,
         model=model,
-        contents=prompt,
+        prompt=prompt,
     )
 
     return response.text.strip()
@@ -184,9 +187,10 @@ INSTRUCCIONES:
 - Devuelve únicamente el texto del destaque.
 """
 
-    response = client.models.generate_content(
+    response = generate_content_safely(
+        client=client,
         model=model,
-        contents=prompt,
+        prompt=prompt,
     )
 
     return response.text.strip()
