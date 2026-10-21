@@ -8,9 +8,9 @@
 <br>
 ![LangGraph](https://img.shields.io/badge/LangGraph-routing-1C3C3C) ![Gemini](https://img.shields.io/badge/Google-Gemini%20Flash--Lite-4285F4) ![Oracle](https://img.shields.io/badge/Oracle-Autonomous%20DB-F80000) ![Streamlit](https://img.shields.io/badge/Streamlit-UI-FF4B4B) ![Status](https://img.shields.io/badge/status-en%20desarrollo-yellow)
 
-> CommunityLab recibe interacciones de una comunidad digital, las analiza con IA y genera contenido listo para revisar (post de LinkedIn, FAQ y destacado de newsletter), con curaduría humana antes de publicar. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
+> CommunityLab recibe interacciones de una comunidad digital, las analiza con IA y genera borradores para LinkedIn, FAQ y newsletter, y los presenta en un panel de resultados para su revisión posterior. La aprobación y publicación quedan fuera de la aplicación. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
 
-* Última actualización: 16 de octubre de 2026.
+* Última actualización: 21 de octubre de 2026.
 
 ## 📑 Tabla de contenidos
 
@@ -41,7 +41,7 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
 * **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz aún no está integrada; la minimización de datos del autor ya está en el código, #16). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar). Límite actual: el FAQ devuelve tema, origen y estado, pero la pregunta y la respuesta generadas aún no llegan en la respuesta.
-* **Guarda y entrega para curaduría** → una persona aprueba, edita o rechaza antes de publicar. Hoy el sistema genera los borradores y la revisión humana se hace fuera de la aplicación; los endpoints para aprobar, editar o rechazar desde la interfaz siguen planificados.
+* **Presenta los resultados** → Streamlit muestra el resumen del análisis, las tarjetas de LinkedIn, newsletter y FAQ, el resultado parcial y el estado de OCI. No incluye controles de aprobación, rechazo, edición, copia ni descarga por tarjeta; la revisión previa a la publicación se realiza fuera de la aplicación.
 
 ## 🏗️ Arquitectura
 
@@ -205,7 +205,7 @@ Recursos opcionales:
 | --- | --- |
 | AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura; con el manejo de errores del #28 fusionado en `main` y redesplegado (servicio activo, `/openapi.json` responde 200). Guía de despliegue en #17 |
 | Backend con reintentos y lote de distribución (#26) | 🟡 Fusionado en `main`; el redespliegue y la validación integral con el AI Engine siguen pendientes |
-| Panel de curaduría en Streamlit | ⏳ Planificado; los endpoints de curaduría aún no existen |
+| Panel de resultados en Streamlit | ✅ Implementado para visualizar los resultados del procesamiento; la curaduría integrada sigue planificada |
 
 ## 🧭 Decisiones y límites conocidos
 
@@ -213,7 +213,7 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 
 ### Decisiones de diseño
 
-* **Curaduría humana antes de publicar.** El sistema genera borradores; una persona aprueba, edita o rechaza (hoy esa revisión se hace fuera de la aplicación). Preferimos eso a publicar automáticamente contenido de una comunidad real.
+* **Revisión humana antes de publicar.** El sistema genera borradores y los presenta en un panel de resultados. La revisión editorial se realiza fuera de la aplicación: no existe todavía un flujo integrado para aprobar, editar o rechazar activos. No se publican automáticamente.
 * **Un activo por tipo y por lote.** De cada tipo (LinkedIn, FAQ, newsletter) se genera el de mayor relevancia; ante empate, el primero en llegar. Mantiene el costo y la revisión acotados.
 * **Hasta 10 interacciones por lote.** Si se superan, se rechaza el lote completo (`400`) en vez de procesarlo a medias.
 * **Errores del servicio de IA.** El AI Engine distingue la saturación de Gemini (`503`) del límite de cuota (`429`) y de los fallos permanentes (`500`). El backend reintenta solo los temporales (hasta 3 intentos, con esperas de 2 y 4 segundos) y responde `503` si siguen fallando; el `429`, el `500` del motor y las respuestas inválidas se devuelven como `502` sin reintentar.
@@ -230,7 +230,7 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 | La minimización solo cubre el nombre completo conocido del autor | No elimina nombres parciales, nombres de terceros, correos ni teléfonos dentro del mensaje. Es una protección inicial, no una anonimización completa | Conocido; ampliar queda para después |
 | Los posts no mencionan al autor | Los testimonios resultan menos personales que en el ejemplo del reto | Decidido con Marketing: anónimo/minimizado (ver #20) |
 | El FAQ no devuelve la pregunta ni la respuesta generadas | El activo llega incompleto | Planificado |
-| El titular del newsletter sale del análisis y puede afirmar más de lo que dice el mensaje original | Un reporte individual puede presentarse como un hecho de la comunidad. El panel de curaduría humana, que lo revisaría antes de publicar, está planificado y aún no existe | Conocido; a cubrir con la curaduría |
+| El titular del newsletter sale del análisis y puede afirmar más de lo que dice el mensaje original | Un reporte individual puede presentarse como un hecho de la comunidad. El panel actual solo muestra resultados; la revisión editorial debe hacerse fuera de la aplicación y la curaduría integrada sigue planificada | Conocido; a cubrir con la curaduría |
 | Los endpoints de curaduría no existen | Aún no se puede aprobar o editar desde la interfaz | En progreso |
 | Si falla una interacción, el lote llega con `status: "parcial"` | El detalle de cuáles fallaron todavía no es consistente | Planificado |
 | Los ids de las interacciones deben ser únicos en el lote | Un id repetido puede mezclar resultados | Planificado (#18) |
