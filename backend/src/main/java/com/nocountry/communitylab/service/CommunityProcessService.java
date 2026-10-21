@@ -47,9 +47,10 @@ import java.util.stream.Collectors;
  * {@code activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json} e incluye
  * {@code interacciones_analizadas}, {@code interacciones_fallidas} y {@code total_descartadas}.
  *
- * <p><b>GRUPO D:</b> los pasos 10 y 11 (subida a OCI y persistencia) se ejecutan dentro de un try/catch,
- * garantizando que si OCI falla, las interacciones se marcan como ERROR y se persiste ese estado.
- * La construcción de la respuesta (paso 13) se realiza fuera del try para evitar alterar el estado del lote.
+ * <p><b>GRUPO D:</b> los pasos 10 a 12 (subida a OCI, guardado de persistencia) se ejecutan dentro de un try/catch.
+ * Si OCI falla o hay un error de persistencia, se marca el lote como ERROR. El guardado del ERROR
+ * se intenta persistir, pero depende de que la base de datos esté disponible.
+ * La construcción de la respuesta (buildResponse) se ejecuta FUERA del try/catch.
  */
 @Service
 public class CommunityProcessService {
@@ -145,8 +146,8 @@ public class CommunityProcessService {
         // 9. Cruzar IDs: los fallidos o ausentes pasan a ERROR
         reconcileInteractions(validInteractions, aiResult);
 
-        // FIX buildResponse sale del try/catch.
-        // El try solo cubre la persistencia (pasos 10-12).
+
+        // El try solo cubre la persistencia
         String ociRoute = null;
         try {
             // 10. Armar el paquete del bucket y subir a OCI
@@ -162,7 +163,7 @@ public class CommunityProcessService {
                 log.info("Batch {} processed: {} interactions -> {}", batchId, validInteractions.size(), ociRoute);
             }
         } catch (RuntimeException ex) {
-            // FIX: Si falla cualquier paso post-IA (no solo OCI), se marca ERROR.
+            // Si falla cualquier paso post-IA (no solo OCI), se marca ERROR.
             log.error("Error on post-AI persistence for batch {}, marking interactions as ERROR", batchId, ex);
             failBatch(batch, validInteractions);
             ociRoute = null; // Nos aseguramos de devolver null en caso de fallo de persistencia
@@ -239,7 +240,7 @@ public class CommunityProcessService {
 
     // ---------------------------------------------------------------- OCI
 
-    // NUEVO (DEC-11): arma el paquete con lote_id, total_descartadas, interacciones_analizadas
+    // arma el paquete con lote_id, total_descartadas, interacciones_analizadas
     // y lo sube con la ruta activos/<periodo_sanitizado>/paquete-distribucion-<lote_id>.json
     private String uploadToOci(FastAiAnalysisResult aiResult,
                                DistributionBatch batch,

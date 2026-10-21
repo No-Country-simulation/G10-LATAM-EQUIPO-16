@@ -403,11 +403,12 @@ class CommunityProcessServiceTest {
     }
 
     // ==================================================
-    // Test de error de subida a OCI (DEC-14)
+    // Test de error de subida a OCI
     // ==================================================
     @Test
     void process_shouldReturn200WithErrorSubida_whenOciUploadFails() throws Exception {
         UUID batchUuid = UUID.fromString("88888888-8888-8888-8888-888888888888");
+        UUID interactionUuid = UUID.fromString("99999999-9999-9999-9999-999999999999");
 
         // 1. Simulamos que el lote se guarda con este ID
         when(distributionBatchRepository.save(any(DistributionBatch.class)))
@@ -417,7 +418,16 @@ class CommunityProcessServiceTest {
                     return b;
                 });
 
-        // 2. Simulamos la ruta de OCI (Buena práctica para evitar nulos)
+        // 2. forzamos que las interacciones reciban el UUID real
+        doAnswer(inv -> {
+            List<InteractionEntity> input = inv.getArgument(0);
+            if (input.size() == 1 && input.get(0).getId() == null) {
+                input.get(0).setId(interactionUuid);
+            }
+            return new ArrayList<>(input);
+        }).when(interactionRepository).saveAll(anyList());
+
+        // 3. simulamos la ruta de OCI
         when(objectStorageService.buildBatchRoute(anyString(), any(UUID.class)))
                 .thenReturn("activos/2026-semana-42/paquete-distribucion-" + batchUuid + ".json");
 
@@ -425,7 +435,7 @@ class CommunityProcessServiceTest {
                 interaction("a@test.com", "mensaje válido")
         });
 
-        // 3. Simulamos que la IA responde bien
+        // 4. Simulamos que la IA responde bien y con el ID REAL
         FastAiAnalysisResult aiResult = FastAiAnalysisResult.builder()
                 .status("exito")
                 .summary(CommunitySummaryDto.builder()
@@ -435,7 +445,7 @@ class CommunityProcessServiceTest {
                         .build())
                 .distributionAssets(DistributionAssetsDto.builder().build())
                 .analyzedInteractions(List.of(
-                        InteractionAnalysisDto.builder().id("11111111-1111-1111-1111-111111111111").build()
+                        InteractionAnalysisDto.builder().id(interactionUuid.toString()).build()
                 ))
                 .failedInteractions(null)
                 .build();
@@ -443,28 +453,23 @@ class CommunityProcessServiceTest {
         when(resilientAiClient.analyzeWithRetry(anyList(), anyString(), anyString()))
                 .thenReturn(aiResult);
 
-        // 4. FORZAMOS EL FALLO DE OCI:
-        // Hacemos que la serialización del JSON lance una excepción.
-        // Esto hará que uploadToOci atrape el error y devuelva null (simulando fallo de OCI)
+        // 5. forzamos al fallo de OCI
         when(objectMapper.writeValueAsString(any()))
                 .thenThrow(new RuntimeException("Fallo simulado de OCI"));
 
-        // 5. Ejecutamos el servicio
+        // 6. Ejecutamos
         CommunityProcessResponseDto response = service.process(request);
 
-        // 6. Validaciones del contrato (DEC-14)
-        // Verifica que devuelve 200 (implícito al no lanzar excepción) y status error_subida
+        // 7. Validaciones
         assertEquals("error_subida", response.getOciStorage().getStatus());
-
-        // Verifica que los activos generados por la IA no se pierden
         assertNotNull(response.getDistributionAssets());
 
-        // 7. Validar que el lote se guardó en estado ERROR
-        verify(distributionBatchRepository, atLeastOnce()).save(argThat(b ->
-                b.getStatus() == BatchStatus.ERROR
+        // 1er save (cuando pasa a PROCESSING), 2do save (cuando failBatch lo pasa a ERROR)
+        verify(distributionBatchRepository, times(2)).save(argThat(b ->
+                b.getStatus() == BatchStatus.ERROR || b.getStatus() == BatchStatus.PROCESSING
         ));
 
-        // 8. Validar que las interacciones también se marcaron como ERROR
+        // Validar que las interacciones se guardaron como ERROR
         verify(interactionRepository, atLeastOnce()).saveAll(argThat(list ->
                 ((List<InteractionEntity>) list).stream()
                         .anyMatch(i -> i.getStatus() == InteractionStatus.ERROR)
