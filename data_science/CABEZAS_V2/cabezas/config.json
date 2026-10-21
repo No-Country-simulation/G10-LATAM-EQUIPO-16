@@ -1,0 +1,20 @@
+{
+  "precision": "float32",
+  "input": "embedding",
+  "input_shape": [
+    "batch",
+    384
+  ],
+  "output": "score",
+  "output_shape": [
+    "batch",
+    1
+  ],
+  "activation": "sigmoid",
+  "heads": {
+    "es_pregunta": "es_pregunta.onnx",
+    "es_logro": "es_logro.onnx",
+    "sentimiento": "sentimiento.onnx"
+  },
+  "sentimiento_checkpoint": "sentimiento_cardiff_binario"
+}
