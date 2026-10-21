@@ -652,7 +652,7 @@ def test_respuesta_demo_contrato_completo():
     assert "post_linkedin" in activos
     assert "destaque_newsletter_semanal" in activos
     assert "sugerencia_contenido_faq" in activos
-    assert "almacenamiento_oci" in resp
+    assert "almacenamiento_oci" in activos
 
     # LinkedIn
     li = activos["post_linkedin"]
@@ -667,16 +667,16 @@ def test_respuesta_demo_contrato_completo():
     assert "titular" in nl
     assert "resumen" in nl
 
-    # FAQ: campos de contenido definidos en el contrato Java
+    # FAQ - contrato real: tema, origen, status (NO pregunta, NO respuesta)
     faq = activos["sugerencia_contenido_faq"]
     assert "tema" in faq
     assert "origen" in faq
     assert "status" in faq
-    assert "pregunta" in faq
-    assert "respuesta" in faq
+    assert "pregunta" not in faq
+    assert "respuesta" not in faq
 
     # Almacenamiento OCI
-    oci = resp["almacenamiento_oci"]
+    oci = activos["almacenamiento_oci"]
     assert "bucket" in oci
     assert "ruta_objeto" in oci
     assert "status" in oci
