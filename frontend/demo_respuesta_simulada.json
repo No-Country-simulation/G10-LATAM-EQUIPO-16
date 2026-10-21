@@ -1,37 +1,43 @@
 {
+  "lote_id": "10000000-0000-4000-8000-000000000001",
   "status": "exito",
   "resumen_comunidad": {
-    "total_interacciones_procesadas": 8,
+    "total_interacciones_procesadas": 3,
+    "total_descartadas": 0,
     "sentimiento_predominante": "positivo",
     "temas_principales": [
-      "programación",
-      "ayuda comunitaria",
-      "resolución de dudas",
-      "logros técnicos",
-      "feedback educativo"
+      "Empleabilidad",
+      "Configuración",
+      "Navegación"
     ]
   },
   "activos_distribucion_generados": {
     "post_linkedin": {
-      "titulo": "El poder de la comunidad técnica: cuando una duda se convierte en logro compartido",
-      "copy": "💡 En nuestra comunidad de desarrolladores, cada pregunta es una oportunidad de aprendizaje colectivo.\n\nEsta semana vimos cómo una duda sobre alcance de variables en JavaScript se transformó en un logro técnico gracias a la colaboración entre pares. Un miembro de la comunidad no solo resolvió su problema, sino que documentó la solución para que otros puedan beneficiarse.\n\n🙌 Gracias a Marce Puente y a todos los que comparten su conocimiento desinteresadamente. ¡Así crecemos juntos!\n\n#ComunidadTécnica #AprendizajeColaborativo #Desarrolladores #JavaScript #OpenSource",
+      "interaccion_id": "00000000-0000-4000-8000-000000000001",
+      "titulo": "Una primera entrevista",
+      "copy": "Una persona de la comunidad consiguió su primera entrevista. Borrador ficticio para revisar la pantalla.",
       "canal_recomendado": "LinkedIn Oficial",
       "potencial_engagement": "Alto"
     },
     "destaque_newsletter_semanal": {
-      "seccion": "Historias de la Comunidad",
-      "titular": "De la confusión a la claridad: el viaje de una pregunta técnica",
-      "resumen": "Esta semana destacamos cómo una pregunta sobre alcance de sentencias en JavaScript desencadenó una cadena de ayuda mutua. Un miembro expresó su confusión, recibió orientación de un docente, implementó la corrección y compartió su logro. La comunidad celebró el progreso y el intercambio de conocimiento. Un recordatorio de que no hay preguntas tontas, solo oportunidades de aprender juntos."
+      "interaccion_id": "00000000-0000-4000-8000-000000000003",
+      "seccion": "Feedback",
+      "titular": "Sugerencia sobre navegación",
+      "resumen": "Una persona propone mejorar la navegación. Ejemplo simulado."
     },
     "sugerencia_contenido_faq": {
-      "tema": "Alcance de variables y sentencias en JavaScript",
-      "origen": "stackoverflow",
+      "interaccion_id": "00000000-0000-4000-8000-000000000002",
+      "tema": "Configuración",
+      "origen": "#qa",
+      "pregunta": "¿Dónde configuro la conexión?",
+      "respuesta": "Consulta las variables de configuración del servicio. Respuesta ficticia de prueba.",
       "status": "BORRADOR"
-    },
-    "almacenamiento_oci": {
-      "bucket": "communitylab-local",
-      "ruta_objeto": "mock://communitylab-local/resultados/batch_demo_20261020.json",
-      "status": "simulado"
     }
+  },
+  "interacciones_fallidas": [],
+  "almacenamiento_oci": {
+    "bucket": "qa-ficticio",
+    "ruta_objeto": "mock://qa-ficticio/activos/revision/paquete.json",
+    "status": "simulado"
   }
 }

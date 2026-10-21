@@ -277,22 +277,26 @@ def _mostrar_destaque_newsletter(activo: dict) -> None:
 
 
 def _mostrar_sugerencia_faq(activo: dict) -> None:
-    """Muestra una sugerencia de FAQ de forma legible.
-
-    Contrato del backend (FaqSuggestionDto): tema, origen, status.
-    No existen campos 'pregunta' ni 'respuesta' en la respuesta actual.
-    """
+    """Presenta los campos de FaqSuggestionDto, admitiendo versiones incompletas."""
     st.caption("💡 Tip de la Semana")
-    tema = activo.get("tema")
-    origen = activo.get("origen")
-    status = activo.get("status")
+    for campo, etiqueta in (("tema", "Tema"), ("origen", "Origen"),
+                            ("pregunta", "Pregunta"), ("respuesta", "Respuesta"),
+                            ("status", "Estado del borrador")):
+        valor = activo.get(campo)
+        if valor:
+            st.text(f"{etiqueta}: {valor}")
 
-    if tema:
-        st.write(f"**Tema:** {tema}")
-    if origen:
-        st.write(f"**Origen:** {origen}")
-    if status:
-        st.write(f"**Estado del borrador:** {status}")
+
+def _mostrar_interacciones_fallidas(resp: dict) -> None:
+    """Usa los IDs y motivos declarados por Backend; no infiere filas locales."""
+    fallidas = resp.get("interacciones_fallidas") or []
+    if fallidas:
+        with st.expander("Interacciones que fallaron", expanded=True):
+            for item in fallidas:
+                st.text(f"ID: {item.get('id') or 'No informado'}")
+                st.text(f"Motivo: {item.get('motivo') or 'No informado'}")
+    elif resp.get("status") == "parcial":
+        st.info("El backend informó un resultado parcial sin detalle de interacciones fallidas.")
 
 
 def _mostrar_almacenamiento_oci(almacenamiento: dict) -> None:
@@ -316,14 +320,21 @@ def _mostrar_almacenamiento_oci(almacenamiento: dict) -> None:
                 )
 
 
-def _cargar_respuesta_demo() -> dict | None:
+def _cargar_respuesta_demo(escenario: str | None = None) -> dict | None:
     """Carga la respuesta simulada desde el archivo JSON para el modo demo.
 
     Returns:
         dict con la respuesta simulada o None si no se pudo cargar.
     """
     try:
-        with open(DEMO_RESPUESTA_ARCHIVO, "r", encoding="utf-8") as f:
+        ruta = DEMO_RESPUESTA_ARCHIVO
+        if escenario is not None:
+            with open(os.path.join(os.path.dirname(__file__), "demo_scenarios", "manifest.json"), encoding="utf-8") as manifest_file:
+                permitidos = json.load(manifest_file)
+            if escenario not in permitidos:
+                return None
+            ruta = os.path.join(os.path.dirname(__file__), "demo_scenarios", escenario + ".json")
+        with open(ruta, "r", encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return None
@@ -340,6 +351,13 @@ st.title("CommunityLab - Panel MVP")
 modo_demo = os.environ.get(MODO_DEMO_VAR, "").lower() in ("1", "true", "yes", "on")
 if modo_demo:
     st.sidebar.warning("⚠️ MODO DEMO ACTIVO - Datos simulados, sin llamada al backend")
+
+escenario_demo = None
+if modo_demo:
+    with open(os.path.join(os.path.dirname(__file__), "demo_scenarios", "manifest.json"), encoding="utf-8") as manifest_file:
+        escenarios_demo = json.load(manifest_file)
+    escenario_demo = st.sidebar.selectbox("Escenario simulado", list(escenarios_demo), format_func=lambda key: escenarios_demo[key])
+    st.sidebar.caption("Respuesta fija de prueba: no depende de los mensajes cargados.")
 
 url_backend = _obtener_url_backend()
 interacciones = None
@@ -409,7 +427,7 @@ if st.button("Procesar"):
         if modo_demo:
             # Modo demo: usar respuesta simulada sin llamar al backend
             with st.spinner("Cargando respuesta simulada..."):
-                resp = _cargar_respuesta_demo()
+                resp = _cargar_respuesta_demo(escenario_demo)
             if resp is None:
                 st.error("No se pudo cargar la respuesta simulada. Verifique que existe demo_respuesta_simulada.json")
                 resp = None
@@ -485,9 +503,6 @@ if st.button("Procesar"):
             # Mostrar activos de distribución si existen
             activos = resp.get("activos_distribucion_generados") or {}
             if activos:
-                # Leer almacenamiento OCI: primero nivel raíz, luego fallback a activos
-                almacenamiento = resp.get("almacenamiento_oci") or activos.get("almacenamiento_oci") or {}
-
                 tarjetas = [
                     ("Publicación LinkedIn", activos.get("post_linkedin"), "linkedin"),
                     ("Destacado Newsletter", activos.get("destaque_newsletter_semanal"), "newsletter"),
@@ -507,36 +522,25 @@ if st.button("Procesar"):
                         else:
                             _mostrar_sugerencia_faq(activo)
 
-                # Mostrar información de almacenamiento OCI
-                if almacenamiento:
-                    _mostrar_almacenamiento_oci(almacenamiento)
+
+            almacenamiento = resp.get("almacenamiento_oci") or activos.get("almacenamiento_oci") or {}
+            if almacenamiento:
+                _mostrar_almacenamiento_oci(almacenamiento)
 
             if not summary:
-                st.info("El backend no devolvió un resumen de comunidad.")
+                st.info("La respuesta no incluye un resumen de comunidad.")
             if not activos:
-                st.info("El backend no devolvió activos de distribución.")
+                st.info("La respuesta no incluye activos de distribución.")
 
-            # Mostrar interacciones fallidas si el estado es parcial
-            if estado == "parcial":
-                interacciones_analizadas = resp.get("interacciones_analizadas") or []
-                # Obtener IDs de las interacciones enviadas para comparar
-                # NOTA: El backend usa UUIDs, el frontend índices 0..N. Correlación aproximada.
-                ids_enviados = {str(i) for i in range(len(interacciones_a_enviar))}
-                ids_procesados = {str(item.get("id")) for item in interacciones_analizadas if item.get("id")}
-                ids_fallidos = ids_enviados - ids_procesados
-                if ids_fallidos:
-                    with st.expander("Interacciones que fallaron", expanded=False):
-                        st.caption("Nota: Los IDs del backend son UUIDs; esta lista usa índices locales como aproximación.")
-                        for idx in sorted(ids_fallidos, key=int):
-                            st.write(f"- Interacción #{idx}: no se pudo procesar")
+            _mostrar_interacciones_fallidas(resp)
 
-            with st.expander("Respuesta completa del backend"):
+            with st.expander("Respuesta simulada" if modo_demo else "Respuesta completa del backend"):
                 try:
                     st.json(resp)
                 except Exception:
                     st.text("La respuesta del backend no es JSON válida")
 
-with st.expander("Ver el payload enviado"):
+with st.expander("Solicitud preparada (sin envío)" if modo_demo else "Ver la solicitud preparada"):
     st.json({
         "origen_comunidad": origen.strip(),
         "periodo_referencia": periodo.strip(),
