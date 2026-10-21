@@ -13,11 +13,13 @@ import streamlit as st
 MAX_INTERACCIONES = 10
 TAMANIO_MAXIMO_BYTES = 1 * 1024 * 1024  # 1 MB
 TIMEOUT_CONEXION_SEGUNDOS = float(os.environ.get("BACKEND_TIMEOUT_CONEXION", "10"))
-# Timeout de respuesta del backend. Con el plan futuro de reintentos automáticos
-# (hasta 3 intentos con backoff) el peor caso puede superar 90 s; el ajuste se
-# puede realizar mediante la variable de entorno BACKEND_TIMEOUT.
-TIMEOUT_RESPUESTA_SEGUNDOS = float(os.environ.get("BACKEND_TIMEOUT", "90"))
+# Timeout de respuesta del backend. Valor por defecto 200 segundos configurable
+# mediante la variable de entorno BACKEND_TIMEOUT.
+TIMEOUT_RESPUESTA_SEGUNDOS = float(os.environ.get("BACKEND_TIMEOUT", "200"))
 URL_BACKEND_DEFAULT = "http://localhost:8080/api/v1/community/process"
+# Modo demo local - archivo de respuesta simulada para demostración sin backend
+MODO_DEMO_VAR = "COMMUNITYLAB_DEMO"
+DEMO_RESPUESTA_ARCHIVO = os.path.join(os.path.dirname(__file__), "demo_respuesta_simulada.json")
 
 CAMPOS_CANONICOS = ("autor", "canal", "tipo", "texto")
 CLAVE_INTERACCIONES = "interacciones"
@@ -54,7 +56,12 @@ def _limpiar_texto(valor) -> str:
 def _normalizar_interaccion(raw) -> dict | None:
     """Normaliza una interacción al contrato {autor, canal, tipo, texto}.
 
-    Devuelve None cuando la interacción no es válida (fila vacía o incompleta).
+    Reglas de validación:
+    - Si falta `autor`, se usa "Anónimo".
+    - Si falta `canal`, se usa "General".
+    - Si falta `tipo`, se usa "otro".
+    - Si falta `texto`, está vacío o contiene únicamente espacios, se descarta la fila.
+    - Limpia espacios innecesarios y normaliza valores sin alterar contenido legítimo.
     """
     if not isinstance(raw, dict):
         return None
@@ -65,9 +72,24 @@ def _normalizar_interaccion(raw) -> dict | None:
         campo = _MAPA_CLAVE_CANONICA.get(_normalizar_clave(str(clave)))
         if campo is not None:
             valores[campo] = _limpiar_texto(valor)
-    interaccion = {campo: valores.get(campo, "") for campo in CAMPOS_CANONICOS}
-    if not all(interaccion[campo] for campo in CAMPOS_CANONICOS):
+
+    # Aplicar valores por defecto para metadatos opcionales
+    autor = valores.get("autor", "").strip()
+    canal = valores.get("canal", "").strip()
+    tipo = valores.get("tipo", "").strip()
+    texto = valores.get("texto", "").strip()
+
+    # Validar que el texto sea obligatorio y no esté vacío
+    if not texto:
         return None
+
+    # Normalizar con valores por defecto
+    interaccion = {
+        "autor": autor if autor else "Anónimo",
+        "canal": canal if canal else "General",
+        "tipo": tipo if tipo else "otro",
+        "texto": texto,
+    }
     return interaccion
 
 
@@ -135,6 +157,10 @@ def _interacciones_desde_csv(texto: str) -> tuple:
             if valor is None or (isinstance(valor, float) and pd.isna(valor)):
                 valor = ""
             registro[campo] = _limpiar_texto(str(valor))
+        # Asegurar que todos los campos canónicos existan en el registro
+        for campo in CAMPOS_CANONICOS:
+            if campo not in registro:
+                registro[campo] = ""
         registros.append(registro)
     if not registros:
         return [], ["El archivo no contiene interacciones para procesar."]
@@ -198,7 +224,7 @@ def _generar_mensaje_error_backend(status_code: int, respuesta) -> str:
     if status_code == 429:
         return "Demasiadas solicitudes al servicio de IA: la cuota está agotada. Intente más tarde."
     if status_code == 502:
-        return "El motor de IA respondió con un error temporal (bad gateway). No se realizarán reintentos automáticos."
+        return "El motor de IA no pudo procesar el lote. Intente más tarde."
     if status_code == 503:
         return "El servicio de IA no está disponible en este momento. Intente más tarde."
     return f"Error {status_code} al procesar la solicitud: {_obtener_mensaje_error(respuesta)}"
@@ -219,12 +245,101 @@ def _formato_temas(temas) -> str:
     return ", ".join(str(tema) for tema in temas)
 
 
+def _mostrar_post_linkedin(activo: dict) -> None:
+    """Muestra una publicación de LinkedIn de forma legible."""
+    titulo = activo.get("titulo")
+    copy = activo.get("copy")
+    canal = activo.get("canal_recomendado")
+    potencial = activo.get("potencial_engagement")
+
+    if titulo:
+        st.write(f"**Título:** {titulo}")
+    if copy:
+        st.text_area("Copy", value=copy, height=120, disabled=True, label_visibility="collapsed")
+    if canal:
+        st.write(f"**Canal recomendado:** {canal}")
+    if potencial:
+        st.write(f"**Potencial de engagement:** {potencial}")
+
+
+def _mostrar_destaque_newsletter(activo: dict) -> None:
+    """Muestra un destacado para newsletter de forma legible."""
+    seccion = activo.get("seccion")
+    titular = activo.get("titular")
+    resumen = activo.get("resumen")
+
+    if seccion:
+        st.write(f"**Sección:** {seccion}")
+    if titular:
+        st.write(f"**Titular:** {titular}")
+    if resumen:
+        st.text_area("Resumen", value=resumen, height=100, disabled=True, label_visibility="collapsed")
+
+
+def _mostrar_sugerencia_faq(activo: dict) -> None:
+    """Muestra una sugerencia de FAQ de forma legible.
+
+    Contrato del backend (FaqSuggestionDto): tema, origen, status.
+    No existen campos 'pregunta' ni 'respuesta' en la respuesta actual.
+    """
+    st.caption("💡 Tip de la Semana")
+    tema = activo.get("tema")
+    origen = activo.get("origen")
+    status = activo.get("status")
+
+    if tema:
+        st.write(f"**Tema:** {tema}")
+    if origen:
+        st.write(f"**Origen:** {origen}")
+    if status:
+        st.write(f"**Estado del borrador:** {status}")
+
+
+def _mostrar_almacenamiento_oci(almacenamiento: dict) -> None:
+    """Muestra información de almacenamiento OCI."""
+    bucket = almacenamiento.get("bucket")
+    ruta = almacenamiento.get("ruta_objeto")
+    status = almacenamiento.get("status")
+
+    if bucket or ruta or status:
+        st.markdown("**Almacenamiento OCI**")
+        if bucket:
+            st.write(f"- Bucket: {bucket}")
+        if ruta:
+            st.write(f"- Ruta del objeto: {ruta}")
+        if status:
+            st.write(f"- Estado: {status}")
+            if status == "error_subida":
+                st.warning(
+                    "La subida a OCI Object Storage falló. La generación de activos se completó, "
+                    "pero los archivos no se guardaron en el almacenamiento."
+                )
+
+
+def _cargar_respuesta_demo() -> dict | None:
+    """Carga la respuesta simulada desde el archivo JSON para el modo demo.
+
+    Returns:
+        dict con la respuesta simulada o None si no se pudo cargar.
+    """
+    try:
+        with open(DEMO_RESPUESTA_ARCHIVO, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
 # ---------------------------------------------------------------------------
 # UI
 # ---------------------------------------------------------------------------
 
 st.set_page_config(page_title="CommunityLab", layout="wide")
 st.title("CommunityLab - Panel MVP")
+
+# Modo demo local - solo activado explícitamente via variable de entorno
+modo_demo = os.environ.get(MODO_DEMO_VAR, "").lower() in ("1", "true", "yes", "on")
+if modo_demo:
+    st.sidebar.warning("⚠️ MODO DEMO ACTIVO - Datos simulados, sin llamada al backend")
 
 url_backend = _obtener_url_backend()
 interacciones = None
@@ -280,109 +395,146 @@ if interacciones_ignoradas > 0:
     )
 
 st.markdown("### Enviar al backend")
-st.caption(f"Enviando a: {url_backend}")
+if modo_demo:
+    st.caption("Modo demo: usando respuesta simulada (sin llamada HTTP)")
+else:
+    st.caption(f"Enviando a: {url_backend}")
 
 if st.button("Procesar"):
     if not interacciones_a_enviar:
         st.warning("Debe cargar datos antes de procesar")
     else:
         payload = _construir_payload(origen, periodo, interacciones_a_enviar)
-        with st.spinner("Procesando interacciones con el motor de IA, esto puede tardar unos segundos..."):
-            try:
-                respuesta = requests.post(
-                    url_backend,
-                    json=payload,
-                    timeout=(TIMEOUT_CONEXION_SEGUNDOS, TIMEOUT_RESPUESTA_SEGUNDOS),
-                )
-            except requests.exceptions.Timeout:
-                st.error("La solicitud tardó demasiado en responder. Intente nuevamente.")
-            except requests.exceptions.ConnectionError:
-                st.error("No fue posible conectarse con el backend. Verifique que el servicio esté disponible.")
-            except requests.exceptions.RequestException:
-                st.error("Ocurrió un error al comunicarse con el backend. Intente nuevamente.")
-            else:
-                if respuesta.status_code == 400:
-                    st.error(_generar_mensaje_error_backend(400, respuesta))
-                elif respuesta.status_code == 429:
-                    st.error(_generar_mensaje_error_backend(429, respuesta))
-                elif respuesta.status_code == 502:
-                    st.error(_generar_mensaje_error_backend(502, respuesta))
-                elif respuesta.status_code == 503:
-                    st.error(_generar_mensaje_error_backend(503, respuesta))
-                elif not respuesta.ok:
-                    st.error(_generar_mensaje_error_backend(respuesta.status_code, respuesta))
+
+        if modo_demo:
+            # Modo demo: usar respuesta simulada sin llamar al backend
+            with st.spinner("Cargando respuesta simulada..."):
+                resp = _cargar_respuesta_demo()
+            if resp is None:
+                st.error("No se pudo cargar la respuesta simulada. Verifique que existe demo_respuesta_simulada.json")
+                resp = None
+        else:
+            # Modo normal: llamada real al backend
+            with st.spinner("Procesando interacciones con el motor de IA, esto puede tardar unos segundos..."):
+                try:
+                    respuesta = requests.post(
+                        url_backend,
+                        json=payload,
+                        timeout=(TIMEOUT_CONEXION_SEGUNDOS, TIMEOUT_RESPUESTA_SEGUNDOS),
+                    )
+                except requests.exceptions.Timeout:
+                    st.error("La solicitud tardó demasiado en responder. Intente nuevamente.")
+                    resp = None
+                except requests.exceptions.ConnectionError:
+                    st.error("No fue posible conectarse con el backend. Verifique que el servicio esté disponible.")
+                    resp = None
+                except requests.exceptions.RequestException:
+                    st.error("Ocurrió un error al comunicarse con el backend. Intente nuevamente.")
+                    resp = None
                 else:
-                    st.markdown("### Resultados del análisis")
-                    try:
-                        resp = respuesta.json()
-                    except Exception:
-                        st.error("La respuesta del backend no es JSON válido")
+                    if respuesta.status_code == 400:
+                        st.error(_generar_mensaje_error_backend(400, respuesta))
                         resp = None
-                    if resp:
-                        estado = str(resp.get("status") or "")
-                        if estado == "exito":
-                            st.success("Análisis procesado exitosamente.")
-                        elif estado == "parcial":
-                            st.warning("Resultado parcial: algunas interacciones no pudieron procesarse.")
-                        elif estado == "error":
-                            st.error("El análisis terminó con errores.")
-
-                        # Mostrar resumen de comunidad si existe
-                        summary = resp.get("resumen_comunidad")
-                        if summary:
-                            sentimiento = _etiquetar_sentimiento(summary.get("sentimiento_predominante"))
-                            temas = summary.get("temas_principales") or []
-                            col1, col2 = st.columns(2)
-                            with col1:
-                                st.metric("Sentimiento predominante", sentimiento)
-                            with col2:
-                                st.metric("Total interacciones procesadas", summary.get("total_interacciones_procesadas") or 0)
-                            st.write(f"**Temas principales:** {_formato_temas(temas)}")
-
-                        # Mostrar activos de distribución si existen
-                        activos = resp.get("activos_distribucion_generados") or {}
-                        if activos:
-                            tarjetas = [
-                                ("Post LinkedIn", activos.get("post_linkedin"), "linkedin"),
-                                ("Destacado Newsletter", activos.get("destaque_newsletter_semanal"), "newsletter"),
-                                ("Sugerencia FAQ", activos.get("sugerencia_contenido_faq"), "faq"),
-                            ]
-                            columnas_activos = st.columns(3)
-                            for columna, (titulo, activo, tipo) in zip(columnas_activos, tarjetas):
-                                with columna:
-                                    st.markdown(f"**{titulo}**")
-                                    if not activo:
-                                        st.caption("Sin activo generado por el motor.")
-                                        continue
-                                    if tipo == "linkedin":
-                                        st.write(f"Título: {activo.get('titulo')}")
-                                        st.write(f"Copy: {activo.get('copy')}")
-                                        st.write(f"Canal recomendado: {activo.get('canal_recomendado')}")
-                                        st.write(f"Potencial de engagement: {activo.get('potencial_engagement')}")
-                                    elif tipo == "newsletter":
-                                        st.write(f"Sección: {activo.get('seccion')}")
-                                        st.write(f"Titular: {activo.get('titular')}")
-                                        st.write(f"Resumen: {activo.get('resumen')}")
-                                    else:
-                                        st.write(f"Tema: {activo.get('tema')}")
-                                        st.write(f"Origen: {activo.get('origen')}")
-                                        st.write(f"Estado: {activo.get('status')}")
-                            almacenamiento = activos.get("almacenamiento_oci") or {}
-                            if almacenamiento:
-                                st.caption(f"Almacenamiento OCI: {almacenamiento.get('status')} - {almacenamiento.get('ruta_objeto')}")
-
-                        if not summary:
-                            st.info("El backend no devolvió un resumen de comunidad.")
-                        if not activos:
-                            st.info("El backend no devolvió activos de distribución.")
-
-                        st.info("Nota: El 'relevance score' por mensaje está pendiente de integración con el backend/ML (persistencia de interacciones_analizadas).")
-
-                    with st.expander("Respuesta completa del backend"):
+                    elif respuesta.status_code == 429:
+                        st.error(_generar_mensaje_error_backend(429, respuesta))
+                        resp = None
+                    elif respuesta.status_code == 502:
+                        st.error(_generar_mensaje_error_backend(502, respuesta))
+                        resp = None
+                    elif respuesta.status_code == 503:
+                        st.error(_generar_mensaje_error_backend(503, respuesta))
+                        resp = None
+                    elif not respuesta.ok:
+                        st.error(_generar_mensaje_error_backend(respuesta.status_code, respuesta))
+                        resp = None
+                    else:
                         try:
-                            st.json(resp if resp is not None else respuesta.json())
+                            resp = respuesta.json()
                         except Exception:
-                            st.text("La respuesta del backend no es JSON válida")
+                            st.error("La respuesta del backend no es JSON válido")
+                            resp = None
+
+        if resp:
+            estado = str(resp.get("status") or "")
+            if estado == "exito":
+                st.success("Análisis procesado exitosamente.")
+            elif estado == "parcial":
+                st.warning("Resultado parcial: algunas interacciones no pudieron procesarse.")
+            elif estado == "error":
+                st.error("El análisis terminó con errores.")
+
+            # Mostrar resumen de comunidad si existe
+            summary = resp.get("resumen_comunidad")
+            if summary:
+                sentimiento = _etiquetar_sentimiento(summary.get("sentimiento_predominante"))
+                temas = summary.get("temas_principales") or []
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.metric("Sentimiento predominante", sentimiento)
+                with col2:
+                    st.metric("Total interacciones procesadas", summary.get("total_interacciones_procesadas") or 0)
+                st.write(f"**Temas principales:** {_formato_temas(temas)}")
+
+                # Mostrar total de interacciones descartadas
+                total_descartadas = summary.get("total_descartadas")
+                if total_descartadas is None:
+                    total_descartadas = resp.get("total_descartadas", 0)
+                if total_descartadas:
+                    st.caption(f"Interacciones descartadas: {total_descartadas}")
+
+            # Mostrar activos de distribución si existen
+            activos = resp.get("activos_distribucion_generados") or {}
+            if activos:
+                # Leer almacenamiento OCI: primero nivel raíz, luego fallback a activos
+                almacenamiento = resp.get("almacenamiento_oci") or activos.get("almacenamiento_oci") or {}
+
+                tarjetas = [
+                    ("Publicación LinkedIn", activos.get("post_linkedin"), "linkedin"),
+                    ("Destacado Newsletter", activos.get("destaque_newsletter_semanal"), "newsletter"),
+                    ("Sugerencia FAQ", activos.get("sugerencia_contenido_faq"), "faq"),
+                ]
+                columnas_activos = st.columns(3)
+                for columna, (titulo, activo, tipo) in zip(columnas_activos, tarjetas):
+                    with columna:
+                        st.markdown(f"**{titulo}**")
+                        if not activo:
+                            st.caption("Sin activo generado por el motor.")
+                            continue
+                        if tipo == "linkedin":
+                            _mostrar_post_linkedin(activo)
+                        elif tipo == "newsletter":
+                            _mostrar_destaque_newsletter(activo)
+                        else:
+                            _mostrar_sugerencia_faq(activo)
+
+                # Mostrar información de almacenamiento OCI
+                if almacenamiento:
+                    _mostrar_almacenamiento_oci(almacenamiento)
+
+            if not summary:
+                st.info("El backend no devolvió un resumen de comunidad.")
+            if not activos:
+                st.info("El backend no devolvió activos de distribución.")
+
+            # Mostrar interacciones fallidas si el estado es parcial
+            if estado == "parcial":
+                interacciones_analizadas = resp.get("interacciones_analizadas") or []
+                # Obtener IDs de las interacciones enviadas para comparar
+                # NOTA: El backend usa UUIDs, el frontend índices 0..N. Correlación aproximada.
+                ids_enviados = {str(i) for i in range(len(interacciones_a_enviar))}
+                ids_procesados = {str(item.get("id")) for item in interacciones_analizadas if item.get("id")}
+                ids_fallidos = ids_enviados - ids_procesados
+                if ids_fallidos:
+                    with st.expander("Interacciones que fallaron", expanded=False):
+                        st.caption("Nota: Los IDs del backend son UUIDs; esta lista usa índices locales como aproximación.")
+                        for idx in sorted(ids_fallidos, key=int):
+                            st.write(f"- Interacción #{idx}: no se pudo procesar")
+
+            with st.expander("Respuesta completa del backend"):
+                try:
+                    st.json(resp)
+                except Exception:
+                    st.text("La respuesta del backend no es JSON válida")
 
 with st.expander("Ver el payload enviado"):
     st.json({
