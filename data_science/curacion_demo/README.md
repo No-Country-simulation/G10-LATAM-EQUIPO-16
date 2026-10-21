@@ -115,3 +115,25 @@ git worktree add --detach ../communitylab-pr38 FETCH_HEAD
 ## Transcripción completa de Gemini
 
 La sección correspondiente del notebook muestra cada solicitud y cada respuesta persistidas en `resultados/*/evidencia.jsonl`. Incluye los prompts completos de análisis y generación, parámetros y respuestas, identificados por caso, método y fecha UTC. La función `mostrar_intercambios()` imprime el contenido completo de todas las ejecuciones disponibles. La consulta de esta evidencia utiliza archivos locales y puede repetirse sin ejecutar nuevas llamadas al modelo.
+
+## Evaluación del análisis
+
+- [Evaluación campo por campo](EVALUACION_ANALISIS.md): entradas, análisis, textos generados y dictámenes humanos por completar.
+- [Transcripción completa de Gemini](TRANSCRIPCION_COMPLETA_GEMINI.md): solicitudes y respuestas de las dos ejecuciones, desplegadas en Markdown.
+- [Guía de curación](GUIA_CURACION.md): criterios y registro de decisiones.
+
+Las observaciones propuestas requieren revisión humana. La publicación de esta documentación no cierra por sí sola la tarjeta de evaluación.
+
+## Contraste y bloque complementario de prompt
+
+Las [sugerencias](SUGERENCIAS_PROMPT_ANALISIS.md) contrastan instrucciones, respuestas e imprecisiones de respaldo. El [bloque complementario](BLOQUE_SUGERIDO_PROMPT_ANALISIS.txt) conserva el estilo de marketing y acota afirmaciones de eficacia, magnitud, causalidad y alcance; requiere implementación y validación. Las respuestas originales permanecen íntegras.
+
+
+## Ensayo del bloque complementario mediante API
+
+[Resultados y 16 respuestas nuevas completas](RESULTADOS_COMPARACION_PROMPTS.md), [notebook ejecutado](comparacion_api_prompts.ipynb) y módulo `comparar_prompts.py`. Se conserva la evidencia de V1 (12 llamadas) y del ajuste V2 de newsletter (4 llamadas), incluidos resultados desfavorables. Los informes por etapa muestran los prompts completos y la configuración. Leer las salidas guardadas no consume API; ejecutar de nuevo las celdas de llamadas genera otras 16 solicitudes. La configuración local utiliza las mismas variables indicadas arriba.
+
+Este ensayo mantiene fijo el análisis y prueba generación; no cambia el motor ni demuestra precisión general. La extensión vigente es una formulación breve que permite reflexiones generales y exige respaldo para cantidades, magnitudes y efectos causales; conserva las instrucciones originales de tono y formato. Su redacción no se ha ensayado. Las pruebas corresponden a V1 y V2; V2 solo se ensayó en newsletter.
+
+
+[Resumen de evaluación, observaciones y estado de cierre](CIERRE_EVALUACION.md).
