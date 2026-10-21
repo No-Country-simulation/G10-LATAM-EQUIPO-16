@@ -23,6 +23,42 @@ Para utilizar Oracle Database:
 - `ORACLE_DB_URL`: conexión JDBC.
 - `ORACLE_DB_USER`: usuario de Oracle.
 - `ORACLE_DB_PASSWORD`: contraseña de Oracle.
+- `TNS_ADMIN`: directorio privado que contiene la configuración de red
+  y el Wallet de Oracle Autonomous Database.
+
+### Configuración del Wallet de Oracle
+
+El Backend utiliza JDBC con el perfil `oracle` para conectarse a
+Oracle Autonomous Database.
+
+En el servidor, el directorio indicado por `TNS_ADMIN` debe contener
+los archivos necesarios para la conexión, entre ellos:
+
+- `tnsnames.ora`: alias y descriptores de conexión.
+- `sqlnet.ora`: configuración de red y ubicación del Wallet.
+- `cwallet.sso` y `ewallet.p12`: archivos del Wallet.
+
+El archivo `sqlnet.ora` debe tener configurada la ubicación del Wallet
+y la validación del nombre del servidor según el entorno desplegado.
+
+El Wallet debe permanecer fuera del repositorio y contar con permisos
+de acceso restringidos. No publicar su contenido, las contraseñas,
+la URL JDBC privada ni los valores de las variables de entorno.
+
+### Evidencia de conexión
+
+En la validación del 19/10/2026, el Backend inició con el perfil
+`oracle`, estableció una conexión JDBC mediante HikariCP y registró
+operaciones de escritura durante el procesamiento de un lote.
+
+Una comprobación posterior mediante un cliente JDBC independiente,
+utilizando la configuración del Backend, consultó la tabla
+`lote_distribucion` con los filtros `TEST_INTEGRACION_PR26` y
+`2026-10`. El resultado fue un lote con estado `PROCESSED`.
+
+Esta consulta confirma la lectura desde Oracle con la misma
+configuración de conexión, pero no constituye evidencia de una
+lectura realizada por un endpoint del Backend.
 
 Para utilizar OCI Object Storage:
 - `OCI_OS_NAMESPACE`: namespace de OCI.

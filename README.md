@@ -204,7 +204,7 @@ Recursos opcionales:
 | Recurso opcional | Estado |
 | --- | --- |
 | AI Engine desplegado en OCI Compute | 🟡 Desplegado con la minimización de datos del autor (commit `689b08f`, verificado con Gemini real en la instancia); falta URL configurable y conexión segura; con el manejo de errores del #28 fusionado en `main` y redesplegado (servicio activo, `/openapi.json` responde 200). Guía de despliegue en #17 |
-| Backend con reintentos y lote de distribución (#26) | 🟡 Fusionado en `main`; el redespliegue y la validación integral con el AI Engine siguen pendientes |
+| Backend con reintentos y lote de distribución (#26) | ✅ Desplegado en OCI (19/10/2026). Validado el flujo principal end-to-end desde Streamlit con 1 interacción (HTTP 200): Backend Java → FastAPI → Oracle Database → OCI Object Storage. Lote Oracle: `9E408368FD5B4D2B9BC9A26F549E06AF`; objeto: `resultados/batch_7c75b113-e012-4ee6-93f1-5fb6234d38d2.json`. Persistencia Oracle `PROCESSED` y JSON en OCI verificados. No se probaron en esta validación el HTTP 429 del AI Engine ni lotes con múltiples interacciones. |
 | Panel de curaduría en Streamlit | ⏳ Planificado; los endpoints de curaduría aún no existen |
 
 ## 🧭 Decisiones y límites conocidos
