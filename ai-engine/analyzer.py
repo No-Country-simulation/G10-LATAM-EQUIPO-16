@@ -195,11 +195,13 @@ el mismo ID de cada una.
 Para cada interacción devuelve:
 
 - id
-- sentimiento: positivo, neutro o negativo
+- sentimiento: positivo, negativo, neutro o mixto
 - tema: tema principal de la interacción
 - tipo: testimonio, pregunta_tecnica, feedback, logro u otro
 - relevancia: alta, media o baja
 - insight: conclusión breve y útil sobre la interacción
+
+Conserva el tono de marketing y las reflexiones generales pertinentes. Distingue esas reflexiones de resultados comprobados: no atribuyas cantidades, magnitudes o efectos causales que la entrada no respalde. Cuando el mensaje exprese una percepción personal, conserva esa atribución.
 
 Devuelve únicamente JSON válido con esta estructura:
 
