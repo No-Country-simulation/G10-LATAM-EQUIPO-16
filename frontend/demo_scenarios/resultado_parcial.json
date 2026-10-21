@@ -1,0 +1,43 @@
+{
+  "lote_id": "10000000-0000-4000-8000-000000000001",
+  "status": "parcial",
+  "resumen_comunidad": {
+    "total_interacciones_procesadas": 2,
+    "total_descartadas": 0,
+    "sentimiento_predominante": "positivo",
+    "temas_principales": [
+      "Empleabilidad",
+      "Configuración",
+      "Navegación"
+    ]
+  },
+  "activos_distribucion_generados": {
+    "post_linkedin": {
+      "interaccion_id": "00000000-0000-4000-8000-000000000001",
+      "titulo": "Una primera entrevista",
+      "copy": "Una persona de la comunidad consiguió su primera entrevista. Borrador ficticio para revisar la pantalla.",
+      "canal_recomendado": "LinkedIn Oficial",
+      "potencial_engagement": "Alto"
+    },
+    "destaque_newsletter_semanal": null,
+    "sugerencia_contenido_faq": {
+      "interaccion_id": "00000000-0000-4000-8000-000000000002",
+      "tema": "Configuración",
+      "origen": "#qa",
+      "pregunta": "¿Dónde configuro la conexión?",
+      "respuesta": "Consulta las variables de configuración del servicio. Respuesta ficticia de prueba.",
+      "status": "BORRADOR"
+    }
+  },
+  "interacciones_fallidas": [
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "motivo": "No se pudo procesar la interacción"
+    }
+  ],
+  "almacenamiento_oci": {
+    "bucket": "qa-ficticio",
+    "ruta_objeto": "mock://qa-ficticio/activos/revision/paquete.json",
+    "status": "simulado"
+  }
+}
