@@ -1,0 +1,3 @@
+pandas
+tokenizers==0.23.2
+scikit-learn

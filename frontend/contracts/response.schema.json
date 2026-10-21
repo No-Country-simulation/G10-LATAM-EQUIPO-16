@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "lote_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resumen_comunidad": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "total_interacciones_procesadas": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "total_descartadas": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "sentimiento_predominante": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "temas_principales": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "activos_distribucion_generados": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "post_linkedin": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "interaccion_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "titulo": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "copy": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "canal_recomendado": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "potencial_engagement": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "destaque_newsletter_semanal": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "interaccion_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "seccion": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "titular": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "resumen": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "sugerencia_contenido_faq": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "interaccion_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "origen": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "pregunta": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "respuesta": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "status": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "almacenamiento_oci": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "bucket": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "ruta_objeto": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "status": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "interacciones_fallidas": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "motivo": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "almacenamiento_oci": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "bucket": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ruta_objeto": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -4,12 +4,14 @@ import com.nocountry.communitylab.client.ResilientAiClient;
 import com.nocountry.communitylab.model.dto.*;
 import com.nocountry.communitylab.model.entity.DistributionBatch;
 import com.nocountry.communitylab.model.entity.InteractionEntity;
+import com.nocountry.communitylab.model.enums.BatchStatus;
 import com.nocountry.communitylab.model.enums.InteractionStatus;
 import com.nocountry.communitylab.repository.DistributionBatchRepository;
 import com.nocountry.communitylab.repository.InteractionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -293,6 +295,185 @@ class CommunityProcessServiceTest {
         CommunityProcessResponseDto response = service.process(request);
 
         assertEquals(2, response.getSummary().getTotalDiscarded());
+    }
+
+    // ==================================================
+    // valida el JSON enviado a uploadJson - deuda tecnica Oscar
+    // FIX Se usa ObjectMapper real en lugar de StringBuilder
+    // ==================================================
+    @Test
+    void process_shouldSendPackageWithRequiredFieldsToOci() throws Exception {
+        UUID batchUuid = UUID.fromString("77777777-7777-7777-7777-777777777777");
+
+        when(distributionBatchRepository.save(any(DistributionBatch.class)))
+                .thenAnswer(inv -> {
+                    DistributionBatch b = inv.getArgument(0);
+                    b.setId(batchUuid);
+                    return b;
+                });
+
+        // Forzamos que la ruta use el ID real que se le pasa
+        when(objectStorageService.buildBatchRoute(anyString(), any(UUID.class)))
+                .thenAnswer(invocation -> {
+                    UUID id = invocation.getArgument(1);
+                    return "activos/2026-semana-42/paquete-distribucion-" + id + ".json";
+                });
+
+        CommunityProcessRequestDto request = buildRequest(new InteractionRequestDto[]{
+                interaction("a@test.com", "mensaje válido"),
+                interaction("b@test.com", "")
+        });
+
+        FastAiAnalysisResult aiResult = FastAiAnalysisResult.builder()
+                .status("exito")
+                .summary(CommunitySummaryDto.builder()
+                        .totalProcessedInteractions(1)
+                        .dominantSentiment("positivo")
+                        .mainTopics(List.of())
+                        .build())
+                .distributionAssets(DistributionAssetsDto.builder().build())
+                .analyzedInteractions(List.of())
+                .failedInteractions(null)
+                .build();
+
+        when(resilientAiClient.analyzeWithRetry(anyList(), anyString(), anyString()))
+                .thenReturn(aiResult);
+
+        // Instanciamos un ObjectMapper real para el test
+        ObjectMapper realMapper = new ObjectMapper();
+        when(objectMapper.writeValueAsString(any())).thenAnswer(inv -> {
+            return realMapper.writeValueAsString(inv.getArgument(0));
+        });
+
+        // Capturamos el JSON que se envía a uploadJson
+        ArgumentCaptor<String> jsonCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> routeCaptor = ArgumentCaptor.forClass(String.class);
+
+        service.process(request);
+
+        verify(objectStorageService).uploadJson(jsonCaptor.capture(), routeCaptor.capture());
+
+        String json = jsonCaptor.getValue();
+        String route = routeCaptor.getValue();
+
+        // Validar campos obligatorios del paquete
+        assertTrue(json.contains("\"lote_id\":\"" + batchUuid + "\""),
+                "El paquete debe incluir lote_id");
+        assertTrue(json.contains("\"total_descartadas\":1"),
+                "El paquete debe incluir total_descartadas = 1");
+        assertTrue(json.contains("\"generado_en\":\""),
+                "El paquete debe incluir generado_en (UTC)");
+        assertTrue(json.contains("\"origen_comunidad\":\"Discord\""),
+                "El paquete debe incluir origen_comunidad");
+
+        // Validar la ruta: debe contener el lote_id
+        assertTrue(route.contains(batchUuid.toString()),
+                "La ruta OCI debe incluir el lote_id");
+    }
+
+    // ==================================================
+    // Verifica el límite de 10 interacciones
+    // ==================================================
+    @Test
+    void process_shouldRejectMoreThanTenInteractions() {
+        // Creamos 11 interacciones (excede el límite)
+        InteractionRequestDto[] elevenInteractions = new InteractionRequestDto[11];
+        for (int i = 0; i < 11; i++) {
+            elevenInteractions[i] = interaction("user" + i + "@test.com", "texto " + i);
+        }
+
+        CommunityProcessRequestDto request = CommunityProcessRequestDto.builder()
+                .communitySource("Discord")
+                .referencePeriod("2026-semana-42")
+                .interactions(List.of(elevenInteractions))
+                .build();
+
+        // Usamos el Validator de Jakarta para probar las anotaciones del DTO directamente
+        try (var factory = jakarta.validation.Validation.buildDefaultValidatorFactory()) {
+            var validator = factory.getValidator();
+            var violations = validator.validate(request);
+
+            assertFalse(violations.isEmpty(), "Debería haber violaciones de validación para más de 10 interacciones");
+
+            boolean hasSizeViolation = violations.stream()
+                    .anyMatch(v -> v.getPropertyPath().toString().equals("interactions"));
+
+            assertTrue(hasSizeViolation, "El error debe ser por el tamaño de la lista de interacciones");
+        }
+    }
+
+    // ==================================================
+    // Test de error de subida a OCI
+    // ==================================================
+    @Test
+    void process_shouldReturn200WithErrorSubida_whenOciUploadFails() throws Exception {
+        UUID batchUuid = UUID.fromString("88888888-8888-8888-8888-888888888888");
+        UUID interactionUuid = UUID.fromString("99999999-9999-9999-9999-999999999999");
+
+        // 1. Simulamos que el lote se guarda con este ID
+        when(distributionBatchRepository.save(any(DistributionBatch.class)))
+                .thenAnswer(inv -> {
+                    DistributionBatch b = inv.getArgument(0);
+                    b.setId(batchUuid);
+                    return b;
+                });
+
+        // 2. forzamos que las interacciones reciban el UUID real
+        doAnswer(inv -> {
+            List<InteractionEntity> input = inv.getArgument(0);
+            if (input.size() == 1 && input.get(0).getId() == null) {
+                input.get(0).setId(interactionUuid);
+            }
+            return new ArrayList<>(input);
+        }).when(interactionRepository).saveAll(anyList());
+
+        // 3. simulamos la ruta de OCI
+        when(objectStorageService.buildBatchRoute(anyString(), any(UUID.class)))
+                .thenReturn("activos/2026-semana-42/paquete-distribucion-" + batchUuid + ".json");
+
+        CommunityProcessRequestDto request = buildRequest(new InteractionRequestDto[]{
+                interaction("a@test.com", "mensaje válido")
+        });
+
+        // 4. Simulamos que la IA responde bien y con el ID REAL
+        FastAiAnalysisResult aiResult = FastAiAnalysisResult.builder()
+                .status("exito")
+                .summary(CommunitySummaryDto.builder()
+                        .totalProcessedInteractions(1)
+                        .dominantSentiment("positivo")
+                        .mainTopics(List.of())
+                        .build())
+                .distributionAssets(DistributionAssetsDto.builder().build())
+                .analyzedInteractions(List.of(
+                        InteractionAnalysisDto.builder().id(interactionUuid.toString()).build()
+                ))
+                .failedInteractions(null)
+                .build();
+
+        when(resilientAiClient.analyzeWithRetry(anyList(), anyString(), anyString()))
+                .thenReturn(aiResult);
+
+        // 5. forzamos al fallo de OCI
+        when(objectMapper.writeValueAsString(any()))
+                .thenThrow(new RuntimeException("Fallo simulado de OCI"));
+
+        // 6. Ejecutamos
+        CommunityProcessResponseDto response = service.process(request);
+
+        // 7. Validaciones
+        assertEquals("error_subida", response.getOciStorage().getStatus());
+        assertNotNull(response.getDistributionAssets());
+
+        // 1er save (cuando pasa a PROCESSING), 2do save (cuando failBatch lo pasa a ERROR)
+        verify(distributionBatchRepository, times(2)).save(argThat(b ->
+                b.getStatus() == BatchStatus.ERROR || b.getStatus() == BatchStatus.PROCESSING
+        ));
+
+        // Validar que las interacciones se guardaron como ERROR
+        verify(interactionRepository, atLeastOnce()).saveAll(argThat(list ->
+                ((List<InteractionEntity>) list).stream()
+                        .anyMatch(i -> i.getStatus() == InteractionStatus.ERROR)
+        ));
     }
 
     // ==================================================
