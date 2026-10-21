@@ -30,6 +30,8 @@ Analiza la interacción proporcionada e identifica:
    Extrae un hallazgo breve y útil para el equipo
    de Community Management o Marketing.
 
+Conserva el tono de marketing y las reflexiones generales pertinentes. Distingue esas reflexiones de resultados comprobados: no atribuyas cantidades, magnitudes o efectos causales que la entrada no respalde. Cuando el mensaje exprese una percepción personal, conserva esa atribución.
+
 Devuelve ÚNICAMENTE un JSON válido con esta estructura:
 
 {
@@ -37,7 +39,7 @@ Devuelve ÚNICAMENTE un JSON válido con esta estructura:
   "tema": "empleabilidad",
   "tipo": "logro",
   "relevancia": "alta",
-  "insight": "Los proyectos prácticos están contribuyendo a la empleabilidad de los participantes."
+  "insight": "Una persona compartió que sus proyectos prácticos le ayudaron a conseguir empleo."
 }
 
 No incluyas explicaciones, Markdown ni texto fuera del JSON.
