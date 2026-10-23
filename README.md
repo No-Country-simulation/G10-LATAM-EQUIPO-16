@@ -40,7 +40,7 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
-* **Genera el activo de contenido** → con prompts por canal (la guía de tono de voz aún no está integrada; la minimización de datos del autor ya está en el código, #16). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar). Límite actual: el FAQ devuelve tema, origen y estado, pero la pregunta y la respuesta generadas aún no llegan en la respuesta.
+* **Genera el activo de contenido** → con prompts por canal (con ejemplos few-shot de la guía de tono de Marketing para LinkedIn y newsletter, #38 y #40; la minimización de datos del autor ya está en el código, #16). Por lote se genera un asset por tipo (el de mayor relevancia; ante empate, el primero en llegar). El FAQ devuelve tema, origen, estado, pregunta y respuesta.
 * **Presenta los resultados** → Streamlit muestra el resumen del análisis, las tarjetas de LinkedIn, newsletter y FAQ, el resultado parcial y el estado de OCI. No incluye controles de aprobación, rechazo, edición, copia ni descarga por tarjeta; la revisión previa a la publicación se realiza fuera de la aplicación.
 
 ## 🏗️ Arquitectura
@@ -193,7 +193,7 @@ Estado frente al checklist de requisitos mínimos del reto, al 16 de octubre de 
 | --- | --- | --- |
 | Ingestión de interacciones (CSV o JSON) | ✅ Cumplido | `POST /api/v1/community/process` y carga de archivo en Streamlit |
 | Análisis de sentimiento y temas con LLM | ✅ Cumplido | Gemini en el AI Engine (`ai-engine/`) |
-| Al menos 2 formatos de activos | ✅ Cumplido | El post de LinkedIn y el destaque de newsletter (sección, titular y resumen) se generan completos. El FAQ devuelve tema y origen, pero todavía no la pregunta ni la respuesta generadas |
+| Al menos 2 formatos de activos | ✅ Cumplido | El post de LinkedIn y el destaque de newsletter (sección, titular y resumen) se generan completos. El FAQ devuelve tema, origen, pregunta y respuesta |
 | Orquestación del flujo | ✅ Cumplido | LangGraph enruta cada interacción al activo que corresponde |
 | Integración con OCI Object Storage (obligatorio) | ✅ Cumplido | Subida real con Instance Principals, fusionada en `main` (#22) y verificada en una instancia de OCI. Por defecto el backend simula la subida (`mock://`); para guardar en el bucket se ejecuta con `OCI_OS_MODE=real`. Ver `docs/OCI_DEPLOYMENT.md` |
 | Demostración de 3 o más ejemplos de transformación | 🟡 En preparación | Hay un lote ficticio y balanceado de 6 mensajes que cubre las rutas de enrutamiento; falta ejecutarlo con Gemini real y publicar los resultados |
@@ -229,11 +229,9 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 | El esquema de Oracle se crea a mano | No hay migraciones automáticas (Flyway): se ejecuta `V1__initial_schema.sql` al crear una base nueva e Hibernate solo valida las tablas | Documentado en `docs/OCI_DEPLOYMENT.md` |
 | La minimización solo cubre el nombre completo conocido del autor | No elimina nombres parciales, nombres de terceros, correos ni teléfonos dentro del mensaje. Es una protección inicial, no una anonimización completa | Conocido; ampliar queda para después |
 | Los posts no mencionan al autor | Los testimonios resultan menos personales que en el ejemplo del reto | Decidido con Marketing: anónimo/minimizado (ver #20) |
-| El FAQ no devuelve la pregunta ni la respuesta generadas | El activo llega incompleto | Planificado |
 | El titular del newsletter sale del análisis y puede afirmar más de lo que dice el mensaje original | Un reporte individual puede presentarse como un hecho de la comunidad. El panel actual solo muestra resultados; la revisión editorial debe hacerse fuera de la aplicación y la curaduría integrada sigue planificada | Conocido; a cubrir con la curaduría |
 | Los endpoints de curaduría no existen | Aún no se puede aprobar o editar desde la interfaz | En progreso |
 | Si falla una interacción, el lote llega con `status: "parcial"` | El detalle de cuáles fallaron todavía no es consistente | Planificado |
-| Los ids de las interacciones deben ser únicos en el lote | Un id repetido puede mezclar resultados | Planificado (#18) |
 | El análisis por interacción no se persiste | No se puede auditar ni reutilizar | Planificado |
 | El servicio no expone tiempo ni tokens por lote | En corridas de demostración con mensajes ficticios se midieron de 2 a 4 llamadas a Gemini, de unos 750 a 2.500 tokens y de 3 a 19 s de extremo a extremo según el lote y la corrida; el costo y los límites de uso aún no están calculados | Parcialmente medido |
 | La conexión entre servicios aún no es segura y la URL del frontend está fija en `localhost:8080` | Limita el despliegue fuera de la máquina local | Pendiente |
@@ -254,14 +252,14 @@ Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se
 
 ### Documentación
 
-* [x] Guía de tono de voz y prompts Few-Shot (pendiente corregir ejemplos con datos inventados antes de integrarlos)
+* [x] Guía de tono de voz y prompts Few-Shot (ejemplos corregidos e integrados en #38 y #40)
 * [x] Dataset inicial de prueba (9 mensajes)
 
 ### En progreso
 
 * [ ] Endpoints de curaduría (`/assets/pending` y `/assets/{id}/curate`)
 * [x] Reintentos ante errores temporales de la IA (#26)
-* [ ] Integrar la guía de tono de voz en los prompts (la minimización de datos del autor ya está en `main`, #16)
+* [x] Integrar la guía de tono de voz en los prompts (ejemplos few-shot de LinkedIn y newsletter, #38 y #40; la minimización de datos del autor ya está en `main`, #16)
 * [ ] Dataset de demo balanceado (un mensaje por tipo de activo)
 * [ ] Filtro previo de Data Science
 
