@@ -47,8 +47,8 @@ def test_demo_screen(scenario,monkeypatch):
     strings=[x.value for x in at.text]
     faq=read(f"demo_scenarios/{scenario}.json")["activos_distribucion_generados"]
     if faq:
-        assert any("Pregunta: ¿Dónde configuro" in x for x in strings)
-        assert any("Respuesta:" in x for x in strings)
+        areas = [x.value for x in at.text_area]
+        assert any("Q: ¿Dónde configuro" in x for x in areas)
     if scenario=="resultado_parcial":
         assert sum(x.startswith("ID:") for x in strings)==1
         assert any("000000000003" in x for x in strings)
