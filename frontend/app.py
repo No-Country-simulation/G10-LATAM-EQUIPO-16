@@ -737,43 +737,49 @@ def _metadatos_activo(tipo: str, activo: dict) -> list:
 def _tarjeta_activo(lote: str, clave: str, titulo: str, tipo: str, activo) -> None:
     llave = f"{lote}:{clave}"
     clave_txt = f"cl_txt_{lote}_{clave}"
-    editando = bool(st.session_state.get(CLAVE_EDICION, {}).get(llave, False))
-    decision = st.session_state.get(CLAVE_FEEDBACK, {}).get(llave, "pendiente")
-    if editando:
-        etiqueta, color = "Editando", "coral"
-    elif decision == "aprobado":
-        etiqueta, color = "Aprobado", "mint"
-    elif decision == "rechazado":
-        etiqueta, color = "Rechazado", "coral"
-    else:
-        etiqueta, color = "En revisión", "grey"
+    
+    original = _texto_activo(tipo, activo) if activo else ""
 
     with st.container(border=True, key=f"card_{clave}"):
-        original = _texto_activo(tipo, activo) if activo else ""
+        # Si no hay activo o el texto está vacío, mostramos el título sin chip de estado y salimos
+        if not activo or not original:
+            st.markdown(
+                f'<div class="cl-card-h"><span class="cl-card-t">{_esc(titulo)}</span></div>',
+                unsafe_allow_html=True,
+            )
+            st.caption("Sin contenido generado")
+            return
+
+        editando = bool(st.session_state.get(CLAVE_EDICION, {}).get(llave, False))
+        decision = st.session_state.get(CLAVE_FEEDBACK, {}).get(llave, "pendiente")
+        if editando:
+            etiqueta, color = "Editando", "coral"
+        elif decision == "aprobado":
+            etiqueta, color = "Aprobado", "mint"
+        elif decision == "rechazado":
+            etiqueta, color = "Rechazado", "coral"
+        else:
+            etiqueta, color = "En revisión", "grey"
+
         cab_titulo, cab_editar = st.columns([5, 1])
         cab_titulo.markdown(
             f'<div class="cl-card-h"><span class="cl-card-t">{_esc(titulo)}</span>'
             f'<span class="cl-chip {color}">{etiqueta}</span></div>',
             unsafe_allow_html=True,
         )
-        if original:
-            if editando:
-                cab_editar.button("💾", key=f"cl_edit_{lote}_{clave}", help="Guardar edición",
-                                  on_click=_guardar_edicion, args=(llave, clave_txt))
-            else:
-                cab_editar.button("✏️", key=f"cl_edit_{lote}_{clave}", help="Editar texto",
-                                  on_click=_alternar, args=(CLAVE_EDICION, llave))
-        if not activo:
-            st.caption("Sin activo generado por el motor.")
-            return
+        
+        if editando:
+            cab_editar.button("💾", key=f"cl_edit_{lote}_{clave}", help="Guardar edición",
+                              on_click=_guardar_edicion, args=(llave, clave_txt))
+        else:
+            cab_editar.button("✏️", key=f"cl_edit_{lote}_{clave}", help="Editar texto",
+                              on_click=_alternar, args=(CLAVE_EDICION, llave))
+
         if tipo == "faq":
             st.caption("💡 Tip de la Semana")
         meta = _html_chips(_metadatos_activo(tipo, activo))
         if meta:
             st.markdown(f'<div class="cl-meta">{meta}</div>', unsafe_allow_html=True)
-        if not original:
-            st.caption("El activo no incluye texto para revisar.")
-            return
 
         # El texto vive en el estado del widget; se restaura desde texto_editado si se perdió.
         st.session_state.setdefault(
@@ -793,7 +799,6 @@ def _tarjeta_activo(lote: str, clave: str, titulo: str, tipo: str, activo) -> No
                   on_click=_decidir, args=(llave, "rechazado"))
         c3.download_button("Descargar", data=texto, file_name=f"{clave}_{lote}.txt",
                            key=f"cl_dl_{lote}_{clave}", disabled=decision != "aprobado")
-
 
 # ---------------------------------------------------------------------------
 # UI
