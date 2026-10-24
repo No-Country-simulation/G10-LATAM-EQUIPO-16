@@ -361,18 +361,16 @@ CLAVE_UPLOADER = "cl_uploader_n"
 # Datos de ejemplo (ficticios, DEC-08: autores neutros, sin nombres ni iniciales)
 _A1, _A2 = "Un miembro de nuestra comunidad", "Una persona de nuestra comunidad"
 DATOS_EJEMPLO = [
-    {"autor": _A1, "canal": "Discord", "tipo": "logro", "texto": "Terminé el módulo de Spring Boot y por fin mi API responde. Gracias a quienes me ayudaron en el canal."},
-    {"autor": _A2, "canal": "Alura Latam", "tipo": "feedback", "texto": "Las clases de la ruta de IA están muy claras, me ayudaron a armar mi primer proyecto para el portafolio."},
-    {"autor": _A1, "canal": "Discord", "tipo": "pregunta", "texto": "¿Alguien sabe cómo conectar un bucket de OCI Object Storage desde Java? Me pierdo con las credenciales."},
-    {"autor": _A2, "canal": "WhatsApp", "tipo": "feedback", "texto": "El grupo de estudio de esta semana estuvo genial, aprendí mucho sobre cómo escribir buenos prompts."},
-    {"autor": _A1, "canal": "Alura Latam", "tipo": "sugerencia", "texto": "Sería útil tener más ejercicios prácticos al final de cada módulo de IA generativa."},
-    {"autor": _A2, "canal": "Discord", "tipo": "logro", "texto": "Conseguí una entrevista para un puesto junior de datos usando lo que practiqué en esta comunidad."},
-    {"autor": _A1, "canal": "LinkedIn", "tipo": "feedback", "texto": "Excelente iniciativa, se nota el esfuerzo de la comunidad por ayudar a quienes recién empiezan."},
-    {"autor": _A2, "canal": "WhatsApp", "tipo": "otro", "texto": "jajaja ok 👍"},
-    {"autor": _A1, "canal": "Alura Latam", "tipo": "duda", "texto": "No me queda claro cuándo conviene usar un agente en lugar de una cadena simple de prompts, ¿hay algún ejemplo?"},
-    {"autor": _A2, "canal": "Discord", "tipo": "queja", "texto": "El horario de las mentorías se cruza con mi trabajo, ojalá hubiera grabaciones."},
-    {"autor": _A1, "canal": "Discord", "tipo": "pregunta", "texto": "¿Qué certificaciones recomiendan para empezar en la nube sin gastar mucho?"},
-    {"autor": _A2, "canal": "Alura Latam", "tipo": "feedback", "texto": "El foro de la ruta de datos me resolvió una duda de pandas en minutos."},
+    {"autor": "gbianchi", "canal": "Discord", "tipo": "logro", "texto": "¡Logré desplegar el microservicio en OCI sin errores! 🚀 Gran trabajo en equipo."},
+    {"autor": "Jared McCarthy", "canal": "Alura Latam", "tipo": "testimonio", "texto": "Las sesiones de Spring Boot y JPA de esta semana aportaron muchísimo valor práctico."},
+    {"autor": "Marce Puente", "canal": "stackoverflow", "tipo": "pregunta_tecnica", "texto": "¿Cómo optimizar las consultas con Spring Data JPA para mejorar el rendimiento en PostgreSQL?"},
+    {"autor": "Coarse Rosinflower", "canal": "LinkedIn", "tipo": "logro", "texto": "Orgullosa de culminar el módulo de arquitectura cloud con éxito. ✨"},
+    {"autor": "Joe1036", "canal": "WhatsApp", "tipo": "testimonio", "texto": "Excelente la guía compartida para configurar los endpoints REST de la aplicación."},
+    {"autor": "Aaqibhafeez Khan", "canal": "stackoverflow", "tipo": "pregunta_tecnica", "texto": "How to handle asynchronous exception handling cleanly in Spring Boot microservices?"},
+    {"autor": "Akira Patafio", "canal": "Discord", "tipo": "logro", "texto": "¡Primer hito cumplido del hackathon! 🌟 El backend responde correctamente."},
+    {"autor": "Scrooge McDuck", "canal": "Alura Latam", "tipo": "testimonio", "texto": "Muy motivado con el avance del proyecto y el soporte de la comunidad."},
+    {"autor": "", "canal": "stackoverflow", "tipo": "pregunta_tecnica", "texto": "¿Cuál es la mejor manera de gestionar las credenciales de OCI Object Storage de forma segura?"},
+    {"autor": "Una persona de nuestra comunidad", "canal": "Desconocido", "tipo": "logro", "texto": "¡Excelente colaboración técnica en el equipo de desarrollo! 💯"},
 ]
 
 CSS_TEMA = """
@@ -677,12 +675,14 @@ def _iniciar_proceso() -> None:
     """Anti-spam: marca el proceso en curso para renderizar el botón deshabilitado."""
     st.session_state[CLAVE_PROCESANDO] = True
     st.session_state.pop(CLAVE_MENSAJE, None)
+    st.session_state.pop(CLAVE_RESULTADO, None)
 
 
-def _vaciar_campo() -> None:
-    """Limpia el JSON pegado y el archivo subido."""
+def _restablecer() -> None:
+    """Limpia el JSON pegado, el archivo subido y los resultados en sesión."""
     st.session_state[CLAVE_JSON] = ""
     st.session_state[CLAVE_UPLOADER] = st.session_state.get(CLAVE_UPLOADER, 0) + 1
+    st.session_state.pop(CLAVE_RESULTADO, None)
 
 
 def _cargar_ejemplo() -> None:
@@ -830,15 +830,37 @@ with st.sidebar:
             unsafe_allow_html=True,
         )
     st.markdown('<div class="cl-side-h">Lote</div>', unsafe_allow_html=True)
-    origen = st.text_input("Origen comunidad", "Discord_Grupo_ONE_G10")
-    periodo = st.text_input("Periodo", "Semana_01")
+
+    origen_detectado = "Discord_Grupo_ONE_G10"
+    periodo_detectado = "Semana_01"
+
+    if st.session_state.get(CLAVE_JSON):
+        try:
+            datos_raw = json.loads(st.session_state[CLAVE_JSON])
+            if isinstance(datos_raw, dict):
+                origen_detectado = datos_raw.get("origen_comunidad") or origen_detectado
+                periodo_detectado = datos_raw.get("periodo_referencia") or periodo_detectado
+        except Exception:
+            pass
+
+    origen = st.text_input("Origen comunidad", value=origen_detectado)
+    periodo = st.text_input("Periodo", value=periodo_detectado)
 
     st.markdown('<div class="cl-side-h">Sistema</div>', unsafe_allow_html=True)
     oci_actual = _info_oci(resp_guardada) if resp_guardada else {}
     oci_txt = _estado_oci(oci_actual)[0] if oci_actual else "Sin ejecución"
     filas = [("Modo", "Demo (simulado)" if modo_demo else "En vivo")]
-    if not modo_demo:
-        filas.append(("Backend", url_backend))
+    if modo_demo:
+        filas.append(("Backend", "Simulado"))
+    else:
+        backend_activo = False
+        try:
+            requests.get(url_backend, timeout=1)
+            backend_activo = True
+        except Exception:
+            backend_activo = False
+        filas.append(("Backend", "Conectado" if backend_activo else "Desconectado"))
+
     filas += [
         ("Bucket OCI", str(oci_actual.get("bucket") or "—")),
         ("Estado OCI", oci_txt),
@@ -921,7 +943,7 @@ with st.container(border=True, key="card_carga"):
 
     b1, b2, b3 = st.columns(3)
     b1.button("🚀 Procesar Lote", type="primary", disabled=procesando, on_click=_iniciar_proceso)
-    b2.button("🧹 Vaciar Campo", disabled=procesando, on_click=_vaciar_campo)
+    b2.button("🔄 Restablecer", disabled=procesando, on_click=_restablecer)
     b3.button("📋 Cargar ejemplo", disabled=procesando, on_click=_cargar_ejemplo)
 
     mensaje = st.session_state.get(CLAVE_MENSAJE)
@@ -933,6 +955,7 @@ if procesando:
     try:
         if not interacciones_a_enviar:
             _registrar_mensaje("warning", "Debe cargar datos antes de procesar")
+            st.session_state.pop(CLAVE_RESULTADO, None) # Limpieza
         else:
             payload = _construir_payload(origen, periodo, interacciones_a_enviar)
             resp = _procesar(payload, modo_demo, escenario_demo, url_backend)
@@ -960,8 +983,13 @@ with tab_panel:
         st.info("Cargue interacciones y pulse Procesar Lote para ver aquí el análisis y los activos generados.")
     else:
         estado = str(resp_guardada.get("status") or "")
-        if estado == "exito":
+        activos_generados = resp_guardada.get("activos_distribucion_generados") or {}
+        tiene_activos = any(activos_generados.values())
+
+        if estado == "exito" and tiene_activos:
             st.success("Análisis procesado exitosamente.")
+        elif estado == "exito" and not tiene_activos:
+            st.warning("El backend respondió con éxito, pero no se generaron activos de distribución para este lote.")
         elif estado == "parcial":
             st.warning("Resultado parcial: algunas interacciones no pudieron procesarse.")
         elif estado == "error":
