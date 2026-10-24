@@ -674,7 +674,6 @@ def _iniciar_proceso() -> None:
     """Anti-spam: marca el proceso en curso para renderizar el botón deshabilitado."""
     st.session_state[CLAVE_PROCESANDO] = True
     st.session_state.pop(CLAVE_MENSAJE, None)
-    st.session_state.pop(CLAVE_RESULTADO, None)
 
 
 def _restablecer() -> None:
@@ -954,7 +953,6 @@ if procesando:
     try:
         if not interacciones_a_enviar:
             _registrar_mensaje("warning", "Debe cargar datos antes de procesar")
-            st.session_state.pop(CLAVE_RESULTADO, None) # Limpieza
         else:
             payload = _construir_payload(origen, periodo, interacciones_a_enviar)
             resp = _procesar(payload, modo_demo, escenario_demo, url_backend)
