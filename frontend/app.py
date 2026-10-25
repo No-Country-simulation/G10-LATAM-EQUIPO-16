@@ -3,6 +3,7 @@ import html
 import io
 import json
 import os
+from urllib.parse import urlparse
 
 import pandas as pd
 import requests
@@ -204,6 +205,39 @@ def _obtener_url_backend() -> str:
         pass
     return url
 
+def _obtener_url_salud(url_backend: str) -> str:
+    """URL de /api/v1/health: BACKEND_HEALTH_URL, o derivada de la URL del backend."""
+    explicita = os.environ.get("BACKEND_HEALTH_URL")
+    if explicita:
+        return explicita
+    partes = urlparse(url_backend)
+    return f"{partes.scheme}://{partes.netloc}/api/v1/health"
+
+@st.cache_data(ttl=30, show_spinner=False)
+def _backend_responde(url_salud: str) -> bool:
+    """Consulta GET /api/v1/health. Cacheado 30 s para no frenar cada clic."""
+    try:
+        return requests.get(url_salud, timeout=1).status_code == 200
+    except requests.RequestException:
+        return False
+
+# Mejora futura: _limpiar_nulos y _respuesta_para_mostrar no se usan mientras el visor muestre la respuesta cruda.
+def _limpiar_nulos(valor):
+    """Solo para mostrar: reemplaza None por '—' sin modificar la respuesta original."""
+    if isinstance(valor, dict):
+        return {clave: _limpiar_nulos(v) for clave, v in valor.items()}
+    if isinstance(valor, list):
+        return [_limpiar_nulos(v) for v in valor]
+    return "—" if valor is None else valor
+
+def _respuesta_para_mostrar(resp):
+    """Solo para mostrar: null -> '—' y sin la copia anidada de almacenamiento_oci si ya viene en la raíz."""
+    copia = _limpiar_nulos(resp)
+    if isinstance(copia, dict) and isinstance(copia.get("almacenamiento_oci"), dict):
+        activos = copia.get("activos_distribucion_generados")
+        if isinstance(activos, dict):
+            activos.pop("almacenamiento_oci", None)
+    return copia
 
 def _obtener_mensaje_error(respuesta) -> str:
     """Extrae un mensaje legible desde respuesta.error/mensaje/message."""
@@ -363,7 +397,7 @@ _A1, _A2 = "Un miembro de nuestra comunidad", "Una persona de nuestra comunidad"
 DATOS_EJEMPLO = [
     {"autor": "Una persona de nuestra comunidad", "canal": "es.stackoverflow", "tipo": "pregunta_tecnica", "texto": "no entiendo algo.. las sentencias se ejecutan, como van a tener un alcance?"},
     {"autor": "Una persona de nuestra comunidad", "canal": "es.stackoverflow", "tipo": "testimonio", "texto": "@alguien edite la pregunta original (esta), porque estuve haciendo mas despues de la pregunta. Entonces, uno de los docentes me dio un feedback y que era lo que se esperaba, que es lo siguiente: Lo que metés al array (todasTareas) es un string pegado  no un objeto { id, texto, fecha, completado }. Esto es lo que estás resolviendo ahorita mismo y es el paso pendiente más urgente, porque todo lo demás depende de esto.. Ya edite la pregunta, cuando puedas revisa y dime si debo tocar la variable todasTareas y hacerlo un dic {} o como podria hacerlo, gracias!"},
-    {"autor": "Una persona de nuestra comunidad", "canal": "es.stackoverflow", "tipo": "logro", "texto": "Ya hice la pregunta de nuevo @alguien, cuando tenga tiempo y si quieres puedes revisarla, te lo agradezco! (Error en funcion y addEventListener en JS (Seguimiento de pregunta))[://stackoverflow.com…"},
+    {"autor": "Una persona de nuestra comunidad", "canal": "es.stackoverflow", "tipo": "logro", "texto": "Ya hice la pregunta de nuevo @alguien, cuando tenga tiempo y si quieres puedes revisarla, te lo agradezco!"},
     {"autor": "Una persona de nuestra comunidad", "canal": "es.stackoverflow", "tipo": "otro", "texto": "No tienes nada que agradecer, y no te quedes con dudas, pregunta, y estaremos felices de poder ayudarte! :)"},
     {"autor": "Una persona de nuestra comunidad", "canal": "stackoverflow", "tipo": "pregunta_tecnica", "texto": "How would one do this before text-box?"},
     {"autor": "Una persona de nuestra comunidad", "canal": "stackoverflow", "tipo": "testimonio", "texto": "Yes, it is my problem."},
@@ -697,6 +731,10 @@ def _alternar(clave_estado: str, llave: str) -> None:
 def _decidir(llave: str, valor: str) -> None:
     """Registra la decisión de revisión (aprobado / rechazado) del activo."""
     st.session_state.setdefault(CLAVE_FEEDBACK, {})[llave] = valor
+    if valor == "aprobado":
+        st.toast("Activo aprobado. Ahora puedes descargarlo.", icon="✅")
+    elif valor == "rechazado":
+        st.toast("Activo rechazado.", icon="❌")
 
 
 def _guardar_edicion(llave: str, clave_widget: str) -> None:
@@ -795,7 +833,8 @@ def _tarjeta_activo(lote: str, clave: str, titulo: str, tipo: str, activo) -> No
                   on_click=_decidir, args=(llave, "aprobado"))
         c2.button("Rechazar", key=f"cl_no_{lote}_{clave}",
                   on_click=_decidir, args=(llave, "rechazado"))
-        c3.download_button("Descargar", data=texto, file_name=f"{clave}_{lote}.txt",
+        lote_corto = str(lote)[:8] if lote and lote != "sin_lote" else "lote"
+        c3.download_button("Descargar", data=texto, file_name=f"{clave}_{lote_corto}.txt",
                            key=f"cl_dl_{lote}_{clave}", disabled=decision != "aprobado")
 
 # ---------------------------------------------------------------------------
@@ -851,12 +890,7 @@ with st.sidebar:
     if modo_demo:
         filas.append(("Backend", "Simulado"))
     else:
-        backend_activo = False
-        try:
-            requests.get(url_backend, timeout=1)
-            backend_activo = True
-        except Exception:
-            backend_activo = False
+        backend_activo = _backend_responde(_obtener_url_salud(url_backend))
         filas.append(("Backend", "Conectado" if backend_activo else "Desconectado"))
 
     filas += [
@@ -1040,9 +1074,11 @@ with tab_datos:
 
 with tab_json:
     if resp_guardada:
-        with st.expander("Respuesta simulada" if modo_demo else "Respuesta completa del backend"):
+        with st.expander("Respuesta simulada" if modo_demo else "Respuesta del backend"):
             try:
                 st.json(resp_guardada)
+                # Mejora futura (vista simplificada: null -> "—" y sin almacenamiento_oci anidado):
+                # st.json(_respuesta_para_mostrar(resp_guardada))
             except Exception:
                 st.text("La respuesta del backend no es JSON válida")
     with st.expander("Solicitud preparada (sin envío)" if modo_demo else "Ver la solicitud preparada"):
