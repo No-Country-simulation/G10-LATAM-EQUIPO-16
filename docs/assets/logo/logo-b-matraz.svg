@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 180" width="800" height="180" role="img" aria-labelledby="t d">
+  <title id="t">CommunityLab</title>
+  <desc id="d">Un matraz de laboratorio con una burbuja de chat dentro del líquido: los mensajes de la comunidad se transforman en contenido.</desc>
+  <style>
+    :root { --bg:#ffffff; --ink:#0f172a; --muted:#475569; --blue:#2563eb; --teal:#0d9488; --tealsoft:#99f6e4; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0d1117; --ink:#f1f5f9; --muted:#94a3b8; --blue:#60a5fa; --teal:#2dd4bf; --tealsoft:#99f6e4; }
+    }
+    .name { font: 700 58px system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; letter-spacing: -1px; }
+    .sub  { font: 400 19px system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  </style>
+  <!-- Isotipo: matraz con burbuja de chat -->
+  <g transform="translate(18 10)">
+    <defs><clipPath id="fl"><path d="M56 22V62L16 128Q8 146 30 146H110Q132 146 124 128L84 62V22Z"/></clipPath></defs>
+    <rect x="0" y="0" width="140" height="160" fill="none"/>
+    <!-- líquido -->
+    <g clip-path="url(#fl)">
+      <rect x="0" y="96" width="140" height="60" fill="var(--teal)"/>
+    </g>
+    <!-- contorno del matraz -->
+    <path d="M56 22V62L16 128Q8 146 30 146H110Q132 146 124 128L84 62V22" fill="none" stroke="var(--blue)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="46" y="10" width="48" height="12" rx="6" fill="var(--blue)"/>
+    <!-- burbujas que suben -->
+    <circle cx="70" cy="62" r="5" fill="var(--teal)"/>
+    <circle cx="78" cy="42" r="3.5" fill="var(--teal)" opacity=".7"/>
+    <!-- burbuja de chat dentro del líquido -->
+    <path d="M48 106h44a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H66l-10 8v-8h-8a8 8 0 0 1-8-8v-14a8 8 0 0 1 8-8z" fill="#fff"/>
+    <circle cx="56" cy="121" r="3.5" fill="var(--teal)"/>
+    <circle cx="70" cy="121" r="3.5" fill="var(--teal)"/>
+    <circle cx="84" cy="121" r="3.5" fill="var(--teal)"/>
+  </g>
+  <text class="name" x="196" y="96"><tspan fill="var(--ink)">Community</tspan><tspan fill="var(--teal)">Lab</tspan></text>
+  <text class="sub" x="198" y="132" fill="var(--muted)">Del chat de la comunidad al contenido publicable</text>
+</svg>
