@@ -1,6 +1,6 @@
 # Validación y curación del dataset de demo
 
-Evaluación del AI Engine de CommunityLab mediante sus funciones de generación y el endpoint batch. Registra respuestas de Gemini para revisión editorial.
+Evaluación del AI Engine de Aigoraweave mediante sus funciones de generación y el endpoint batch. Registra respuestas de Gemini para revisión editorial.
 
 ## Versión de referencia
 

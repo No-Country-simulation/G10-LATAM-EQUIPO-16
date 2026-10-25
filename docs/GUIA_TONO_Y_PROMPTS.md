@@ -2,7 +2,7 @@
 
 | Campo | Detalle |
 | :-: | :-: |
-| **Proyecto** | CommunityLab |
+| **Proyecto** | Aigoraweave |
 | **Fase** | Semana 1 - Definiciones Técnicas y Setup |
 | **Autor** | Uziel Green (Marketing y Copywriting) |
 | **Destinatario** | Machine Learning, Backend y Frontend |
