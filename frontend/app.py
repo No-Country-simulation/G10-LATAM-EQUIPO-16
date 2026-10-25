@@ -16,6 +16,8 @@ import streamlit as st
 MAX_INTERACCIONES = 10
 TAMANIO_MAXIMO_BYTES = 1 * 1024 * 1024  # 1 MB
 TIMEOUT_CONEXION_SEGUNDOS = float(os.environ.get("BACKEND_TIMEOUT_CONEXION", "10"))
+# Interruptor para mostrar (True) u ocultar (False) la marca de agua de fondo
+MOSTRAR_MARCA_AGUA = False
 # Timeout de respuesta del backend. Valor por defecto 200 segundos configurable
 # mediante la variable de entorno BACKEND_TIMEOUT.
 TIMEOUT_RESPUESTA_SEGUNDOS = float(os.environ.get("BACKEND_TIMEOUT", "200"))
@@ -409,8 +411,9 @@ DATOS_EJEMPLO = [
 CSS_TEMA = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
-/* Oculta menú de 3 puntos, botón Deploy, header, footer y barra decorativa (igual que app_final) */
-#MainMenu,footer,.stAppDeployButton,div[data-testid="stDecoration"],header[data-testid="stHeader"]{visibility:hidden!important;display:none!important;}
+/* Oculta menú de 3 puntos, footer y botón Deploy, pero mantiene el header para el control de la barra lateral */
+#MainMenu, footer, .stAppDeployButton, div[data-testid="stDecoration"] {visibility: hidden !important; display: none !important;}
+header[data-testid="stHeader"] {background: transparent !important;}
 :root{--navy:#252733;--navy2:#323544;--coral:#F98B72;--mint:#9BE19D;--bg:#E8F4F3;--ink:#252733;--muted:#6b7280;--card:#ffffff;--line:#d6e6e4;}
 html,body,.stApp,[data-testid="stAppViewContainer"]{background:var(--bg)!important;font-family:'Inter',system-ui,sans-serif;color:var(--ink);}
 header[data-testid="stHeader"]{background:transparent!important;}
@@ -499,16 +502,16 @@ def _cargar_logo_html() -> str:
     """Logo del repo (docs/assets/logo) embebido; si no existe, usa texto."""
     base = os.path.dirname(os.path.abspath(__file__))
     for ruta in (
-        os.path.join(base, "..", "docs", "assets", "logo", "logo-b-matraz.svg"),
-        os.path.join(base, "assets", "logo-b-matraz.svg"),
+        os.path.join(base, "..", "docs", "assets", "logo", "aigoraweave-horizontal-claro.svg"),
+        os.path.join(base, "assets", "aigoraweave-horizontal-claro.svg"),
     ):
         try:
             with open(ruta, "rb") as f:
                 datos = base64.b64encode(f.read()).decode("ascii")
-            return f'<img alt="CommunityLab" src="data:image/svg+xml;base64,{datos}">'
+            return f'<img alt="Aigoraweave" src="data:image/svg+xml;base64,{datos}">'
         except OSError:
             continue
-    return '<div class="cl-brandtxt">Community<span>Lab</span></div>'
+    return '<div class="cl-brandtxt">Aigora<span>weave</span></div>'
 
 
 def _kpi(etiqueta: str, valor, icono: str, color: str, detalle: str, texto: bool = False) -> str:
@@ -841,8 +844,57 @@ def _tarjeta_activo(lote: str, clave: str, titulo: str, tipo: str, activo) -> No
 # UI
 # ---------------------------------------------------------------------------
 
-st.set_page_config(page_title="CommunityLab", layout="wide", initial_sidebar_state="expanded")
+# Definir la ruta del icono para la pestaña del navegador
+_favicon_path = os.path.join(os.path.dirname(__file__), "..", "docs", "assets", "logo", "aigoraweave-icono-claro.png")
+if not os.path.exists(_favicon_path):
+    _favicon_path = os.path.join(os.path.dirname(__file__), "assets", "aigoraweave-icono-claro.png")
+
+st.set_page_config(
+    page_title="Aigoraweave",
+    page_icon=_favicon_path if os.path.exists(_favicon_path) else None,
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 st.markdown(CSS_TEMA, unsafe_allow_html=True)
+
+# Si el interruptor está activo, inyectamos la marca de agua de fondo de forma segura
+if MOSTRAR_MARCA_AGUA:
+    base = os.path.dirname(os.path.abspath(__file__))
+    svg_rutas = (
+        os.path.join(base, "..", "docs", "assets", "logo", "aigoraweave-icono-claro.svg"),
+        os.path.join(base, "assets", "aigoraweave-icono-claro.svg"),
+    )
+    svg_base64 = ""
+    for r in svg_rutas:
+        try:
+            with open(r, "rb") as f:
+                svg_base64 = base64.b64encode(f.read()).decode("ascii")
+            break
+        except OSError:
+            continue
+
+    if svg_base64:
+        css_marca_agua = """
+        <style>
+        .stApp::after {
+            content: "";
+            position: fixed;
+            bottom: -40px;
+            right: -20px;
+            width: 620px;
+            height: 620px;
+            background-image: url("data:image/svg+xml;base64,REPLACE_B64");
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.12;
+            pointer-events: none;
+            z-index: 0;
+        }
+        </style>
+        """.replace("REPLACE_B64", svg_base64)
+        
+        st.markdown(css_marca_agua, unsafe_allow_html=True)
 
 # Modo demo local - solo activado explícitamente via variable de entorno
 modo_demo = os.environ.get(MODO_DEMO_VAR, "").lower() in ("1", "true", "yes", "on")
@@ -855,7 +907,7 @@ lote_actual = str((resp_guardada or {}).get("lote_id") or "sin_lote")
 # ---- Barra lateral: escenario demo, datos del lote y monitoreo cloud ----
 escenario_demo = None
 with st.sidebar:
-    st.markdown('<div class="cl-side-brand">Community<span>Lab</span></div>', unsafe_allow_html=True)
+    st.markdown('<div class="cl-side-brand">Aigora<span>weave</span></div>', unsafe_allow_html=True)
     if modo_demo:
         with open(os.path.join(os.path.dirname(__file__), "demo_scenarios", "manifest.json"), encoding="utf-8") as manifest_file:
             escenarios_demo = json.load(manifest_file)
