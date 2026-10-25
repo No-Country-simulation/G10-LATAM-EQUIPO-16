@@ -1023,7 +1023,7 @@ with st.container(border=True, key="card_carga"):
     if modo_demo:
         st.caption("Modo demo: usando respuesta simulada (sin llamada HTTP)")
     else:
-        st.caption(f"Enviando a: {url_backend}")
+        st.caption("Listo para enviar al backend.")
 
     b1, b2, b3 = st.columns(3)
     b1.button("🚀 Procesar Lote", type="primary", disabled=procesando, on_click=_iniciar_proceso)
