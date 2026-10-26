@@ -1,6 +1,6 @@
-# CommunityLab AI Engine
+# Aigoraweave AI Engine
 
-Motor de inteligencia artificial de **CommunityLab**, encargado de analizar interacciones de comunidades digitales y transformarlas en insights y activos de contenido mediante Gemini y LangGraph.
+Motor de inteligencia artificial de **Aigoraweave**, encargado de analizar interacciones de comunidades digitales y transformarlas en insights y activos de contenido mediante Gemini y LangGraph.
 
 ## 🤖 Funcionalidades
 
@@ -17,7 +17,7 @@ El AI Engine permite:
 - Generar sugerencias de FAQ.
 - Generar destacados para newsletter.
 - Exponer el motor mediante una API REST con FastAPI.
-- Integrarse con el backend Java de CommunityLab.
+- Integrarse con el backend Java de Aigoraweave.
 
 ## 🧠 Flujo del motor de IA
 
@@ -288,7 +288,7 @@ Este mecanismo evita reintentos innecesarios y mejora la tolerancia del flujo an
 
 ### 1. Infraestructura
 
-El AI Engine de CommunityLab está desplegado en una instancia de Oracle Cloud Infrastructure (OCI).
+El AI Engine de Aigoraweave está desplegado en una instancia de Oracle Cloud Infrastructure (OCI).
 
 | Componente | Configuración |
 |---|---|

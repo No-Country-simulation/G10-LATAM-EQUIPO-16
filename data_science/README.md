@@ -1,4 +1,4 @@
-# CommunityLab - dataset real de Stack Exchange
+# Aigoraweave - dataset real de Stack Exchange
 
 Entrega de Data Science, Semana 1. Responsable: Saul Mendoza.
 
@@ -115,7 +115,7 @@ quedan fuera del JSON de entrada. Esta comprobación es estructural: no se ejecu
 
 ## Alcance y límites
 
-Se revisaron las bases de CommunityLab y la persistencia anterior: 179 preguntas previamente descargadas,
+Se revisaron las bases de Aigoraweave y la persistencia anterior: 179 preguntas previamente descargadas,
 el subconjunto de 118 del experimento FAQ y el experimento de testimonios con 61 reales + 32 controles sintéticos.
 Se preservó ese trabajo; la colección nueva contiene únicamente la nueva captura real de Stack Exchange.
 

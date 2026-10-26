@@ -1,4 +1,4 @@
-# Despliegue de CommunityLab en Oracle Cloud Infrastructure
+# Despliegue de Aigoraweave en Oracle Cloud Infrastructure
 
 ## 1. Requisitos
 - Oracle Autonomous Database configurada.

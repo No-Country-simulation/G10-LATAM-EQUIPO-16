@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo/logo-b-matraz.svg" alt="CommunityLab: del chat de la comunidad al contenido publicable" width="560">
+  <img src="docs/assets/logo/aigoraweave-logo.svg" alt="Aigoraweave: del chat de la comunidad al contenido publicable" width="560">
 </p>
 
 ## Motor inteligente de transformación y distribución de contenido para comunidades digitales
@@ -8,15 +8,15 @@
 <br>
 ![LangGraph](https://img.shields.io/badge/LangGraph-routing-1C3C3C) ![Gemini](https://img.shields.io/badge/Google-Gemini%20Flash--Lite-4285F4) ![Oracle](https://img.shields.io/badge/Oracle-Autonomous%20DB-F80000) ![Streamlit](https://img.shields.io/badge/Streamlit-UI-FF4B4B) ![Status](https://img.shields.io/badge/status-en%20desarrollo-yellow)
 
-> CommunityLab recibe interacciones de una comunidad digital, las analiza con IA y genera borradores para LinkedIn, FAQ y newsletter, y los presenta en un panel de resultados para su revisión posterior. La aprobación y publicación quedan fuera de la aplicación. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
+> Aigoraweave recibe interacciones de una comunidad digital, las analiza con IA y genera borradores para LinkedIn, FAQ y newsletter, y los presenta en un panel de resultados para su revisión posterior. La aprobación y publicación quedan fuera de la aplicación. Proyecto del equipo 16 de la Hackathon ONE G10 (Oracle Next Education & Alura).
 
-* Última actualización: 21 de octubre de 2026.
+* Última actualización: 25 de octubre de 2026.
 
 ## 📑 Tabla de contenidos
 
 <!-- no toc -->
 * [Un problema real y con un caso de uso claro](#-un-problema-real-y-con-un-caso-de-uso-claro)
-* [Lo que hace CommunityLab](#-lo-que-hace-communitylab)
+* [Lo que hace Aigoraweave](#-lo-que-hace-aigoraweave)
 * [Arquitectura](#-arquitectura)
   * [Pipeline](#pipeline)
   * [Contrato de la API](#contrato-de-la-api)
@@ -34,9 +34,9 @@
 
 Las comunidades digitales activas (Discord, Slack, foros) generan a diario testimonios de logros, dudas técnicas recurrentes y proyectos destacados. La mayor parte de ese contenido se pierde en el historial del chat, y los equipos de marketing y gestión de comunidades no tienen tiempo de leer miles de mensajes para encontrar esas historias y convertirlas en contenido publicable.
 
-## 🧩 Lo que hace CommunityLab
+## 🧩 Lo que hace Aigoraweave
 
-Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y CommunityLab:
+Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Aigoraweave:
 
 * **Analiza cada mensaje** → sentimiento, tema, tipo, relevancia e insight, con Gemini.
 * **Enruta según el resultado** → logro o testimonio a LinkedIn, pregunta técnica a FAQ, feedback relevante a newsletter, con LangGraph.
@@ -45,7 +45,7 @@ Le entregas un lote de interacciones (CSV o JSON, hasta 10 por lote) y Community
 
 ## 🏗️ Arquitectura
 
-CommunityLab está dividido en tres servicios:
+Aigoraweave está dividido en tres servicios:
 
 | Capa | Tecnología | Qué hace |
 | --- | --- | --- |
@@ -219,6 +219,7 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 * **Errores del servicio de IA.** El AI Engine distingue la saturación de Gemini (`503`) del límite de cuota (`429`) y de los fallos permanentes (`500`). El backend reintenta solo los temporales (hasta 3 intentos, con esperas de 2 y 4 segundos) y responde `503` si siguen fallando; el `429`, el `500` del motor y las respuestas inválidas se devuelven como `502` sin reintentar.
 * **Minimización de datos del autor.** Antes de enviar texto a Gemini, el módulo `privacy.py` quita el campo `autor` de los prompts y reemplaza el nombre completo del autor, si aparece en el mensaje, por un marcador. El contenido generado no nombra a la persona: usa "una persona de la comunidad". Esto difiere a propósito del ejemplo del reto, donde el post nombra a la autora. Preferimos no publicar ni enviar a un servicio externo datos personales sin consentimiento, porque un error ahí es difícil de revertir y omitir el nombre solo resta calidez al texto. La decisión quedó cerrada con Marketing en el #20: se adopta la opción anónimo/minimizado, sin nombres reales ni iniciales. Mencionar al autor en el futuro, por ejemplo con consentimiento explícito, sería una decisión nueva.
 * **Datos de demostración y de entrenamiento por separado.** La demo usa mensajes ficticios; el dataset real de Stack Exchange vive en `data_science/` con su atribución y licencia (CC BY-SA), y se usa para entrenar y evaluar el modelo.
+* **Nombre del proyecto e identificadores técnicos.** El proyecto se llama Aigoraweave. Los identificadores técnicos conservan el nombre original, CommunityLab (paquete Java `com.nocountry.communitylab`, variable `COMMUNITYLAB_DEMO` y recursos de OCI como el bucket y el grupo dinámico), porque renombrarlos arriesgaba romper lo ya validado y desplegado.
 * **Secretos fuera del repositorio.** `.env` y la wallet de Oracle no se versionan.
 
 ### Límites conocidos
