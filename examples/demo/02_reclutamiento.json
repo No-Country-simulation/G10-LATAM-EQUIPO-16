@@ -1,0 +1,64 @@
+{
+  "interacciones": [
+    {
+      "autor": "Participante 01",
+      "canal": "Discord",
+      "tipo": "pregunta_tecnica",
+      "texto": "Hola! Estoy buscando mi primer trabajo como analista de datos y todas las vacantes piden experiencia 😅 ¿Sirve poner los proyectos del curso en el CV? No sé cómo presentarlos sin que parezcan solo tareas."
+    },
+    {
+      "autor": "Mentor 01",
+      "canal": "Discord",
+      "tipo": "otro",
+      "texto": "Sí, puedes incluirlos en una sección de Proyectos. Explica qué problema abordaste, qué hiciste, qué herramientas utilizaste y qué resultado obtuviste. Agrega un enlace para ver el trabajo y aclara que es un proyecto académico o personal."
+    },
+    {
+      "autor": "Participante 01",
+      "canal": "Discord",
+      "tipo": "logro",
+      "texto": "¡Me llamaron para mi primera entrevista! Reorganicé el CV y agregué mi proyecto de análisis de ventas. La reclutadora me preguntó específicamente por ese proyecto. Ahora toca practicar cómo explicarlo sin leer todo 😂"
+    },
+    {
+      "autor": "Participante 02",
+      "canal": "Discord",
+      "tipo": "otro",
+      "texto": "Qué buenooo 🙌 Si quieres practicamos por acá. Puedes empezar contando el problema que querías resolver y después mostrar una decisión que tomaste. A mí me ayuda explicarlo como una historia en lugar de enumerar herramientas."
+    },
+    {
+      "autor": "Participante 03",
+      "canal": "LinkedIn",
+      "tipo": "testimonio",
+      "texto": "Después de varios años en atención al cliente, estoy orientando mi carrera hacia el análisis de datos. El acompañamiento de esta comunidad me ayudó a reconocer habilidades transferibles: entender necesidades, identificar patrones y comunicar hallazgos. Ahora puedo explicar mejor cómo mi experiencia anterior se conecta con el rol que busco."
+    },
+    {
+      "autor": "Reclutador 01",
+      "canal": "LinkedIn",
+      "tipo": "otro",
+      "texto": "En las entrevistas que realizo para perfiles iniciales, los proyectos permiten conversar sobre cómo una persona aborda un problema y explica sus decisiones. Mi recomendación es describir con claridad la contribución individual y distinguir los ejercicios académicos de la experiencia laboral."
+    },
+    {
+      "autor": "Participante 04",
+      "canal": "LinkedIn",
+      "tipo": "logro",
+      "texto": "Esta semana acepté una oferta para mi primer puesto como analista de datos. En la entrevista pude presentar mi portafolio y explicar qué aprendí de un proyecto que inicialmente no salió como esperaba. Gracias a quienes participaron en las entrevistas de práctica y me dieron comentarios concretos para mejorar."
+    },
+    {
+      "autor": "Participante 05",
+      "canal": "WhatsApp",
+      "tipo": "pregunta_tecnica",
+      "texto": "Gente, mañana tengo entrevista virtual 🙈 ¿Qué revisan antes de conectarse? Me preocupa que falle algo y ponerme más nerviosa."
+    },
+    {
+      "autor": "Mentor 02",
+      "canal": "WhatsApp",
+      "tipo": "otro",
+      "texto": "Prueba hoy el enlace, la cámara, el micrófono y la conexión 😊 Deja a mano tu CV y la descripción de la vacante. Busca un lugar tranquilo, silencia las notificaciones y entra unos minutos antes. También prepara un ejemplo concreto de un problema que hayas resuelto."
+    },
+    {
+      "autor": "Participante 05",
+      "canal": "WhatsApp",
+      "tipo": "testimonio",
+      "texto": "Ya salí de la entrevista! No sé todavía si quedé, pero pude explicar mi experiencia con más calma. Practicar ayer con ustedes me ayudó muchísimo y la prueba de audio me salvó porque tenía seleccionado otro micrófono 😂 Gracias por acompañarme."
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "interacciones": [
+    {
+      "autor": "Cliente 01",
+      "canal": "Instagram",
+      "tipo": "testimonio",
+      "texto": "Mi pedido lleva cuatro días de retraso y hoy aparece como entregado. ¡Yo no he recibido nada! Es frustrante pagar por un servicio y después tener que perseguir a la empresa para que explique dónde está tu compra."
+    },
+    {
+      "autor": "Cliente 02",
+      "canal": "X",
+      "tipo": "testimonio",
+      "texto": "Lo peor de RutaExpress no es solo el retraso: es recibir la misma respuesta automática mientras nadie resuelve. Dejé de recomendar el servicio. La confianza también se pierde cuando no te dan información clara."
+    },
+    {
+      "autor": "Cliente 03",
+      "canal": "Instagram",
+      "tipo": "pregunta_tecnica",
+      "texto": "Mi paquete también figura como entregado, pero no lo recibí. ¿Cuál es el canal oficial para reportarlo y qué información tengo que enviar? No quiero publicar mi dirección ni mi número de pedido en los comentarios."
+    },
+    {
+      "autor": "Equipo RutaExpress",
+      "canal": "Instagram",
+      "tipo": "otro",
+      "texto": "Lamentamos los retrasos y los casos de pedidos marcados como entregados sin recepción confirmada. Para revisarlos, contacten por mensaje privado a esta cuenta oficial con su número de pedido. No publiquen direcciones ni teléfonos en comentarios. Nuestro equipo verificará cada caso y comunicará su estado por esa vía."
+    },
+    {
+      "autor": "Cliente 04",
+      "canal": "X",
+      "tipo": "testimonio",
+      "texto": "En mi caso el pedido llegó hoy, dos días tarde. El producto está bien, pero tuve que reorganizar mi día porque nunca actualizaron la fecha de entrega. No todo salió mal, aunque la comunicación sí necesita mejorar."
+    },
+    {
+      "autor": "Cliente 05",
+      "canal": "Instagram",
+      "tipo": "logro",
+      "texto": "Actualizo mi caso: me respondieron por privado, localizaron el paquete y finalmente lo recibí. La persona que me atendió fue amable y me explicó lo ocurrido. Agradezco la solución, aunque habría preferido tener esa información desde el principio."
+    },
+    {
+      "autor": "Profesional 01",
+      "canal": "LinkedIn",
+      "tipo": "otro",
+      "texto": "La situación de RutaExpress muestra cuánto influye la comunicación en la experiencia del cliente. Además de resolver las entregas pendientes, sería útil informar qué ocurrió, qué medidas se aplicarán y cuándo habrá una próxima actualización. Un comunicado sin seguimiento deja las mismas preguntas abiertas."
+    },
+    {
+      "autor": "Comerciante 01",
+      "canal": "LinkedIn",
+      "tipo": "testimonio",
+      "texto": "Utilizo RutaExpress para los envíos de mi emprendimiento. Durante meses tuve una buena experiencia, pero los retrasos recientes también afectan la confianza de mis compradores en mi negocio. Valoro que la empresa haya reconocido el problema; necesito información concreta para poder responder a mis clientes."
+    },
+    {
+      "autor": "Cliente 06",
+      "canal": "X",
+      "tipo": "otro",
+      "texto": "Yo he usado RutaExpress varias veces y mis pedidos llegaron bien. Entiendo el enojo de quienes siguen esperando. Ojalá resuelvan los casos pendientes y publiquen avances; responder con claridad sería un buen comienzo."
+    },
+    {
+      "autor": "Participante 07",
+      "canal": "LinkedIn",
+      "tipo": "otro",
+      "texto": "..."
+    }
+  ]
+}
