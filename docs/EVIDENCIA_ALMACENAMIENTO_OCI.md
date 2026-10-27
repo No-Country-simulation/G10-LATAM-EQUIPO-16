@@ -65,22 +65,28 @@ Consultas de solo lectura en Database Actions (SQL), esquema `AIGORAWEAVE_TEST`,
 
 Las interacciones descartadas no se enlazan por `ruta_oci` a un lote, porque no entran al paquete; la asignación al lote `67b40d80…` se deduce por el texto `...` y la hora de creación, que coinciden con la prueba 4 (9 procesadas y 1 descartada).
 
-## Versión desplegada
+## Entorno y versión desplegada
 
-El repositorio no tiene flujos de GitHub Actions ni despliegues registrados, así que el commit no figura en GitHub. Se identificó por comparación entre la interfaz en vivo y el historial del repositorio (verificado el 26 de octubre de 2026):
+Datos confirmados por Óscar el 27 de octubre de 2026, tras revisar la instancia OCI `nocountry-ai-engine` (IP pública `155.181.177.178`, región Chile Central, única instancia del compartimento raíz):
 
-* La interfaz en vivo muestra el nombre y el logo de Aigoraweave, presentes desde el commit `ba10ed7`.
-* La interfaz en vivo todavía muestra la línea "Enviando a: …" en la tarjeta de carga, que el commit `ee5c834` reemplazó por "Listo para enviar al backend."
-* `ba10ed7` es el único commit del historial que reúne ambas condiciones, por lo que el frontend desplegado corresponde a `ba10ed7` (PR #50, rama `feature/dashboard`; integrado en `main` como `d0582cf`). Es el mismo commit sobre el que Óscar corrió las 64 pruebas en su revisión.
+* **Cadena:** dominio público → Nginx → Streamlit (`127.0.0.1:8502`) → backend Spring Boot (`127.0.0.1:8084`).
+* **Frontend:** servicio `aigoraweave-pr50-frontend.service`, puerto 8502, directorio `/home/ubuntu/communitylab-pr50-review`. Su variable `BACKEND_URL` apunta a `127.0.0.1:8084`.
+* **Backend:** servicio `aigoraweave-pr50.service` (Java, Spring Boot), puerto 8084, carpeta `/home/ubuntu/communitylab-release-test/backend`, JAR `target/communitylab-0.0.1-SNAPSHOT.jar`. Perfil Spring `oracle`, esquema `AIGORAWEAVE_TEST`.
+* **Object Storage:** modo `real`, bucket `aigoraweave-pr50-test`, namespace `axfj94golgwj`.
+* Ambos servicios los gestiona systemd.
 
-Alcance: esto identifica la versión del frontend. No hay forma de ver desde fuera la versión exacta del backend ni del motor de IA; su commit lo puede confirmar quien tenga acceso a la instancia (`git rev-parse HEAD`).
+Versiones:
+
+* **Backend:** el HEAD de su carpeta es `4ce1e68` (PR #49, 21/10/2026). Comparado con `main`, el código del backend es idéntico: no hay cambios entre ambos. Reserva: la carpeta tiene cambios locales sin commit y el JAR no registra su commit de compilación, por lo que no es una versión certificada.
+* **Frontend:** no se informó su commit. Por comparación entre la interfaz en vivo y el historial del repositorio, corresponde a `ba10ed7` (PR #50): el nombre y el logo de Aigoraweave existen desde ese commit, y la interfaz aún muestra "Enviando a: …", que `ee5c834` reemplazó.
+* **AI Engine:** no se confirmó qué servicio usa este backend ni su commit. La instancia tiene además los servicios `nocountry-backend`, `nocountry-ai` y `nocountry-frontend` (puertos 8081, 8001 y 8501), cuyo HEAD es `0105a76` con cambios locales sin commit en el AI Engine. Podría ser el `nocountry-ai`, pero no está verificado.
 
 ## Qué falta por verificar
 
-1. El commit exacto del backend y del motor de IA desplegados (el frontend se identificó arriba).
+1. El servicio y el commit del AI Engine que usa el backend de la demo.
 2. Los objetos de las otras tres ejecuciones; en la lista del bucket aparecen varios archivos `paquete-distribucion-…`, pero solo se abrió el de la prueba 4.
 
 ## Observaciones
 
-* El bucket de estas ejecuciones es `aigoraweave-pr50-test`, distinto de `communitylab-results`, que documenta `docs/OCI_DEPLOYMENT.md`. Conviene aclarar si es un bucket de pruebas de esta versión o el definitivo.
+* El bucket de estas ejecuciones, `aigoraweave-pr50-test`, pertenece a los servicios `aigoraweave-pr50*` (entorno de revisión del PR #50). El `communitylab-results` que documenta `docs/OCI_DEPLOYMENT.md` corresponde a los servicios `nocountry-*`.
 * Estas cuatro ejecuciones crearon cuatro lotes reales en la base y cuatro objetos en el bucket de la demo.
