@@ -29,7 +29,9 @@ Rutas completas:
 
 ## Verificación en la consola de OCI Object Storage
 
-Verificado en la consola de OCI (región Chile Central, Santiago) para la prueba 4:
+Verificado en la consola de OCI (región Chile Central, Santiago) para la prueba 4 (RutaExpress). Solo se inspeccionó y descargó ese objeto: de las otras tres ejecuciones se registraron las respuestas del backend, las rutas y los registros de Oracle, pero no se abrió cada archivo.
+
+Detalle del objeto de la prueba 4:
 
 * El objeto existe en el bucket `aigoraweave-pr50-test` (namespace `axfj94golgwj`), en `activos/Semana_01/paquete-distribucion-67b40d80-421b-49bd-a90b-7429bcb34615.json`. Almacenamiento: Standard. Tamaño: 5,77 KiB.
 * Se descargó el objeto y su contenido corresponde a la ejecución: `lote_id` `67b40d80-421b-49bd-a90b-7429bcb34615`, generado el 27/10/2026 a las 00:03:37 UTC (19:03 en Bogotá), origen `Discord_Grupo_ONE_G10`, periodo `Semana_01`.
