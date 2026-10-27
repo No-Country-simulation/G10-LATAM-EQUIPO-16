@@ -1,0 +1,64 @@
+{
+  "interacciones": [
+    {
+      "autor": "Participante 01",
+      "canal": "Discord",
+      "tipo": "pregunta_tecnica",
+      "texto": "Hola! Estoy empezando el curso de Excel y quiero organizar mis gastos. Tengo compras, transporte y comida en una sola lista. ¿Cómo puedo saber cuánto gasto en cada categoría sin sumar todo a mano?"
+    },
+    {
+      "autor": "Soporte 01",
+      "canal": "Discord",
+      "tipo": "otro",
+      "texto": "Puedes crear una tabla con las columnas Fecha, Categoría, Descripción y Monto. Después, una tabla dinámica te permite agrupar los gastos por categoría y sumar los montos. Revisa que los montos estén guardados como números y usa siempre el mismo nombre para cada categoría."
+    },
+    {
+      "autor": "Participante 01",
+      "canal": "Discord",
+      "tipo": "logro",
+      "texto": "¡Me salió! Organicé mis gastos y pude ver cuánto estaba destinando a comida fuera de casa. Antes tenía los datos anotados, pero nunca los había visto juntos por categoría. Ya tengo mi primer resumen mensual."
+    },
+    {
+      "autor": "Participante 02",
+      "canal": "Discord",
+      "tipo": "testimonio",
+      "texto": "Yo llegué al curso pensando que Excel era solo para contadores. Practicar con mis propios gastos me ayudó a entender para qué sirve. Lo que más me ayudó fue poder preguntar sin sentir vergüenza por estar empezando."
+    },
+    {
+      "autor": "Participante 03",
+      "canal": "Discord",
+      "tipo": "pregunta_tecnica",
+      "texto": "Quiero hacer algo parecido, pero tengo poco tiempo después del trabajo. ¿Cómo practican sin tener que pasar horas viendo otra vez toda la clase?"
+    },
+    {
+      "autor": "Participante 02",
+      "canal": "Discord",
+      "tipo": "otro",
+      "texto": "A mí me funciona elegir una tarea pequeña y practicarla durante 15 minutos: un día organizo los datos, otro pruebo una fórmula y otro hago un gráfico. Cuando algo no sale, comparto aquí el paso donde me quedé."
+    },
+    {
+      "autor": "Participante 03",
+      "canal": "Discord",
+      "tipo": "logro",
+      "texto": "Probé dividirlo en tareas pequeñas y hoy terminé mi primera tabla de gastos. No hice todo de una vez, pero pude avanzar después del trabajo sin sentir que tenía que empezar el curso desde cero."
+    },
+    {
+      "autor": "Participante 04",
+      "canal": "Discord",
+      "tipo": "testimonio",
+      "texto": "Ver las preguntas de ustedes me animó a participar. Tenía la misma duda y pensaba que era demasiado básica. La explicación y el ejemplo me ayudaron a resolver mi tabla también."
+    },
+    {
+      "autor": "Soporte 01",
+      "canal": "Discord",
+      "tipo": "otro",
+      "texto": "¡Qué bueno leer sus avances! No hace falta llegar con todo resuelto para participar. Una pregunta concreta puede ayudar a otras personas que están pasando por lo mismo. Si comparten ejemplos de gastos, usen datos ficticios y eviten publicar información personal."
+    },
+    {
+      "autor": "Participante 01",
+      "canal": "Discord",
+      "tipo": "testimonio",
+      "texto": "Me llevo algo más que una tabla: ahora entiendo cómo usar lo aprendido para una decisión de mi día a día. Empecé preguntando cómo sumar mis gastos y terminé con un resumen que puedo actualizar cada mes."
+    }
+  ]
+}
