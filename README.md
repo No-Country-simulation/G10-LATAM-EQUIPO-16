@@ -61,7 +61,6 @@ Aigoraweave está dividido en tres servicios:
 
 Streamlit, Java y FastAPI corren en la misma instancia de OCI Compute (AMD E5) y se comunican por localhost. Solo el navegador del operador queda fuera: habla con Streamlit, y el backend y el motor de IA no se exponen.
 
-<!-- NOTA PARA DOCUMENTACIÓN: Streamlit aún no está desplegado en la instancia (ver fila de Límites y el Roadmap). Al terminar el despliegue (servicio systemd y Nginx), quitar esa fila, marcar el pendiente del Roadmap y borrar esta nota. -->
 
 ### Pipeline
 
@@ -280,7 +279,7 @@ Lo que decidimos, por qué, y lo que sabemos que todavía no está.
 | Si falla una interacción, el lote llega con `status: "parcial"` | El motivo de cada fallida es un texto fijo y, si falla un activo, no se informa cuál | Planificado |
 | El análisis por interacción no se persiste en la base de datos | Solo queda dentro del JSON guardado en OCI; no se puede consultar ni reutilizar desde Oracle | Planificado |
 | El servicio no expone tiempo ni tokens por lote | En corridas de demostración con mensajes ficticios se midieron de 2 a 4 llamadas a Gemini, de unos 750 a 2.500 tokens y de 3 a 19 s de extremo a extremo según el lote y la corrida; el costo y los límites de uso aún no están calculados | Parcialmente medido |
-| Streamlit aún no está desplegado en la instancia | Faltan el servicio systemd y Nginx. Streamlit debe arrancar desde `frontend/` para leer `.streamlit/config.toml`. `st.secrets` pisa a `BACKEND_URL` de la variable de entorno y `requirements.txt` no fija versiones | Pendiente |
+| Streamlit se sirve en la demo permanente, pero su despliegue no está documentado | La demo (`https://aigoraweave.duckdns.org`) ya está accesible y se usó en las ejecuciones del 26/10/2026. Falta documentar cómo se despliega (servicio systemd y Nginx). Streamlit debe arrancar desde `frontend/` para leer `.streamlit/config.toml`. `st.secrets` pisa a `BACKEND_URL` de la variable de entorno y `requirements.txt` no fija versiones | Parcial |
 | Peor caso de unos 3 minutos | Con el AI Engine caído o colgado, 3 intentos de hasta 60 s más 6 s de esperas | Conocido |
 | Límite por minuto de Gemini (`429`) | El backend responde `502` sin reintentar: varios lotes seguidos en menos de un minuto pueden fallar con el plan gratuito | No enviar lotes seguidos |
 | El backend no es idempotente | Reenviar el mismo lote duplica las interacciones y crea otro lote y otro objeto en el bucket | Conocido |
@@ -310,7 +309,7 @@ Cuando uno de estos puntos se resuelva, se mueve a la tabla de cumplimiento y se
 
 ### En progreso
 
-* [ ] Despliegue de Streamlit en la instancia (servicio systemd y Nginx)
+* [ ] Documentar el despliegue de Streamlit en la instancia (servicio systemd y Nginx)
 * [ ] Redesplegar el backend y confirmar la ruta `activos/<periodo>/…` en el bucket
 * [ ] Validar el recorrido completo en vivo sobre OCI con el bucket real
 * [x] Reintentos ante errores temporales de la IA
