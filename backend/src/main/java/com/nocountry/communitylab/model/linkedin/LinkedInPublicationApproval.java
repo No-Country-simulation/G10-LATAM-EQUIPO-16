@@ -6,6 +6,7 @@ import com.nocountry.communitylab.service.linkedin.LinkedInContentHasher;
 public record LinkedInPublicationApproval(
     String approvalId,
     String sessionId,
+    String linkedinSubject,
     String content,
     String contentSha256,
     Instant createdAt,
@@ -23,11 +24,37 @@ public record LinkedInPublicationApproval(
             Instant createdAt,
             Instant expiresAt,
             boolean confirmed,
+            boolean published,
+            LinkedInPublicationStatus status) {
+
+        this(
+            approvalId,
+            sessionId,
+            null,
+            content,
+            contentSha256,
+            createdAt,
+            expiresAt,
+            confirmed,
+            published,
+            status
+        );
+    }
+
+    public LinkedInPublicationApproval(
+            String approvalId,
+            String sessionId,
+            String content,
+            String contentSha256,
+            Instant createdAt,
+            Instant expiresAt,
+            boolean confirmed,
             boolean published) {
 
         this(
             approvalId,
             sessionId,
+            null,
             content,
             contentSha256,
             createdAt,
@@ -46,9 +73,15 @@ public record LinkedInPublicationApproval(
         return !now.isBefore(expiresAt);
     }
 
-    public boolean canPublish(String currentSessionId, Instant now) {
+    public boolean canPublish(
+            String currentSessionId,
+            String currentLinkedinSubject,
+            Instant now) {
         return sessionId != null
             && sessionId.equals(currentSessionId)
+            && linkedinSubject != null
+            && !linkedinSubject.isBlank()
+            && linkedinSubject.equals(currentLinkedinSubject)
             && content != null
             && !content.isBlank()
             && LinkedInContentHasher.matches(content, contentSha256)

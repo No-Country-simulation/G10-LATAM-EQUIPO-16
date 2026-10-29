@@ -20,9 +20,7 @@ class LinkedInApprovalServiceTest {
     void creaAprobacionPendienteConHashCorrecto() {
         var service = new LinkedInApprovalService(clock);
 
-        var approval = service.create(
-            "sesion-A", "Contenido para LinkedIn"
-        );
+        var approval = service.create("sesion-A", "linkedin-A", "Contenido para LinkedIn");
 
         assertNotNull(approval.approvalId());
         assertEquals("sesion-A", approval.sessionId());
@@ -37,47 +35,39 @@ class LinkedInApprovalServiceTest {
     @Test
     void recuperaAprobacionDesdeSesionCorrecta() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto aprobado");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto aprobado");
 
-        assertNotNull(service.findForSession(
-            approval.approvalId(), "sesion-A"
-        ));
+        assertNotNull(service.findForSession(approval.approvalId(), "sesion-A", "linkedin-A"));
     }
 
     @Test
     void otraSesionNoPuedeRecuperarAprobacion() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto privado");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto privado");
 
-        assertNull(service.findForSession(
-            approval.approvalId(), "sesion-B"
-        ));
+        assertNull(service.findForSession(approval.approvalId(), "sesion-B", "linkedin-A"));
     }
 
     @Test
     void aprobacionExpiradaNoPuedeRecuperarse() {
         var adjustableClock = new AdjustableClock(now);
         var service = new LinkedInApprovalService(adjustableClock);
-        var approval = service.create("sesion-A", "Texto temporal");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto temporal");
 
-        assertNotNull(service.findForSession(
-            approval.approvalId(), "sesion-A"
-        ));
+        assertNotNull(service.findForSession(approval.approvalId(), "sesion-A", "linkedin-A"));
 
         adjustableClock.advanceSeconds(601);
 
-        assertNull(service.findForSession(
-            approval.approvalId(), "sesion-A"
-        ));
+        assertNull(service.findForSession(approval.approvalId(), "sesion-A", "linkedin-A"));
     }
 
     @Test
     void sesionCorrectaPuedeConfirmar() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto original");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto original");
 
         var confirmed = service.confirm(
-            approval.approvalId(), "sesion-A"
+            approval.approvalId(), "sesion-A", "linkedin-A"
         );
 
         assertNotNull(confirmed);
@@ -88,28 +78,26 @@ class LinkedInApprovalServiceTest {
     @Test
     void otraSesionNoPuedeConfirmar() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto privado");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto privado");
 
         assertNull(service.confirm(
-            approval.approvalId(), "sesion-B"
+            approval.approvalId(), "sesion-B", "linkedin-A"
         ));
 
-        assertFalse(service.findForSession(
-            approval.approvalId(), "sesion-A"
-        ).confirmed());
+        assertFalse(service.findForSession(approval.approvalId(), "sesion-A", "linkedin-A").confirmed());
     }
 
     @Test
     void noPuedeConfirmarseDosVeces() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto único");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto único");
 
         assertNotNull(service.confirm(
-            approval.approvalId(), "sesion-A"
+            approval.approvalId(), "sesion-A", "linkedin-A"
         ));
 
         assertNull(service.confirm(
-            approval.approvalId(), "sesion-A"
+            approval.approvalId(), "sesion-A", "linkedin-A"
         ));
     }
 
@@ -117,22 +105,22 @@ class LinkedInApprovalServiceTest {
     void aprobacionExpiradaNoPuedeConfirmarse() {
         var adjustableClock = new AdjustableClock(now);
         var service = new LinkedInApprovalService(adjustableClock);
-        var approval = service.create("sesion-A", "Texto temporal");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto temporal");
 
         adjustableClock.advanceSeconds(601);
 
         assertNull(service.confirm(
-            approval.approvalId(), "sesion-A"
+            approval.approvalId(), "sesion-A", "linkedin-A"
         ));
     }
 
     @Test
     void confirmacionConservaContenidoYHash() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto aprobado");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto aprobado");
 
         var confirmed = service.confirm(
-            approval.approvalId(), "sesion-A"
+            approval.approvalId(), "sesion-A", "linkedin-A"
         );
 
         assertNotNull(confirmed);
@@ -141,20 +129,94 @@ class LinkedInApprovalServiceTest {
             approval.contentSha256(),
             confirmed.contentSha256()
         );
-        assertTrue(confirmed.canPublish("sesion-A", now));
-        assertFalse(confirmed.canPublish("sesion-B", now));
+        assertFalse(confirmed.canPublish("sesion-A", null, now));
+        assertFalse(confirmed.canPublish("sesion-B", null, now));
+    }
+
+    @Test
+    void cambioDeCuentaLinkedInNoAutorizaPublicacion() {
+        var service = new LinkedInApprovalService(clock);
+
+        var approval = service.create(
+            "sesion-A",
+            "linkedin-A",
+            "Publicación protegida por identidad"
+        );
+
+        // Misma sesión HTTP, pero otra cuenta de LinkedIn.
+        assertNull(service.confirm(
+            approval.approvalId(), "sesion-A", "linkedin-B"
+        ));
+
+        // La cuenta original sí puede confirmar.
+        assertNotNull(service.confirm(
+            approval.approvalId(), "sesion-A", "linkedin-A"
+        ));
+
+        // La segunda cuenta no puede reservar.
+        assertNull(service.reserveForPublishing(
+            approval.approvalId(), "sesion-A", "linkedin-B"
+        ));
+
+        // La cuenta original puede reservar una sola vez.
+        assertNotNull(service.reserveForPublishing(
+            approval.approvalId(), "sesion-A", "linkedin-A"
+        ));
+
+        // La segunda cuenta no puede finalizar.
+        assertNull(service.finishPublishing(
+            approval.approvalId(),
+            "sesion-A",
+            "linkedin-B",
+            com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHED
+        ));
+
+        // La cuenta original sí puede finalizar.
+        assertNotNull(service.finishPublishing(
+            approval.approvalId(),
+            "sesion-A",
+            "linkedin-A",
+            com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHED
+        ));
+    }
+
+    @Test
+    void otraCuentaLinkedInNoPuedeConsultarAprobacion() {
+        var service = new LinkedInApprovalService(clock);
+
+        var approval = service.create(
+            "sesion-A",
+            "linkedin-A",
+            "Contenido privado de LinkedIn A"
+        );
+
+        // La cuenta original puede consultar su aprobación.
+        assertNotNull(service.findForSession(
+            approval.approvalId(), "sesion-A", "linkedin-A"
+        ));
+
+        // Otra cuenta no puede consultar, aunque comparta sesión.
+        assertNull(service.findForSession(
+            approval.approvalId(), "sesion-A", "linkedin-B"
+        ));
+
+        // Otra sesión tampoco puede consultar.
+        assertNull(service.findForSession(
+            approval.approvalId(), "sesion-B", "linkedin-A"
+        ));
+
+        // La firma antigua sin identidad debe permanecer bloqueada.
+        assertNull(service.findForSession(
+            approval.approvalId(), "sesion-A"
+        ));
     }
 
     @Test
     void soloUnaSolicitudPuedeReservarPublicacion() throws Exception {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create(
-            "sesion-A", "Publicación única de Aigoraweave"
-        );
+        var approval = service.create("sesion-A", "linkedin-A", "Publicación única de Aigoraweave");
 
-        assertNotNull(service.confirm(
-            approval.approvalId(), "sesion-A"
-        ));
+        assertNotNull(service.confirm(approval.approvalId(), "sesion-A", "linkedin-A"));
 
         var ready = new java.util.concurrent.CountDownLatch(2);
         var start = new java.util.concurrent.CountDownLatch(1);
@@ -169,9 +231,7 @@ class LinkedInApprovalServiceTest {
                     throw new IllegalStateException("Tiempo de espera agotado");
                 }
 
-                return service.reserveForPublishing(
-                    approval.approvalId(), "sesion-A"
-                ) != null;
+                return service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A") != null;
             };
 
             var first = executor.submit(attempt);
@@ -189,9 +249,7 @@ class LinkedInApprovalServiceTest {
 
             assertEquals(1, successfulReservations);
 
-            var stored = service.findForSession(
-                approval.approvalId(), "sesion-A"
-            );
+            var stored = service.findForSession(approval.approvalId(), "sesion-A", "linkedin-A");
 
             assertNotNull(stored);
             assertEquals(
@@ -206,35 +264,51 @@ class LinkedInApprovalServiceTest {
     }
 
     @Test
+    void otraSesionNoPuedeReservarPublicacion() {
+        var service = new LinkedInApprovalService(clock);
+
+        var approval = service.create("sesion-A", "linkedin-A", "Contenido aprobado por el usuario A");
+
+        assertNotNull(
+            service.confirm(approval.approvalId(), "sesion-A", "linkedin-A")
+        );
+
+        assertNull(
+            service.reserveForPublishing(approval.approvalId(), "sesion-B", "linkedin-A"),
+            "La sesión B no debe reservar publicaciones de A."
+        );
+
+        assertNotNull(
+            service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"),
+            "La sesión A debe conservar su derecho a publicar."
+        );
+    }
+
+    @Test
     void reservaNoPuedeRepetirse() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto único");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto único");
 
-        assertNotNull(service.confirm(
-            approval.approvalId(), "sesion-A"
-        ));
+        assertNotNull(service.confirm(approval.approvalId(), "sesion-A", "linkedin-A"));
 
-        assertNotNull(service.reserveForPublishing(
-            approval.approvalId(), "sesion-A"
-        ));
+        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
 
-        assertNull(service.reserveForPublishing(
-            approval.approvalId(), "sesion-A"
-        ));
+        assertNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
     }
 
 
     @Test
     void publicacionExitosaNoPuedeReservarseNuevamente() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Publicación exitosa");
+        var approval = service.create("sesion-A", "linkedin-A", "Publicación exitosa");
 
-        assertNotNull(service.confirm(approval.approvalId(), "sesion-A"));
-        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A"));
+        assertNotNull(service.confirm(approval.approvalId(), "sesion-A", "linkedin-A"));
+        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
 
         var finished = service.finishPublishing(
             approval.approvalId(),
             "sesion-A",
+            "linkedin-A",
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHED
         );
 
@@ -244,20 +318,21 @@ class LinkedInApprovalServiceTest {
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHED,
             finished.status()
         );
-        assertNull(service.reserveForPublishing(approval.approvalId(), "sesion-A"));
+        assertNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
     }
 
     @Test
     void resultadoDesconocidoNoPuedeReintentarseAutomaticamente() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Publicación incierta");
+        var approval = service.create("sesion-A", "linkedin-A", "Publicación incierta");
 
-        assertNotNull(service.confirm(approval.approvalId(), "sesion-A"));
-        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A"));
+        assertNotNull(service.confirm(approval.approvalId(), "sesion-A", "linkedin-A"));
+        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
 
         var finished = service.finishPublishing(
             approval.approvalId(),
             "sesion-A",
+            "linkedin-A",
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.UNKNOWN
         );
 
@@ -267,37 +342,39 @@ class LinkedInApprovalServiceTest {
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.UNKNOWN,
             finished.status()
         );
-        assertNull(service.reserveForPublishing(approval.approvalId(), "sesion-A"));
+        assertNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
     }
 
     @Test
     void otraSesionNoPuedeFinalizarPublicacion() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto protegido");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto protegido");
 
-        assertNotNull(service.confirm(approval.approvalId(), "sesion-A"));
-        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A"));
+        assertNotNull(service.confirm(approval.approvalId(), "sesion-A", "linkedin-A"));
+        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
 
         assertNull(service.finishPublishing(
             approval.approvalId(),
             "sesion-B",
+            "linkedin-A",
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHED
         ));
 
         assertEquals(
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHING,
-            service.findForSession(approval.approvalId(), "sesion-A").status()
+            service.findForSession(approval.approvalId(), "sesion-A", "linkedin-A").status()
         );
     }
 
     @Test
     void noPuedeFinalizarSinReserva() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto pendiente");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto pendiente");
 
         assertNull(service.finishPublishing(
             approval.approvalId(),
             "sesion-A",
+            "linkedin-A",
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHED
         ));
     }
@@ -305,20 +382,22 @@ class LinkedInApprovalServiceTest {
     @Test
     void publicacionFinalizadaNoPuedeFinalizarseDosVeces() {
         var service = new LinkedInApprovalService(clock);
-        var approval = service.create("sesion-A", "Texto definitivo");
+        var approval = service.create("sesion-A", "linkedin-A", "Texto definitivo");
 
-        assertNotNull(service.confirm(approval.approvalId(), "sesion-A"));
-        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A"));
+        assertNotNull(service.confirm(approval.approvalId(), "sesion-A", "linkedin-A"));
+        assertNotNull(service.reserveForPublishing(approval.approvalId(), "sesion-A", "linkedin-A"));
 
         assertNotNull(service.finishPublishing(
             approval.approvalId(),
             "sesion-A",
+            "linkedin-A",
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.PUBLISHED
         ));
 
         assertNull(service.finishPublishing(
             approval.approvalId(),
             "sesion-A",
+            "linkedin-A",
             com.nocountry.communitylab.model.linkedin.LinkedInPublicationStatus.UNKNOWN
         ));
     }
@@ -358,6 +437,6 @@ class LinkedInApprovalServiceTest {
             () -> service.create("", "Texto"));
 
         assertThrows(IllegalArgumentException.class,
-            () -> service.create("sesion-A", "   "));
+            () -> service.create("sesion-A", "linkedin-A", "   "));
     }
 }

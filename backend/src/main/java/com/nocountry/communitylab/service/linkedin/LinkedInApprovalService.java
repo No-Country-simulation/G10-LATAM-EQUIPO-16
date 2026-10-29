@@ -27,6 +27,14 @@ public class LinkedInApprovalService {
             String sessionId,
             String content) {
 
+        return create(sessionId, null, content);
+    }
+
+    public LinkedInPublicationApproval create(
+            String sessionId,
+            String linkedinSubject,
+            String content) {
+
         if (sessionId == null || sessionId.isBlank()) {
             throw new IllegalArgumentException(
                 "Se requiere una sesión válida"
@@ -45,12 +53,14 @@ public class LinkedInApprovalService {
             new LinkedInPublicationApproval(
                 UUID.randomUUID().toString(),
                 sessionId,
+                linkedinSubject,
                 content,
                 LinkedInContentHasher.sha256(content),
                 now,
                 now.plus(APPROVAL_TTL),
                 false,
-                false
+                false,
+                LinkedInPublicationStatus.PENDING
             );
 
         approvals.put(approval.approvalId(), approval);
@@ -62,6 +72,14 @@ public class LinkedInApprovalService {
             String approvalId,
             String sessionId) {
 
+        return confirm(approvalId, sessionId, null);
+    }
+
+    public LinkedInPublicationApproval confirm(
+            String approvalId,
+            String sessionId,
+            String linkedinSubject) {
+
         if (approvalId == null || sessionId == null
                 || sessionId.isBlank()) {
             return null;
@@ -71,6 +89,9 @@ public class LinkedInApprovalService {
 
         approvals.computeIfPresent(approvalId, (id, current) -> {
             if (!sessionId.equals(current.sessionId())
+                    || linkedinSubject == null
+                    || linkedinSubject.isBlank()
+                    || !linkedinSubject.equals(current.linkedinSubject())
                     || current.isExpired(clock.instant())
                     || current.confirmed()
                     || current.published()
@@ -85,12 +106,14 @@ public class LinkedInApprovalService {
                 new LinkedInPublicationApproval(
                     current.approvalId(),
                     current.sessionId(),
+                    current.linkedinSubject(),
                     current.content(),
                     current.contentSha256(),
                     current.createdAt(),
                     current.expiresAt(),
                     true,
-                    false
+                    false,
+                    LinkedInPublicationStatus.CONFIRMED
                 );
 
             confirmed[0] = updated;
@@ -104,6 +127,14 @@ public class LinkedInApprovalService {
             String approvalId,
             String sessionId) {
 
+        return reserveForPublishing(approvalId, sessionId, null);
+    }
+
+    public LinkedInPublicationApproval reserveForPublishing(
+            String approvalId,
+            String sessionId,
+            String linkedinSubject) {
+
         if (approvalId == null || sessionId == null
                 || sessionId.isBlank()) {
             return null;
@@ -112,7 +143,11 @@ public class LinkedInApprovalService {
         final LinkedInPublicationApproval[] reserved = {null};
 
         approvals.computeIfPresent(approvalId, (id, current) -> {
-            if (!current.canPublish(sessionId, clock.instant())) {
+            if (!current.canPublish(
+                    sessionId,
+                    linkedinSubject,
+                    clock.instant()
+                )) {
                 return current;
             }
 
@@ -120,6 +155,7 @@ public class LinkedInApprovalService {
                 new LinkedInPublicationApproval(
                     current.approvalId(),
                     current.sessionId(),
+                    current.linkedinSubject(),
                     current.content(),
                     current.contentSha256(),
                     current.createdAt(),
@@ -141,6 +177,20 @@ public class LinkedInApprovalService {
             String sessionId,
             LinkedInPublicationStatus resultStatus) {
 
+        return finishPublishing(
+            approvalId,
+            sessionId,
+            null,
+            resultStatus
+        );
+    }
+
+    public LinkedInPublicationApproval finishPublishing(
+            String approvalId,
+            String sessionId,
+            String linkedinSubject,
+            LinkedInPublicationStatus resultStatus) {
+
         if (approvalId == null || sessionId == null
                 || sessionId.isBlank()) {
             return null;
@@ -157,6 +207,9 @@ public class LinkedInApprovalService {
 
         approvals.computeIfPresent(approvalId, (id, current) -> {
             if (!sessionId.equals(current.sessionId())
+                    || linkedinSubject == null
+                    || linkedinSubject.isBlank()
+                    || !linkedinSubject.equals(current.linkedinSubject())
                     || current.status() != LinkedInPublicationStatus.PUBLISHING) {
                 return current;
             }
@@ -165,6 +218,7 @@ public class LinkedInApprovalService {
                 new LinkedInPublicationApproval(
                     current.approvalId(),
                     current.sessionId(),
+                    current.linkedinSubject(),
                     current.content(),
                     current.contentSha256(),
                     current.createdAt(),
@@ -185,7 +239,19 @@ public class LinkedInApprovalService {
             String approvalId,
             String sessionId) {
 
-        if (approvalId == null || sessionId == null) {
+        return findForSession(approvalId, sessionId, null);
+    }
+
+    public LinkedInPublicationApproval findForSession(
+            String approvalId,
+            String sessionId,
+            String linkedinSubject) {
+
+        if (approvalId == null
+                || sessionId == null
+                || sessionId.isBlank()
+                || linkedinSubject == null
+                || linkedinSubject.isBlank()) {
             return null;
         }
 
@@ -193,6 +259,7 @@ public class LinkedInApprovalService {
 
         if (approval == null
                 || !sessionId.equals(approval.sessionId())
+                || !linkedinSubject.equals(approval.linkedinSubject())
                 || approval.isExpired(clock.instant())) {
             return null;
         }

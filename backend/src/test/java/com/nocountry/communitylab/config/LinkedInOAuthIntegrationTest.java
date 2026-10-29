@@ -43,7 +43,12 @@ class LinkedInOAuthIntegrationTest {
                 .param("state", "estado-ficticio"))
             .andExpect(result -> {
                 int status = result.getResponse().getStatus();
-                assertTrue(status >= 400 && status < 500,
+                assertTrue(
+                    (status >= 400 && status < 500)
+                    || (status == 302
+                        && "/login?error".equals(
+                            result.getResponse().getRedirectedUrl()
+                        )),
                     "El callback sin sesión OAuth previa debe rechazarse. HTTP: " + status);
             });
     }
@@ -71,8 +76,51 @@ class LinkedInOAuthIntegrationTest {
 
         int status = callback.getResponse().getStatus();
 
-        assertTrue(status >= 400 && status < 500,
+        assertTrue(
+                    (status >= 400 && status < 500)
+                    || (status == 302
+                        && "/login?error".equals(
+                            callback.getResponse().getRedirectedUrl()
+                        )),
             "Un state incorrecto debe rechazarse. HTTP: " + status);
+    }
+
+    @Test
+    void callbackInvalidoNoCreaSesionAutenticada() throws Exception {
+        var inicio = mvc.perform(get("/oauth2/authorization/linkedin"))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+        var session = (org.springframework.mock.web.MockHttpSession)
+            inicio.getRequest().getSession(false);
+
+        assertNotNull(session);
+
+        var callback = mvc.perform(get("/auth/linkedin/callback")
+                .session(session)
+                .secure(true)
+                .param("code", "codigo-ficticio")
+                .param("state", "estado-invalido"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/login?error"))
+            .andReturn();
+
+        var securityContext = (org.springframework.security.core.context.SecurityContext)
+            session.getAttribute("SPRING_SECURITY_CONTEXT");
+
+        if (securityContext != null) {
+            var authentication = securityContext.getAuthentication();
+
+            assertTrue(
+                authentication == null
+                    || !authentication.isAuthenticated()
+                    || authentication instanceof
+                        org.springframework.security.authentication.AnonymousAuthenticationToken,
+                "Un callback inválido no debe autenticar al usuario."
+            );
+        }
+
+        assertNotNull(callback);
     }
 
     @Test
@@ -94,6 +142,10 @@ class LinkedInOAuthIntegrationTest {
                     "https://www.linkedin.com/oauth/v2/authorization?"));
                 assertTrue(location.contains("state="));
                 assertTrue(location.contains("w_member_social"));
+          assertTrue(location.contains("openid"),
+              "La autorización debe solicitar openid.");
+          assertTrue(location.contains("profile"),
+              "La autorización debe solicitar profile.");
             });
     }
 }

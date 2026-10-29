@@ -30,6 +30,36 @@ public class SecurityConfig {
 
             if (linkedinOAuthEnabled) {
                 auth.requestMatchers(
+                    HttpMethod.GET,
+                    "/api/v1/linkedin/me",
+                    "/api/v1/linkedin/drafts/import"
+                ).authenticated();
+
+                auth.requestMatchers(
+                    HttpMethod.GET,
+                    "/api/v1/linkedin/approvals/*/review",
+                    "/api/v1/linkedin/approvals/*/confirmed"
+                ).authenticated();
+
+                auth.requestMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/linkedin/drafts",
+                    "/api/v1/linkedin/drafts/import",
+                    "/api/v1/linkedin/drafts/import/review",
+                    "/api/v1/linkedin/drafts/*/consume"
+                ).authenticated();
+
+                auth.requestMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/linkedin/approvals"
+                ).authenticated();
+
+                auth.requestMatchers(
+                    HttpMethod.POST,
+                    "/api/v1/linkedin/approvals/*/confirm"
+                ).authenticated();
+
+                auth.requestMatchers(
                     "/oauth2/authorization/linkedin",
                     "/auth/linkedin/callback"
                 ).permitAll();
@@ -39,6 +69,12 @@ public class SecurityConfig {
         });
 
         if (linkedinOAuthEnabled) {
+            http.oauth2Login(oauth -> oauth
+                .redirectionEndpoint(redirection -> redirection
+                    .baseUri("/auth/linkedin/callback")
+                )
+            );
+
             http.oauth2Client(oauth -> oauth
                 .authorizedClientRepository(
                     new HttpSessionOAuth2AuthorizedClientRepository()

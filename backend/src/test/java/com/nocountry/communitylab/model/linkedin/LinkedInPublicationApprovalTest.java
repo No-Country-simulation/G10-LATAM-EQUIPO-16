@@ -42,36 +42,81 @@ class LinkedInPublicationApprovalTest {
             original.published()
         );
 
-        assertFalse(modificado.canPublish("sesion-A", now));
+        assertFalse(modificado.canPublish("sesion-A", null, now));
     }
 
     @Test
     void aprobacionValidaPermitePublicar() {
         var item = approval("sesion-A", now.plusSeconds(300), true, false);
-        assertTrue(item.canPublish("sesion-A", now));
+        assertFalse(item.canPublish("sesion-A", null, now));
     }
 
     @Test
     void otraSesionNoPuedePublicar() {
         var item = approval("sesion-A", now.plusSeconds(300), true, false);
-        assertFalse(item.canPublish("sesion-B", now));
+        assertFalse(item.canPublish("sesion-B", null, now));
     }
 
     @Test
     void aprobacionExpiradaNoPuedePublicar() {
         var item = approval("sesion-A", now.minusSeconds(1), true, false);
-        assertFalse(item.canPublish("sesion-A", now));
+        assertFalse(item.canPublish("sesion-A", null, now));
     }
 
     @Test
     void contenidoSinConfirmarNoPuedePublicar() {
         var item = approval("sesion-A", now.plusSeconds(300), false, false);
-        assertFalse(item.canPublish("sesion-A", now));
+        assertFalse(item.canPublish("sesion-A", null, now));
     }
 
     @Test
     void contenidoYaPublicadoNoPuedeRepetirse() {
         var item = approval("sesion-A", now.plusSeconds(300), true, true);
-        assertFalse(item.canPublish("sesion-A", now));
+        assertFalse(item.canPublish("sesion-A", null, now));
     }
+
+    @Test
+    void cuentaLinkedInDistintaNoPuedePublicar() {
+        var now = java.time.Instant.parse("2026-10-29T01:00:00Z");
+        var content = "Contenido aprobado para LinkedIn A";
+
+        var approval = new LinkedInPublicationApproval(
+            "approval-1",
+            "sesion-compartida",
+            "linkedin-user-A",
+            content,
+            com.nocountry.communitylab.service.linkedin.LinkedInContentHasher.sha256(content),
+            now,
+            now.plusSeconds(600),
+            true,
+            false,
+            LinkedInPublicationStatus.CONFIRMED
+        );
+
+        assertTrue(
+            approval.canPublish(
+                "sesion-compartida",
+                "linkedin-user-A",
+                now
+            )
+        );
+
+        assertFalse(
+            approval.canPublish(
+                "sesion-compartida",
+                "linkedin-user-B",
+                now
+            ),
+            "La cuenta B no debe publicar contenido aprobado para A."
+        );
+
+        assertFalse(
+            approval.canPublish(
+                "otra-sesion",
+                "linkedin-user-A",
+                now
+            )
+        );
+    }
+
 }
