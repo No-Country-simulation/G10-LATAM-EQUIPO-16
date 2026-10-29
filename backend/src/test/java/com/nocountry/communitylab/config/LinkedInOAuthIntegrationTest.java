@@ -141,7 +141,8 @@ class LinkedInOAuthIntegrationTest {
                 assertTrue(location.startsWith(
                     "https://www.linkedin.com/oauth/v2/authorization?"));
                 assertTrue(location.contains("state="));
-                assertTrue(location.contains("w_member_social"));
+                assertFalse(location.contains("w_member_social"),
+                    "La autenticación no debe solicitar permisos de publicación.");
           assertTrue(location.contains("openid"),
               "La autorización debe solicitar openid.");
           assertTrue(location.contains("profile"),
