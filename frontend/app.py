@@ -740,8 +740,14 @@ def _decidir(llave: str, valor: str) -> None:
         st.toast("Activo rechazado.", icon="❌")
 
 
-def _guardar_edicion(llave: str, clave_widget: str) -> None:
-    st.session_state.setdefault(CLAVE_TEXTO_EDITADO, {})[llave] = st.session_state.get(clave_widget, "")
+def _guardar_edicion(llave: str, clave_widget: str, texto_original: str) -> None:
+    nuevo_texto = st.session_state.get(clave_widget, "")
+    texto_anterior = st.session_state.get(CLAVE_TEXTO_EDITADO, {}).get(llave, texto_original)
+
+    if texto_anterior != nuevo_texto:
+        st.session_state.setdefault(CLAVE_FEEDBACK, {}).pop(llave, None)
+
+    st.session_state.setdefault(CLAVE_TEXTO_EDITADO, {})[llave] = nuevo_texto
     st.session_state.setdefault(CLAVE_EDICION, {})[llave] = False
 
 
@@ -809,7 +815,7 @@ def _tarjeta_activo(lote: str, clave: str, titulo: str, tipo: str, activo) -> No
         
         if editando:
             cab_editar.button("💾", key=f"cl_edit_{lote}_{clave}", help="Guardar edición",
-                              on_click=_guardar_edicion, args=(llave, clave_txt))
+                              on_click=_guardar_edicion, args=(llave, clave_txt, original))
         else:
             cab_editar.button("✏️", key=f"cl_edit_{lote}_{clave}", help="Editar texto",
                               on_click=_alternar, args=(CLAVE_EDICION, llave))
