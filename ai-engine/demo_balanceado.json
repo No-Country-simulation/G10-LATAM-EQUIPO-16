@@ -1,0 +1,42 @@
+{
+  "origen_comunidad": "Comunidad_Simulada_Demo",
+  "periodo_referencia": "Semana_04",
+  "interacciones": [
+    {
+      "autor": "Camila Ortega",
+      "canal": "#logros-y-empleos",
+      "tipo": "logro",
+      "texto": "Comunidad, ¡quedé seleccionada como desarrolladora junior de IA! El proyecto de LangGraph que armé en el curso fue lo que más pesó en la entrevista técnica. Gracias a todos por el apoyo en las revisiones."
+    },
+    {
+      "autor": "Mateo Salinas",
+      "canal": "#logros-y-empleos",
+      "tipo": "testimonio",
+      "texto": "Soy Mateo Salinas y quiero contar que, gracias a las sesiones de código en vivo, pasé de no entender las APIs a publicar mi primer servicio con FastAPI."
+    },
+    {
+      "autor": "Lucía Paredes",
+      "canal": "#dudas-langgraph",
+      "tipo": "pregunta_tecnica",
+      "texto": "¿Cómo estructuro los nodos condicionales en LangGraph cuando la respuesta del LLM necesita reintento? ¿Alguien tiene un ejemplo práctico de router?"
+    },
+    {
+      "autor": "Diego Ramírez",
+      "canal": "#dudas-python",
+      "tipo": "pregunta_tecnica",
+      "texto": "¿Qué diferencia hay entre usar venv y poetry para manejar las dependencias de un proyecto con FastAPI? ¿Cuál conviene en un equipo que recién empieza?"
+    },
+    {
+      "autor": "Andrés Vega",
+      "canal": "#general",
+      "tipo": "feedback",
+      "texto": "Llevo dos semanas sin poder avanzar porque las clases grabadas de los módulos 3 y 4 no cargan y no encuentro dónde reportarlo. Varios compañeros están igual y algunos ya abandonaron el curso."
+    },
+    {
+      "autor": "Sofía Molina",
+      "canal": "#general",
+      "tipo": "otro",
+      "texto": "Buenos días a todos."
+    }
+  ]
+}
