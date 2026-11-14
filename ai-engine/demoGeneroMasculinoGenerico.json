@@ -1,0 +1,12 @@
+{
+  "origen_comunidad": "Comunidad_Simulada_Demo",
+  "periodo_referencia": "Semana_04",
+  "interacciones": [
+    {
+      "autor": "Valentina Ríos",
+      "canal": "#logros-y-empleos",
+      "tipo": "logro",
+      "texto": "Comunidad, ¡me contrataron como desarrollador junior de IA! El proyecto de LangGraph que armé en el curso fue lo que más pesó en la entrevista técnica. Gracias a todos por el apoyo en las revisiones."
+    }
+  ]
+}

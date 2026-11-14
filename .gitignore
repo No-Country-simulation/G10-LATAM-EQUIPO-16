@@ -42,6 +42,9 @@ ENV/
 poetry.lock
 Pipfile.lock
 
+# Salida de ai-engine/medir_demo.py (respuestas reales de Gemini)
+ai-engine/resultados_demo/
+
 # ==========================================
 # JAVA & ENTORNOS DE COMPILACIÓN
 # ==========================================
